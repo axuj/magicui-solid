@@ -1,0 +1,101 @@
+---
+title: Terminal
+description: An implementation of the MacOS terminal. Useful for showcasing a command line interface.
+---
+
+import DemoPreview from '@/components/DemoPreview.astro'
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+
+<div class="not-content">
+  <DemoPreview demo="TerminalDemo" />
+</div>
+
+## Examples
+
+### Custom Delays
+
+<div class="not-content">
+  <DemoPreview demo="TerminalDemo2" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/terminal
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/terminal
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/terminal
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/terminal
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Import
+
+```tsx
+import { AnimatedSpan, Terminal, TypingAnimation } from '@/components/ui/terminal'
+```
+
+## Usage
+
+```tsx
+<Terminal>
+  <TypingAnimation>pnpm dlx shadcn@latest init</TypingAnimation>
+  <AnimatedSpan>✔ Preflight checks.</AnimatedSpan>
+  <AnimatedSpan>✔ Validating Tailwind CSS.</AnimatedSpan>
+  <TypingAnimation>Success! Project initialization completed.</TypingAnimation>
+</Terminal>
+```
+
+The terminal sequences its children automatically. Each TypingAnimation or AnimatedSpan starts when the previous finishes. Manual delay props are optional and typically unnecessary.
+
+## Props
+
+### Terminal
+
+| Prop          | Type          | Default | Description                                                    |
+| ------------- | ------------- | ------- | -------------------------------------------------------------- |
+| `children`    | `JSX.Element` | `-`     | Terminal content: a list of TypingAnimation / AnimatedSpan.    |
+| `class`       | `string`      | `-`     | Custom CSS class for styling.                                  |
+| `sequence`    | `boolean`     | `true`  | Enable auto sequencing so each line starts after the previous. |
+| `startOnView` | `boolean`     | `true`  | Start sequencing when the terminal enters the viewport.        |
+
+### AnimatedSpan
+
+| Prop          | Type          | Default | Description                                                               |
+| ------------- | ------------- | ------- | ------------------------------------------------------------------------- |
+| `children`    | `JSX.Element` | `-`     | Content to be faded in.                                                   |
+| `class`       | `string`      | `-`     | Custom CSS class for styling.                                             |
+| `delay`       | `number`      | `0`     | Delay in ms before animation starts (used when sequence is false).        |
+| `startOnView` | `boolean`     | `false` | If true, waits for viewport visibility before animating when unsequenced. |
+
+### TypingAnimation
+
+| Prop          | Type      | Default  | Description                                                            |
+| ------------- | --------- | -------- | ---------------------------------------------------------------------- |
+| `children`    | `string`  | `-`      | Text to be typed.                                                      |
+| `class`       | `string`  | `-`      | Custom CSS class for styling.                                          |
+| `duration`    | `number`  | `60`     | Milliseconds per character.                                            |
+| `delay`       | `number`  | `0`      | Delay in ms before typing starts (used when sequence is false).        |
+| `as`          | `string`  | `"span"` | The HTML element to render.                                            |
+| `startOnView` | `boolean` | `true`   | If true, waits for viewport visibility before typing when unsequenced. |
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/terminal" target="_blank">
+    magicui.design/docs/components/terminal
+  </a>
+</p>

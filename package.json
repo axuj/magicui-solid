@@ -1,0 +1,54 @@
+{
+  "name": "magicui-solid",
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "lint": "eslint",
+    "lint:fix": "eslint --fix",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/solid-js": "^5.0.7",
+    "@astrojs/starlight": "^0.41.4",
+    "@astrojs/starlight-tailwind": "^5.0.0",
+    "@fontsource-variable/geist": "^5.3.0",
+    "@fontsource-variable/geist-mono": "^5.3.0",
+    "@iconify-json/ri": "^1.2.5",
+    "@solid-primitives/intersection-observer": "^2.2.5",
+    "@tailwindcss/vite": "^4.3.3",
+    "astro": "^7.1.5",
+    "clsx": "^2.1.1",
+    "shiki": "^4.3.1",
+    "solid-js": "^1.9.5",
+    "starlight-theme-black": "^0.7.1",
+    "tailwind-merge": "^3.6.0",
+    "tailwindcss": "^4.3.3"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^9.2.0",
+    "eslint": "^10.8.0",
+    "eslint-plugin-astro": "^3.0.1",
+    "eslint-plugin-better-tailwindcss": "^4.7.0",
+    "eslint-plugin-format": "^2.0.1",
+    "eslint-plugin-mdx": "^3.8.1",
+    "eslint-plugin-solid": "^0.14.5",
+    "eslint-plugin-tailwindcss": "^4.2.0",
+    "prettier": "^3.9.6",
+    "prettier-plugin-astro": "^0.14.1",
+    "typescript": "^6.0.3",
+    "vite": "^8.1.5"
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "nub",
+      "version": "^0.6.0",
+      "onFail": "warn"
+    }
+  }
+}

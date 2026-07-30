@@ -1,0 +1,84 @@
+---
+title: Marquee
+description: An infinite scrolling component that can be used to display text, images, or videos.
+---
+
+import DemoPreview from '@/components/DemoPreview.astro'
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+
+<div class="not-content">
+  <DemoPreview demo="MarqueeDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/marquee
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/marquee
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/marquee
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/marquee
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Examples
+
+### Vertical
+
+<div class="not-content">
+  <DemoPreview demo="MarqueeDemoVertical" />
+</div>
+
+### 3D
+
+<div class="not-content">
+  <DemoPreview demo="MarqueeDemo3D" />
+</div>
+
+## Import
+
+```tsx
+import { Marquee } from '@/components/ui/marquee'
+```
+
+## Usage
+
+```tsx
+<Marquee>
+  <span>Solid</span>
+  <span>TypeScript</span>
+  <span>Tailwind CSS</span>
+</Marquee>
+```
+
+## Props
+
+| Prop           | Type          | Default | Description                                            |
+| -------------- | ------------- | ------- | ------------------------------------------------------ |
+| `class`        | `string`      | `-`     | Optional CSS class name to apply custom styles.        |
+| `reverse`      | `boolean`     | `false` | Whether to reverse the animation direction.            |
+| `pauseOnHover` | `boolean`     | `false` | Whether to pause the animation on hover.               |
+| `vertical`     | `boolean`     | `false` | Whether to animate vertically instead of horizontally. |
+| `children`     | `JSX.Element` | `-`     | Content to be displayed in the marquee.                |
+| `repeat`       | `number`      | `4`     | Number of times to repeat the content.                 |
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/marquee" target="_blank">
+    magicui.design/docs/components/marquee
+  </a>
+</p>

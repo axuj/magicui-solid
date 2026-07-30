@@ -1,0 +1,130 @@
+---
+import { Code } from '@astrojs/starlight/components'
+
+export interface Props {
+  align?: 'center' | 'start' | 'end'
+  class?: string
+  code?: string
+  lang?: string
+  meta?: string
+}
+
+const { align = 'center', class: className, code, lang, meta } = Astro.props
+---
+
+<div
+  data-component-preview
+  class="relative mt-4 mb-12 flex min-h-120 flex-col gap-2"
+  class:list={[className]}
+>
+  <div class="flex items-center justify-between">
+    <div class="flex items-center gap-4 rounded-none bg-transparent px-2 md:px-0">
+      <button
+        type="button"
+        class="tab-trigger px-0 text-base transition-colors text-foreground font-medium"
+        data-tab="preview"
+      >
+        Preview
+      </button>
+      <button
+        type="button"
+        class="tab-trigger px-0 text-base transition-colors text-muted-foreground"
+        data-tab="code"
+      >
+        Code
+      </button>
+    </div>
+  </div>
+  <div
+    class="relative flex flex-1 flex-col md:-mx-1"
+  >
+    <div
+      data-panel="preview"
+      data-active
+      class="flex flex-1 flex-col overflow-hidden border border-border rounded-(--ec-brdRad)"
+      class:list={[{
+        'justify-center': align === 'center',
+        'justify-start': align === 'start',
+        'justify-end': align === 'end',
+      }]}
+    >
+      <slot />
+    </div>
+    <div data-panel="code" class="absolute inset-0 flex flex-col">
+      {code
+        ? <Code code={code} lang={lang ?? 'tsx'} meta={meta} />
+        : <slot name="code" />}
+    </div>
+  </div>
+</div>
+
+<style>
+  [data-panel] {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    z-index: 1;
+  }
+  [data-panel][data-active] {
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 10;
+  }
+
+  [data-panel="code"] {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  [data-panel="code"] :global(.expressive-code) {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  [data-panel="code"] :global(.expressive-code figure.frame) {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+  }
+
+  [data-panel="code"] :global(.expressive-code figure.frame pre) {
+    flex: 1 1 0%;
+    min-height: 0;
+    overflow: auto;
+  }
+</style>
+
+<script>
+function activate(root: HTMLElement, tab: string) {
+  root.querySelectorAll<HTMLElement>('[data-panel]').forEach((panel) => {
+    panel.toggleAttribute('data-active', panel.dataset.panel === tab)
+  })
+
+  root.querySelectorAll<HTMLButtonElement>('.tab-trigger').forEach((t) => {
+    const isActive = t.dataset.tab === tab
+    t.classList.toggle('text-muted-foreground', !isActive)
+    t.classList.toggle('text-foreground', isActive)
+    t.classList.toggle('font-medium', isActive)
+  })
+}
+
+document.addEventListener('click', (e: MouseEvent) => {
+  const target = e.target as HTMLElement | null
+  const btn = target?.closest<HTMLButtonElement>('.tab-trigger')
+  if (!btn)
+    return
+
+  const root = btn.closest<HTMLElement>('[data-component-preview]')
+  if (!root)
+    return
+  activate(root, btn.dataset.tab!)
+})
+
+document.querySelectorAll<HTMLElement>('[data-component-preview]').forEach((root) => {
+  activate(root, 'preview')
+})
+</script>

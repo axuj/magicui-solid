@@ -1,0 +1,69 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "magicui-solid",
+  "homepage": "https://magicui-solid.vercel.app",
+  "items": [
+    {
+      "name": "utils",
+      "type": "registry:lib",
+      "title": "Utils",
+      "description": "Utility functions for magicui-solid.",
+      "dependencies": ["clsx", "tailwind-merge"],
+      "files": [
+        {
+          "path": "src/lib/utils.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "terminal",
+      "type": "registry:ui",
+      "title": "Terminal",
+      "description": "An implementation of the MacOS terminal. Useful for showcasing a command line interface.",
+      "dependencies": ["@solid-primitives/intersection-observer"],
+      "registryDependencies": ["utils"],
+      "files": [
+        {
+          "path": "src/registry/magicui/terminal.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "marquee",
+      "type": "registry:ui",
+      "title": "Marquee",
+      "description": "An infinite scrolling component that can be used to display text, images, or videos.",
+      "registryDependencies": ["utils"],
+      "files": [
+        {
+          "path": "src/registry/magicui/marquee.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "cssVars": {
+        "animate-marquee": "marquee var(--duration) infinite linear",
+        "animate-marquee-vertical": "marquee-vertical var(--duration) linear infinite"
+      },
+      "cssVarsTemplate": {
+        "@keyframes marquee": {
+          "from": {
+            "transform": "translateX(0)"
+          },
+          "to": {
+            "transform": "translateX(calc(-100% - var(--gap)))"
+          }
+        },
+        "@keyframes marquee-vertical": {
+          "from": {
+            "transform": "translateY(0)"
+          },
+          "to": {
+            "transform": "translateY(calc(-100% - var(--gap)))"
+          }
+        }
+      }
+    }
+  ]
+}
