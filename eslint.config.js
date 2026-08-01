@@ -1,7 +1,6 @@
 import antfu, { parserPlain } from '@antfu/eslint-config'
 import betterTailwindcss from 'eslint-plugin-better-tailwindcss'
 import { flat as mdxFlat } from 'eslint-plugin-mdx'
-import tailwindcss from 'eslint-plugin-tailwindcss'
 
 const disableStyleForMdx = {
   'style/indent': 'off',
@@ -55,22 +54,14 @@ export default antfu({
     'no-undef': 'off',
     ...disableStyleForMdx,
   },
-}, {
-  plugins: {
-    'better-tailwindcss': betterTailwindcss,
-  },
+}, betterTailwindcss.configs.recommended, {
   settings: {
     'better-tailwindcss': {
       entryPoint: 'src/styles/global.css',
+      rootFontSize: 16,
     },
   },
   rules: {
-    'better-tailwindcss/enforce-canonical-classes': 'warn',
-  },
-}, tailwindcss.configs.recommended, {
-  settings: {
-    tailwindcss: {
-      cssConfigPath: 'src/styles/global.css',
-    },
+    'better-tailwindcss/no-unknown-classes': ['error', { ignore: ['^not-content$', '^tab-trigger$'] }],
   },
 })

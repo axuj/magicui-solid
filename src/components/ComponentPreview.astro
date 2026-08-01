@@ -18,17 +18,26 @@ const { align = 'center', class: className, code, lang, meta } = Astro.props
   class:list={[className]}
 >
   <div class="flex items-center justify-between">
-    <div class="flex items-center gap-4 rounded-none bg-transparent px-2 md:px-0">
+    <div class="
+      flex items-center gap-4 rounded-none bg-transparent px-2
+      md:px-0
+    "
+    >
       <button
         type="button"
-        class="tab-trigger px-0 text-base transition-colors text-foreground font-medium"
+        class="
+          tab-trigger px-0 text-base font-medium text-foreground
+          transition-colors
+        "
         data-tab="preview"
       >
         Preview
       </button>
       <button
         type="button"
-        class="tab-trigger px-0 text-base transition-colors text-muted-foreground"
+        class="
+          tab-trigger px-0 text-base text-muted-foreground transition-colors
+        "
         data-tab="code"
       >
         Code
@@ -36,12 +45,18 @@ const { align = 'center', class: className, code, lang, meta } = Astro.props
     </div>
   </div>
   <div
-    class="relative flex flex-1 flex-col md:-mx-1"
+    class="
+      relative flex flex-1 flex-col
+      md:-mx-1
+    "
   >
     <div
       data-panel="preview"
       data-active
-      class="flex flex-1 flex-col overflow-hidden border border-border rounded-(--ec-brdRad)"
+      class="
+        flex flex-1 flex-col overflow-hidden rounded-(--ec-brdRad) border
+        border-border
+      "
       class:list={[{
         'justify-center': align === 'center',
         'justify-start': align === 'start',

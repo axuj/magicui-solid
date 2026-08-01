@@ -1,24 +1,38 @@
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
 @layer base, starlight, theme, components, utilities;
 @import 'tailwindcss/preflight.css' layer(base);
 @import 'tailwindcss/theme.css' layer(theme);
 @import 'tailwindcss/utilities.css' layer(utilities);
 
 :root {
-  --sl-content-width: 60rem;
+  --sl-content-width: 50rem;
 }
 
 [data-has-sidebar][data-has-toc] .main-pane {
-  max-width: 60rem;
+  max-width: 50rem;
 }
 
 @theme inline {
   --color-background: var(--sl-color-bg);
   --color-foreground: var(--sl-color-text);
   --color-border: var(--sl-color-hairline);
-  --color-muted-foreground: var(--sl-color-gray-3);
-  --color-muted: var(--sl-color-bg-nav);
   --color-card: var(--sl-color-bg);
+  --color-card-foreground: var(--sl-color-text);
+  --color-popover: var(--sl-color-bg);
+  --color-popover-foreground: var(--sl-color-text);
   --color-primary: var(--sl-color-text-accent);
+  --color-primary-foreground: var(--sl-color-text-invert);
+  --color-secondary: var(--sl-color-gray-6);
+  --color-secondary-foreground: var(--sl-color-text);
+  --color-muted: var(--sl-color-bg-nav);
+  --color-muted-foreground: var(--sl-color-gray-3);
+  --color-accent: var(--sl-color-bg-accent);
+  --color-accent-foreground: var(--sl-color-text-accent);
+  --color-destructive: var(--sl-color-red);
+  --color-destructive-foreground: var(--sl-color-text-invert);
+  --color-input: var(--sl-color-hairline);
+  --color-ring: var(--sl-color-text-accent);
 
   --animate-aurora: aurora 8s ease-in-out infinite alternate;
   --animate-blink-cursor: blink-cursor 1.2s step-end infinite;

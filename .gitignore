@@ -2,6 +2,9 @@
 dist/
 public/r/
 
+# generated registry (source of truth: registry.ts)
+/__generated__/
+
 # generated types
 .astro/
 
@@ -27,3 +30,5 @@ pnpm-debug.log*
 
 AGENTS.md
 .agent
+
+tmp/

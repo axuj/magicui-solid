@@ -32,6 +32,15 @@ export default defineConfig({
           items: [
             { slug: 'docs/components/marquee' },
             { slug: 'docs/components/terminal' },
+            { slug: 'docs/components/hero-video-dialog' },
+            { slug: 'docs/components/bento-grid' },
+            { slug: 'docs/components/animated-list' },
+          ],
+        },
+        {
+          label: 'Special Effects',
+          items: [
+            { slug: 'docs/components/animated-beam' },
           ],
         },
       ],
@@ -40,6 +49,7 @@ export default defineConfig({
   vite: {
     resolve: {
       alias: { '@': resolve('./src') },
+      noExternal: ['lucide-solid'],
     },
     plugins: [tailwindcss(), demoTypesPlugin()],
   },

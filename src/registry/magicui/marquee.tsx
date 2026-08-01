@@ -39,14 +39,12 @@ export function Marquee(props: MarqueeProps) {
 
   return (
     <div
-      class={cn(
-        'group flex gap-(--gap) overflow-hidden p-2 [--duration:40s] [--gap:1rem]',
-        {
-          'flex-row': !local.vertical,
-          'flex-col': local.vertical,
-        },
-        local.class,
-      )}
+      class={cn(`
+        group flex gap-(--gap) overflow-hidden p-2 [--duration:40s] [--gap:1rem]
+      `, {
+        'flex-row': !local.vertical,
+        'flex-col': local.vertical,
+      }, local.class)}
       {...rest}
     >
       <For each={Array.from({ length: local.repeat })}>

@@ -1,5 +1,4 @@
 import { For } from 'solid-js'
-import { cn } from '@/lib/utils'
 import { Marquee } from '@/registry/magicui/marquee'
 
 const reviews = [
@@ -19,17 +18,32 @@ const fourthRow = reviews.slice(reviews.length / 2)
 function ReviewCard(props: { img: string, name: string, username: string, body: string }) {
   return (
     <figure
-      class={cn(
-        'relative h-full w-fit cursor-pointer overflow-hidden rounded-xl border p-4 sm:w-36',
-        'border-gray-950/10 bg-gray-950/1 hover:bg-gray-950/5',
-        'dark:border-gray-50/10 dark:bg-gray-50/10 dark:hover:bg-gray-50/15',
-      )}
+      class="
+        relative h-full w-fit cursor-pointer overflow-hidden rounded-xl border
+        border-gray-950/10 bg-gray-950/1 p-4
+        hover:bg-gray-950/5
+        sm:w-36
+        dark:border-gray-50/10 dark:bg-gray-50/10
+        dark:hover:bg-gray-50/15
+      "
     >
       <div class="flex flex-row items-center gap-2">
         <img class="rounded-full" width="32" height="32" alt="" src={props.img} />
         <div class="flex flex-col">
-          <figcaption class="text-sm font-medium dark:text-white">{props.name}</figcaption>
-          <p class="text-xs font-medium dark:text-white/40">{props.username}</p>
+          <figcaption class="
+            text-sm font-medium
+            dark:text-white
+          "
+          >
+            {props.name}
+          </figcaption>
+          <p class="
+            text-xs font-medium
+            dark:text-white/40
+          "
+          >
+            {props.username}
+          </p>
         </div>
       </div>
       <blockquote class="mt-2 text-sm">{props.body}</blockquote>
@@ -39,7 +53,11 @@ function ReviewCard(props: { img: string, name: string, username: string, body: 
 
 export function MarqueeDemo3D() {
   return (
-    <div class="relative flex h-96 w-full flex-row items-center justify-center gap-4 overflow-hidden perspective-near">
+    <div class="
+      relative flex h-96 w-full flex-row items-center justify-center gap-4
+      overflow-hidden perspective-near
+    "
+    >
       <div
         class="flex flex-row items-center gap-4"
         style={{
@@ -59,10 +77,26 @@ export function MarqueeDemo3D() {
           <For each={fourthRow}>{review => <ReviewCard {...review} />}</For>
         </Marquee>
       </div>
-      <div class="pointer-events-none absolute inset-x-0 top-0 h-1/4 bg-linear-to-b from-background" />
-      <div class="pointer-events-none absolute inset-x-0 bottom-0 h-1/4 bg-linear-to-t from-background" />
-      <div class="pointer-events-none absolute inset-y-0 left-0 w-1/4 bg-linear-to-r from-background" />
-      <div class="pointer-events-none absolute inset-y-0 right-0 w-1/4 bg-linear-to-l from-background" />
+      <div class="
+        pointer-events-none absolute inset-x-0 top-0 h-1/4 bg-linear-to-b
+        from-background
+      "
+      />
+      <div class="
+        pointer-events-none absolute inset-x-0 bottom-0 h-1/4 bg-linear-to-t
+        from-background
+      "
+      />
+      <div class="
+        pointer-events-none absolute inset-y-0 left-0 w-1/4 bg-linear-to-r
+        from-background
+      "
+      />
+      <div class="
+        pointer-events-none absolute inset-y-0 right-0 w-1/4 bg-linear-to-l
+        from-background
+      "
+      />
     </div>
   )
 }

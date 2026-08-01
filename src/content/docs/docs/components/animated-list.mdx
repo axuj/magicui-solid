@@ -1,0 +1,75 @@
+---
+title: Animated List
+description: A list that animates each item in sequence with a delay. Used to showcase notifications or events on your landing page.
+---
+
+import DemoPreview from '@/components/DemoPreview.astro'
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+
+<div class="not-content">
+  <DemoPreview demo="AnimatedListDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/animated-list
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/animated-list
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/animated-list
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/animated-list
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Import
+
+```tsx
+import { AnimatedList, AnimatedListItem } from '@/components/ui/animated-list'
+```
+
+## Usage
+
+```tsx
+<AnimatedList delay={1500}>
+  <AnimatedListItem>
+    <p>Item 1</p>
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <p>Item 2</p>
+  </AnimatedListItem>
+  <AnimatedListItem>
+    <p>Item 3</p>
+  </AnimatedListItem>
+</AnimatedList>
+```
+
+## Props
+
+### AnimatedList
+
+| Prop       | Type          | Default | Description                       |
+| ---------- | ------------- | ------- | --------------------------------- |
+| `class`    | `string`      | `-`     | Optional CSS class name.          |
+| `delay`    | `number`      | `1000`  | The delay between each item in ms |
+| `children` | `JSX.Element` | `-`     | The items to animate.             |
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/animated-list" target="_blank">
+    magicui.design/docs/components/animated-list
+  </a>
+</p>

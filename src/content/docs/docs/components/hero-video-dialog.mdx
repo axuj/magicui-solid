@@ -1,0 +1,95 @@
+---
+title: Hero Video Dialog
+description: A hero video dialog component that opens a video player with configurable animations.
+---
+
+import DemoPreview from '@/components/DemoPreview.astro'
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+
+<div class="not-content">
+  <DemoPreview demo="HeroVideoDialogDemo" />
+</div>
+
+## Examples
+
+### Top-in-bottom-out
+
+<div class="not-content">
+  <DemoPreview demo="HeroVideoDialogDemoTopInBottomOut" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/hero-video-dialog
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/hero-video-dialog
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/hero-video-dialog
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/hero-video-dialog
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Import
+
+```tsx
+import { HeroVideoDialog } from '@/components/ui/hero-video-dialog'
+```
+
+## Usage
+
+```tsx
+<HeroVideoDialog
+  animationStyle="from-center"
+  videoSrc="https://www.youtube.com/embed/qh3NGpYRG3I?si=4rb-zSdDkVK9qxxb"
+  thumbnailSrc="https://startup-template-sage.vercel.app/hero-light.png"
+  thumbnailAlt="Hero Video"
+/>
+```
+
+## Props
+
+| Prop             | Type     | Default             | Description                      |
+| ---------------- | -------- | ------------------- | -------------------------------- |
+| `animationStyle` | `string` | `"from-center"`     | Animation style for the dialog   |
+| `videoSrc`       | `string` | `-`                 | URL of the video to be played    |
+| `thumbnailSrc`   | `string` | `-`                 | URL of the thumbnail image       |
+| `thumbnailAlt`   | `string` | `"Video thumbnail"` | Alt text for the thumbnail image |
+| `class`          | `string` | `-`                 | Custom CSS class for styling.    |
+
+## Animation Styles
+
+The `animationStyle` prop accepts the following values:
+
+- `"from-bottom"`: Dialog enters from the bottom and exits to the bottom
+- `"from-center"`: Dialog scales up from the center and scales down to the center
+- `"from-top"`: Dialog enters from the top and exits to the top
+- `"from-left"`: Dialog enters from the left and exits to the left
+- `"from-right"`: Dialog enters from the right and exits to the right
+- `"fade"`: Dialog fades in and out
+- `"top-in-bottom-out"`: Dialog enters from the top and exits to the bottom
+- `"left-in-right-out"`: Dialog enters from the left and exits to the right
+
+## Note
+
+- If using a YouTube video, make sure to use the `embed` version of the video URL.
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/hero-video-dialog" target="_blank">
+    magicui.design/docs/components/hero-video-dialog
+  </a>
+</p>

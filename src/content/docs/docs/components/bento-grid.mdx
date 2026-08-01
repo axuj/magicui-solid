@@ -1,0 +1,102 @@
+---
+title: Bento Grid
+description: A bento grid layout component that showcases content in a grid of cards with hover effects.
+---
+
+import DemoPreview from '@/components/DemoPreview.astro'
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+
+<div class="not-content">
+  <DemoPreview demo="BentoGridDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/bento-grid
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/bento-grid
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/bento-grid
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/bento-grid
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+This component also installs the `button` component from [solid-ui](https://www.solid-ui.com) as a dependency.
+
+## Examples
+
+### Vertical
+
+<div class="not-content">
+  <DemoPreview demo="BentoGridDemoVertical" />
+</div>
+
+## Import
+
+```tsx
+import { BentoCard, BentoGrid } from '@/components/ui/bento-grid'
+```
+
+## Usage
+
+```tsx
+const features = [
+  {
+    Icon: FileText,
+    name: 'Save your files',
+    description: 'We automatically save your files as you type.',
+    href: '/',
+    cta: 'Learn more',
+    background: <img alt="" class="absolute -top-20 -right-20 opacity-60" />,
+    class: 'lg:row-start-1 lg:row-end-4 lg:col-start-2 lg:col-end-3',
+  },
+]
+
+<BentoGrid class="lg:grid-rows-3">
+  <For each={features}>
+    {feature => <BentoCard {...feature} />}
+  </For>
+</BentoGrid>
+```
+
+## Props
+
+### BentoGrid
+
+| Prop       | Type          | Default | Description                                     |
+| ---------- | ------------- | ------- | ----------------------------------------------- |
+| `class`    | `string`      | `-`     | Optional CSS class name to apply custom styles. |
+| `children` | `JSX.Element` | `-`     | Content to be displayed in the grid.            |
+
+### BentoCard
+
+| Prop          | Type                            | Default | Description                                           |
+| ------------- | ------------------------------- | ------- | ----------------------------------------------------- |
+| `name`        | `string`                        | `-`     | Title of the card.                                    |
+| `class`       | `string`                        | `-`     | CSS class name to position the card in the grid.      |
+| `background`  | `JSX.Element`                   | `-`     | Background element displayed behind the card content. |
+| `Icon`        | `Component<{ class?: string }>` | `-`     | Icon component displayed at the top of the card.      |
+| `description` | `string`                        | `-`     | Description text of the card.                         |
+| `href`        | `string`                        | `-`     | Link target for the call-to-action button.            |
+| `cta`         | `string`                        | `-`     | Call-to-action button label.                          |
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/bento-grid" target="_blank">
+    magicui.design/docs/components/bento-grid
+  </a>
+</p>

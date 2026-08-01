@@ -19,7 +19,11 @@ export function PreviewPanel(props: PreviewPanelProps) {
       <button
         type="button"
         onClick={handleReplay}
-        class="absolute  top-4 right-4 z-50 inline-flex items-center rounded-lg px-3 py-1 transition-colors hover:bg-foreground/10"
+        class="
+          absolute top-4 right-4 z-50 inline-flex items-center rounded-lg px-3
+          py-1 transition-colors
+          hover:bg-foreground/10
+        "
         aria-label="重新播放"
       >
         <svg

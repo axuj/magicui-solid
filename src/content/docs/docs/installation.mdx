@@ -68,36 +68,9 @@ Or use the CLI to add the registry:
   </Fragment>
 </PackageManagerTabs>
 
-## Initialize shadcn
-
-If you haven't already, initialize shadcn in your project:
-
-<PackageManagerTabs>
-  <Fragment slot="npm">
-    ```bash
-    npx shadcn@latest init
-    ```
-  </Fragment>
-  <Fragment slot="pnpm">
-    ```bash
-    pnpm dlx shadcn@latest init
-    ```
-  </Fragment>
-  <Fragment slot="yarn">
-    ```bash
-    yarn dlx shadcn@latest init
-    ```
-  </Fragment>
-  <Fragment slot="bun">
-    ```bash
-    bunx shadcn@latest init
-    ```
-  </Fragment>
-</PackageManagerTabs>
-
 ## Install a Component
 
-Now you can install any component from the registry:
+SolidJS projects can't use `shadcn init` (it's designed for React). Instead, the base theme is distributed as a registry item (`@magicui-solid/theme`) and installed automatically as a dependency when you add any component:
 
 <PackageManagerTabs>
   <Fragment slot="npm">
@@ -122,14 +95,18 @@ Now you can install any component from the registry:
   </Fragment>
 </PackageManagerTabs>
 
-The component and its dependencies will be installed into your project.
+That's it. The CLI installs the component, its dependencies, and automatically injects the entire theme into your `app.css`: all CSS variables (`:root`/`.dark`), Tailwind v4 color mappings (`@theme inline`), radius scale, and animation keyframes (e.g. `animate-marquee`). No manual configuration required.
+
+> **Note:** If your `app.css` already contains shadcn variables, the CLI keeps your existing values and only appends what's missing.
 
 ## Manual Installation
 
 Alternatively, you can copy the component source directly from the [GitHub repository](https://github.com/axuj/magicui-solid).
 
-You'll also need to install the required dependencies:
+You'll also need to install the required dependencies and add the theme manually:
 
 ```bash
 npm install @solid-primitives/intersection-observer clsx tailwind-merge
 ```
+
+Copy the theme variables into your (see the [theme registry item):
