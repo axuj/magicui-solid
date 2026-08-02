@@ -1,4 +1,4 @@
-import type { Component, JSX } from 'solid-js'
+import type { Component } from 'solid-js'
 import { Bell, CalendarDays, ChevronLeft, ChevronRight, FileText, Share2 } from 'lucide-solid'
 import { For } from 'solid-js'
 
@@ -169,7 +169,7 @@ interface Feature {
   description: string
   href: string
   cta: string
-  background: JSX.Element
+  background: Component
   class: string
 }
 
@@ -181,7 +181,7 @@ const features: Feature[] = [
     href: '/',
     cta: 'Learn more',
     class: 'col-span-3 lg:col-span-1',
-    background: (
+    background: () => (
       <Marquee
         pauseOnHover
         class="
@@ -227,7 +227,7 @@ const features: Feature[] = [
     href: '/',
     cta: 'Learn more',
     class: 'col-span-3 lg:col-span-2',
-    background: (
+    background: () => (
       <AnimatedListDemo class="
         absolute top-4 right-2 h-75 w-full scale-75 border-none
         mask-[linear-gradient(to_top,transparent_10%,#000_100%)] transition-all
@@ -244,7 +244,7 @@ const features: Feature[] = [
     href: '/',
     cta: 'Learn more',
     class: 'col-span-3 lg:col-span-2',
-    background: (
+    background: () => (
       <AnimatedBeamMultipleOutputsDemo class="
         absolute top-4 right-2 h-75 border-none
         mask-[linear-gradient(to_top,transparent_10%,#000_100%)] transition-all
@@ -261,7 +261,7 @@ const features: Feature[] = [
     href: '/',
     cta: 'Learn more',
     class: 'col-span-3 lg:col-span-1',
-    background: (
+    background: () => (
       <div class="
         absolute top-10 right-0 origin-top scale-75 rounded-md
         mask-[linear-gradient(to_top,transparent_40%,#000_100%)] transition-all

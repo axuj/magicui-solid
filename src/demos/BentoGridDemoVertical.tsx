@@ -1,4 +1,4 @@
-import type { Component, JSX } from 'solid-js'
+import type { Component } from 'solid-js'
 import { Bell, Calendar, FileText, Globe, Search } from 'lucide-solid'
 import { For } from 'solid-js'
 
@@ -10,7 +10,7 @@ interface Feature {
   description: string
   href: string
   cta: string
-  background: JSX.Element
+  background: Component
   class: string
 }
 
@@ -22,7 +22,7 @@ const features: Feature[] = [
     href: '/',
     cta: 'Learn more',
     class: 'lg:row-start-1 lg:row-end-4 lg:col-start-2 lg:col-end-3',
-    background: <img alt="" class="absolute -top-20 -right-20 opacity-60" />,
+    background: () => <img alt="" class="absolute -top-20 -right-20 opacity-60" />,
   },
   {
     Icon: Search,
@@ -31,7 +31,7 @@ const features: Feature[] = [
     href: '/',
     cta: 'Learn more',
     class: 'lg:col-start-1 lg:col-end-2 lg:row-start-1 lg:row-end-3',
-    background: <img alt="" class="absolute -top-20 -right-20 opacity-60" />,
+    background: () => <img alt="" class="absolute -top-20 -right-20 opacity-60" />,
   },
   {
     Icon: Globe,
@@ -40,7 +40,7 @@ const features: Feature[] = [
     href: '/',
     cta: 'Learn more',
     class: 'lg:col-start-1 lg:col-end-2 lg:row-start-3 lg:row-end-4',
-    background: <img alt="" class="absolute -top-20 -right-20 opacity-60" />,
+    background: () => <img alt="" class="absolute -top-20 -right-20 opacity-60" />,
   },
   {
     Icon: Calendar,
@@ -49,7 +49,7 @@ const features: Feature[] = [
     href: '/',
     cta: 'Learn more',
     class: 'lg:col-start-3 lg:col-end-3 lg:row-start-1 lg:row-end-2',
-    background: <img alt="" class="absolute -top-20 -right-20 opacity-60" />,
+    background: () => <img alt="" class="absolute -top-20 -right-20 opacity-60" />,
   },
   {
     Icon: Bell,
@@ -58,7 +58,7 @@ const features: Feature[] = [
     href: '/',
     cta: 'Learn more',
     class: 'lg:col-start-3 lg:col-end-3 lg:row-start-2 lg:row-end-4',
-    background: <img alt="" class="absolute -top-20 -right-20 opacity-60" />,
+    background: () => <img alt="" class="absolute -top-20 -right-20 opacity-60" />,
   },
 ]
 

@@ -13,7 +13,7 @@ interface BentoGridProps extends JSX.HTMLAttributes<HTMLDivElement> {
 interface BentoCardProps extends JSX.HTMLAttributes<HTMLDivElement> {
   name: string
   class: string
-  background: JSX.Element
+  background: Component
   Icon: Component<{ class?: string }>
   description: string
   href: string
@@ -56,7 +56,7 @@ export function BentoCard(props: BentoCardProps) {
       `, local.class)}
       {...rest}
     >
-      <div>{local.background}</div>
+      <div><Dynamic component={local.background} /></div>
       <div class="p-4">
         <div class="
           pointer-events-none z-10 flex transform-gpu flex-col gap-1

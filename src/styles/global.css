@@ -6,11 +6,27 @@
 @import 'tailwindcss/utilities.css' layer(utilities);
 
 :root {
-  --sl-content-width: 50rem;
+  --content-width: 50rem;
+  --sl-content-width: var(--content-width);
+}
+
+html:root:not([data-has-sidebar]) {
+  --sl-content-width: var(--content-width);
 }
 
 [data-has-sidebar][data-has-toc] .main-pane {
-  max-width: 50rem;
+  max-width: none;
+  flex: 0 1 auto;
+  margin-inline: 0;
+  --sl-content-margin-inline: auto;
+}
+
+.content-panel {
+  padding: 1.5rem var(--sl-content-pad-x);
+}
+
+.main-frame {
+  padding-inline-start: var(--sl-content-inline-start);
 }
 
 @theme inline {
