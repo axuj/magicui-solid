@@ -1,0 +1,79 @@
+---
+title: Tweet Card
+description: A card that displays a tweet with the author's name, handle, and profile picture.
+---
+
+import DemoPreview from '@/components/DemoPreview.astro'
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+
+<div class="not-content">
+  <DemoPreview demo="TweetCardDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/client-tweet-card
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/client-tweet-card
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/client-tweet-card
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/client-tweet-card
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Import
+
+```tsx
+import { ClientTweetCard } from '@/components/ui/client-tweet-card'
+```
+
+## Usage
+
+```tsx
+<ClientTweetCard id="1441032681968212480" />
+```
+
+## Examples
+
+### Tweet Card With Image Carousel
+
+<div class="not-content">
+  <DemoPreview demo="TweetCardImagesDemo" />
+</div>
+
+### Tweet Card With Meta URL Preview
+
+<div class="not-content">
+  <DemoPreview demo="TweetCardMetaPreviewDemo" />
+</div>
+
+## Props
+
+| Prop           | Type          | Default           | Description                                     |
+| -------------- | ------------- | ----------------- | ----------------------------------------------- |
+| `id`           | `string`      | `-`               | The id of the tweet to display.                 |
+| `fallback`     | `JSX.Element` | `TweetSkeleton()` | Loading skeleton shown while fetching.          |
+| `apiUrl`       | `string`      | `-`               | Custom API URL to fetch the tweet from.         |
+| `fetchOptions` | `RequestInit` | `-`               | Options passed to the underlying `fetch`.       |
+| `onError`      | `Function`    | `-`               | Callback invoked when fetching the tweet fails. |
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/tweet-card" target="_blank">
+    magicui.design/docs/components/tweet-card
+  </a>
+</p>

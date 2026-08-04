@@ -1,0 +1,62 @@
+---
+title: Globe
+description: An autorotating, interactive, and highly performant globe made using WebGL.
+---
+
+import DemoPreview from '@/components/DemoPreview.astro'
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+
+<div class="not-content">
+  <DemoPreview demo="GlobeDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/globe
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/globe
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/globe
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/globe
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Import
+
+```tsx
+import { Globe } from '@/components/ui/globe'
+```
+
+## Usage
+
+```tsx
+<Globe />
+```
+
+## Props
+
+| Prop     | Type          | Default | Description                                                                           |
+| -------- | ------------- | ------- | ------------------------------------------------------------------------------------- |
+| `class`  | `string`      | `-`     | The css classes for the component.                                                    |
+| `config` | `COBEOptions` | `{}`    | The configuration options for the globe. More details [here](https://cobe.vercel.app) |
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/globe" target="_blank">
+    magicui.design/docs/components/globe
+  </a>
+</p>

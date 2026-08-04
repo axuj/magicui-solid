@@ -8,6 +8,10 @@ import _AnimatedBeamUnidirectionalDemo from '@/demos/AnimatedBeamUnidirectionalD
 import _AnimatedListDemo from '@/demos/AnimatedListDemo.tsx?raw'
 import _BentoGridDemo from '@/demos/BentoGridDemo.tsx?raw'
 import _BentoGridDemoVertical from '@/demos/BentoGridDemoVertical.tsx?raw'
+import _DockDemo from '@/demos/DockDemo.tsx?raw'
+import _DockDemoCustom from '@/demos/DockDemoCustom.tsx?raw'
+import _DockDemoDirection from '@/demos/DockDemoDirection.tsx?raw'
+import _GlobeDemo from '@/demos/GlobeDemo.tsx?raw'
 import _HeroVideoDialogDemo from '@/demos/HeroVideoDialogDemo.tsx?raw'
 import _HeroVideoDialogDemoTopInBottomOut from '@/demos/HeroVideoDialogDemoTopInBottomOut.tsx?raw'
 import _MarqueeDemo from '@/demos/MarqueeDemo.tsx?raw'
@@ -15,6 +19,9 @@ import _MarqueeDemo3D from '@/demos/MarqueeDemo3D.tsx?raw'
 import _MarqueeDemoVertical from '@/demos/MarqueeDemoVertical.tsx?raw'
 import _TerminalDemo from '@/demos/TerminalDemo.tsx?raw'
 import _TerminalDemo2 from '@/demos/TerminalDemo2.tsx?raw'
+import _TweetCardDemo from '@/demos/TweetCardDemo.tsx?raw'
+import _TweetCardImagesDemo from '@/demos/TweetCardImagesDemo.tsx?raw'
+import _TweetCardMetaPreviewDemo from '@/demos/TweetCardMetaPreviewDemo.tsx?raw'
 
 import { AnimatedBeamBidirectionalDemo } from '@/demos/AnimatedBeamBidirectionalDemo'
 import { AnimatedBeamDemo } from '@/demos/AnimatedBeamDemo'
@@ -24,6 +31,10 @@ import { AnimatedBeamUnidirectionalDemo } from '@/demos/AnimatedBeamUnidirection
 import { AnimatedListDemo } from '@/demos/AnimatedListDemo'
 import { BentoGridDemo } from '@/demos/BentoGridDemo'
 import { BentoGridDemoVertical } from '@/demos/BentoGridDemoVertical'
+import { DockDemo } from '@/demos/DockDemo'
+import { DockDemoCustom } from '@/demos/DockDemoCustom'
+import { DockDemoDirection } from '@/demos/DockDemoDirection'
+import { GlobeDemo } from '@/demos/GlobeDemo'
 import { HeroVideoDialogDemo } from '@/demos/HeroVideoDialogDemo'
 import { HeroVideoDialogDemoTopInBottomOut } from '@/demos/HeroVideoDialogDemoTopInBottomOut'
 import { MarqueeDemo } from '@/demos/MarqueeDemo'
@@ -31,6 +42,9 @@ import { MarqueeDemo3D } from '@/demos/MarqueeDemo3D'
 import { MarqueeDemoVertical } from '@/demos/MarqueeDemoVertical'
 import { TerminalDemo } from '@/demos/TerminalDemo'
 import { TerminalDemo2 } from '@/demos/TerminalDemo2'
+import { TweetCardDemo } from '@/demos/TweetCardDemo'
+import { TweetCardImagesDemo } from '@/demos/TweetCardImagesDemo'
+import { TweetCardMetaPreviewDemo } from '@/demos/TweetCardMetaPreviewDemo'
 
 export const demoPaths = {
   AnimatedBeamBidirectionalDemo: '/src/demos/AnimatedBeamBidirectionalDemo.tsx',
@@ -41,6 +55,10 @@ export const demoPaths = {
   AnimatedListDemo: '/src/demos/AnimatedListDemo.tsx',
   BentoGridDemo: '/src/demos/BentoGridDemo.tsx',
   BentoGridDemoVertical: '/src/demos/BentoGridDemoVertical.tsx',
+  DockDemo: '/src/demos/DockDemo.tsx',
+  DockDemoCustom: '/src/demos/DockDemoCustom.tsx',
+  DockDemoDirection: '/src/demos/DockDemoDirection.tsx',
+  GlobeDemo: '/src/demos/GlobeDemo.tsx',
   HeroVideoDialogDemo: '/src/demos/HeroVideoDialogDemo.tsx',
   HeroVideoDialogDemoTopInBottomOut: '/src/demos/HeroVideoDialogDemoTopInBottomOut.tsx',
   MarqueeDemo: '/src/demos/MarqueeDemo.tsx',
@@ -48,6 +66,9 @@ export const demoPaths = {
   MarqueeDemoVertical: '/src/demos/MarqueeDemoVertical.tsx',
   TerminalDemo: '/src/demos/TerminalDemo.tsx',
   TerminalDemo2: '/src/demos/TerminalDemo2.tsx',
+  TweetCardDemo: '/src/demos/TweetCardDemo.tsx',
+  TweetCardImagesDemo: '/src/demos/TweetCardImagesDemo.tsx',
+  TweetCardMetaPreviewDemo: '/src/demos/TweetCardMetaPreviewDemo.tsx',
 } as const
 
 export const demoRawMap = {
@@ -59,6 +80,10 @@ export const demoRawMap = {
   AnimatedListDemo: _AnimatedListDemo,
   BentoGridDemo: _BentoGridDemo,
   BentoGridDemoVertical: _BentoGridDemoVertical,
+  DockDemo: _DockDemo,
+  DockDemoCustom: _DockDemoCustom,
+  DockDemoDirection: _DockDemoDirection,
+  GlobeDemo: _GlobeDemo,
   HeroVideoDialogDemo: _HeroVideoDialogDemo,
   HeroVideoDialogDemoTopInBottomOut: _HeroVideoDialogDemoTopInBottomOut,
   MarqueeDemo: _MarqueeDemo,
@@ -66,6 +91,9 @@ export const demoRawMap = {
   MarqueeDemoVertical: _MarqueeDemoVertical,
   TerminalDemo: _TerminalDemo,
   TerminalDemo2: _TerminalDemo2,
+  TweetCardDemo: _TweetCardDemo,
+  TweetCardImagesDemo: _TweetCardImagesDemo,
+  TweetCardMetaPreviewDemo: _TweetCardMetaPreviewDemo,
 } as const
 
 export const demoComponentMap = {
@@ -77,6 +105,10 @@ export const demoComponentMap = {
   AnimatedListDemo,
   BentoGridDemo,
   BentoGridDemoVertical,
+  DockDemo,
+  DockDemoCustom,
+  DockDemoDirection,
+  GlobeDemo,
   HeroVideoDialogDemo,
   HeroVideoDialogDemoTopInBottomOut,
   MarqueeDemo,
@@ -84,4 +116,7 @@ export const demoComponentMap = {
   MarqueeDemoVertical,
   TerminalDemo,
   TerminalDemo2,
+  TweetCardDemo,
+  TweetCardImagesDemo,
+  TweetCardMetaPreviewDemo,
 } as const

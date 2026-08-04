@@ -25,19 +25,19 @@ export function AnimatedBeamMultipleInputsDemo() {
       "
       >
         <div class="flex flex-col justify-center gap-2">
-          <Circle ref={div1Ref} class="border-border">
+          <Circle ref={div1Ref}>
             <Icons.googleDrive />
           </Circle>
-          <Circle ref={div2Ref} class="border-border">
+          <Circle ref={div2Ref}>
             <Icons.googleDocs />
           </Circle>
-          <Circle ref={div3Ref} class="border-border">
+          <Circle ref={div3Ref}>
             <Icons.whatsapp />
           </Circle>
-          <Circle ref={div4Ref} class="border-border">
+          <Circle ref={div4Ref}>
             <Icons.messenger />
           </Circle>
-          <Circle ref={div5Ref} class="border-border">
+          <Circle ref={div5Ref}>
             <Icons.notion />
           </Circle>
         </div>

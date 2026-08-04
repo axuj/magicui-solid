@@ -35,6 +35,9 @@ export default defineConfig({
             { slug: 'docs/components/hero-video-dialog' },
             { slug: 'docs/components/bento-grid' },
             { slug: 'docs/components/animated-list' },
+            { slug: 'docs/components/dock' },
+            { slug: 'docs/components/globe' },
+            { slug: 'docs/components/tweet-card' },
           ],
         },
         {
@@ -48,8 +51,7 @@ export default defineConfig({
   ],
   vite: {
     resolve: {
-      alias: { '@': resolve('./src') },
-      noExternal: ['lucide-solid'],
+      alias: { '@': resolve('./src'), '~': resolve('./src') },
     },
     plugins: [tailwindcss(), demoTypesPlugin()],
   },

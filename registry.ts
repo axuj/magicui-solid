@@ -129,6 +129,12 @@ const data = {
       tailwind: { config: { theme: { extend: marqueeAnimation } } },
     }),
     uiItem({
+      name: 'dock',
+      title: 'Dock',
+      description: 'An implementation of the macOS dock using SolidJS + TailwindCSS + motion.',
+      dependencies: ['motion', 'class-variance-authority'],
+    }),
+    uiItem({
       name: 'bento-grid',
       title: 'Bento Grid',
       description: 'A bento grid layout component that showcases content in a grid of cards with hover effects.',
@@ -147,6 +153,17 @@ const data = {
       title: 'Animated Beam',
       description: 'An animated beam component that draws a gradient flow between two elements.',
       dependencies: ['motion'],
+    }),
+    uiItem({
+      name: 'globe',
+      title: 'Globe',
+      description: 'An autorotating, interactive, and highly performant globe made using WebGL.',
+      dependencies: ['cobe@0.6.5'],
+    }),
+    uiItem({
+      name: 'client-tweet-card',
+      title: 'Client Tweet Card',
+      description: 'A client-side tweet card that displays a tweet with the author\'s name, handle, and profile picture.',
     }),
   ],
 }

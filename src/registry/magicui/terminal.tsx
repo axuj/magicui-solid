@@ -189,12 +189,12 @@ export function Terminal(props: TerminalProps) {
       <div
         ref={containerRef}
         class={cn(
-          'z-0 size-full max-w-lg rounded-xl border border-border bg-background',
+          'z-0 size-full max-w-lg rounded-xl border bg-background',
           local.class,
         )}
         {...rest}
       >
-        <div class="flex flex-col gap-y-2 border-b border-border p-4">
+        <div class="flex flex-col gap-y-2 border-b p-4">
           <div class="flex flex-row gap-x-2">
             <div class="size-2 rounded-full bg-red-500" />
             <div class="size-2 rounded-full bg-yellow-500" />

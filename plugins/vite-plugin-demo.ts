@@ -22,7 +22,6 @@ export default function demoTypesPlugin(): Plugin {
       return lastContent
 
     const names = files.map(f => f.replace(/\.tsx$/, ''))
-
     const rawImportLines = names.map(n => `import _${n} from '@/demos/${n}.tsx?raw'`).join('\n')
     const compImportLines = names.map(n => `import { ${n} } from '@/demos/${n}'`).join('\n')
 

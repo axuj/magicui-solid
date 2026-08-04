@@ -1,9 +1,15 @@
 @custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
 
-@layer base, starlight, theme, components, utilities;
+@layer base, starlight, theme, black, components, utilities;
 @import 'tailwindcss/preflight.css' layer(base);
 @import 'tailwindcss/theme.css' layer(theme);
 @import 'tailwindcss/utilities.css' layer(utilities);
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+}
 
 :root {
   --content-width: 50rem;
