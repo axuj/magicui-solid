@@ -88,6 +88,22 @@ const marqueeAnimation = {
   },
 }
 
+const orbitingCirclesAnimation = {
+  animation: {
+    orbit: 'orbit calc(var(--duration) * 1s) linear infinite',
+  },
+  keyframes: {
+    orbit: {
+      '0%': {
+        transform: 'rotate(calc(var(--angle) * 1deg)) translateY(calc(var(--radius) * 1px)) rotate(calc(var(--angle) * -1deg))',
+      },
+      '100%': {
+        transform: 'rotate(calc(var(--angle) * 1deg + 360deg)) translateY(calc(var(--radius) * 1px)) rotate(calc((var(--angle) * -1deg) - 360deg))',
+      },
+    },
+  },
+}
+
 const data = {
   $schema: 'https://ui.shadcn.com/schema/registry.json',
   name: 'magicui-solid',
@@ -164,6 +180,12 @@ const data = {
       name: 'client-tweet-card',
       title: 'Client Tweet Card',
       description: 'A client-side tweet card that displays a tweet with the author\'s name, handle, and profile picture.',
+    }),
+    uiItem({
+      name: 'orbiting-circles',
+      title: 'Orbiting Circles',
+      description: 'A collection of circles which move in orbit along a circular path.',
+      tailwind: { config: { theme: { extend: orbitingCirclesAnimation } } },
     }),
   ],
 }
