@@ -187,6 +187,11 @@ const data = {
       description: 'A collection of circles which move in orbit along a circular path.',
       tailwind: { config: { theme: { extend: orbitingCirclesAnimation } } },
     }),
+    uiItem({
+      name: 'avatar-circles',
+      title: 'Avatar Circles',
+      description: 'Overlapping circles of avatars.',
+    }),
   ],
 }
 

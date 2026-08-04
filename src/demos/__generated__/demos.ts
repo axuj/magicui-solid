@@ -6,6 +6,7 @@ import _AnimatedBeamMultipleInputsDemo from '@/demos/AnimatedBeamMultipleInputsD
 import _AnimatedBeamMultipleOutputsDemo from '@/demos/AnimatedBeamMultipleOutputsDemo.tsx?raw'
 import _AnimatedBeamUnidirectionalDemo from '@/demos/AnimatedBeamUnidirectionalDemo.tsx?raw'
 import _AnimatedListDemo from '@/demos/AnimatedListDemo.tsx?raw'
+import _AvatarCirclesDemo from '@/demos/AvatarCirclesDemo.tsx?raw'
 import _BentoGridDemo from '@/demos/BentoGridDemo.tsx?raw'
 import _BentoGridDemoVertical from '@/demos/BentoGridDemoVertical.tsx?raw'
 import _DockDemo from '@/demos/DockDemo.tsx?raw'
@@ -30,6 +31,7 @@ import { AnimatedBeamMultipleInputsDemo } from '@/demos/AnimatedBeamMultipleInpu
 import { AnimatedBeamMultipleOutputsDemo } from '@/demos/AnimatedBeamMultipleOutputsDemo'
 import { AnimatedBeamUnidirectionalDemo } from '@/demos/AnimatedBeamUnidirectionalDemo'
 import { AnimatedListDemo } from '@/demos/AnimatedListDemo'
+import { AvatarCirclesDemo } from '@/demos/AvatarCirclesDemo'
 import { BentoGridDemo } from '@/demos/BentoGridDemo'
 import { BentoGridDemoVertical } from '@/demos/BentoGridDemoVertical'
 import { DockDemo } from '@/demos/DockDemo'
@@ -55,6 +57,7 @@ export const demoPaths = {
   AnimatedBeamMultipleOutputsDemo: '/src/demos/AnimatedBeamMultipleOutputsDemo.tsx',
   AnimatedBeamUnidirectionalDemo: '/src/demos/AnimatedBeamUnidirectionalDemo.tsx',
   AnimatedListDemo: '/src/demos/AnimatedListDemo.tsx',
+  AvatarCirclesDemo: '/src/demos/AvatarCirclesDemo.tsx',
   BentoGridDemo: '/src/demos/BentoGridDemo.tsx',
   BentoGridDemoVertical: '/src/demos/BentoGridDemoVertical.tsx',
   DockDemo: '/src/demos/DockDemo.tsx',
@@ -81,6 +84,7 @@ export const demoRawMap = {
   AnimatedBeamMultipleOutputsDemo: _AnimatedBeamMultipleOutputsDemo,
   AnimatedBeamUnidirectionalDemo: _AnimatedBeamUnidirectionalDemo,
   AnimatedListDemo: _AnimatedListDemo,
+  AvatarCirclesDemo: _AvatarCirclesDemo,
   BentoGridDemo: _BentoGridDemo,
   BentoGridDemoVertical: _BentoGridDemoVertical,
   DockDemo: _DockDemo,
@@ -107,6 +111,7 @@ export const demoComponentMap = {
   AnimatedBeamMultipleOutputsDemo,
   AnimatedBeamUnidirectionalDemo,
   AnimatedListDemo,
+  AvatarCirclesDemo,
   BentoGridDemo,
   BentoGridDemoVertical,
   DockDemo,

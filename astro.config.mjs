@@ -39,6 +39,7 @@ export default defineConfig({
             { slug: 'docs/components/globe' },
             { slug: 'docs/components/tweet-card' },
             { slug: 'docs/components/orbiting-circles' },
+            { slug: 'docs/components/avatar-circles' },
           ],
         },
         {

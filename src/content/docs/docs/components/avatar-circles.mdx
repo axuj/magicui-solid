@@ -1,0 +1,71 @@
+---
+title: Avatar Circles
+description: Overlapping circles of avatars.
+---
+
+import DemoPreview from '@/components/DemoPreview.astro'
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+
+<div class="not-content">
+  <DemoPreview demo="AvatarCirclesDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/avatar-circles
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/avatar-circles
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/avatar-circles
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/avatar-circles
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Import
+
+```tsx
+import { AvatarCircles } from '@/components/ui/avatar-circles'
+```
+
+## Usage
+
+```tsx
+<AvatarCircles
+  numPeople={99}
+  avatarUrls={[
+    {
+      imageUrl: 'https://avatars.githubusercontent.com/u/16860528',
+      profileUrl: 'https://github.com/dillionverma',
+    },
+  ]}
+/>
+```
+
+## Props
+
+| Prop         | Type       | Default | Description                                           |
+| ------------ | ---------- | ------- | ----------------------------------------------------- |
+| `class`      | `string`   | `-`     | Optional CSS class name to apply custom styles.       |
+| `numPeople`  | `number`   | `-`     | The number appearing in the last circle.              |
+| `avatarUrls` | `Avatar[]` | `-`     | Array of `{ imageUrl, profileUrl }` pairs to display. |
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/avatar-circles" target="_blank">
+    magicui.design/docs/components/avatar-circles
+  </a>
+</p>
