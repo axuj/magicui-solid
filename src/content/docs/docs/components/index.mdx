@@ -3,24 +3,6 @@ title: Components
 description: Browse all available components.
 ---
 
-Browse all available components.
+import ComponentsList from '@/components/ComponentsList.astro'
 
-import { Card, CardGrid } from '@astrojs/starlight/components'
-
-<CardGrid>
-  <Card title="Marquee" icon="seti:code">
-    An infinite scrolling component for text, images, or videos.
-  </Card>
-  <Card title="Terminal" icon="seti:terminal">
-    An implementation of the MacOS terminal with typing animation.
-  </Card>
-  <Card title="Bento Grid" icon="seti:grid">
-    A bento grid layout component for showcasing content in a grid of cards.
-  </Card>
-  <Card title="Orbiting Circles" icon="seti:code">
-    A collection of circles which move in orbit along a circular path.
-  </Card>
-  <Card title="Avatar Circles" icon="seti:code">
-    Overlapping circles of avatars.
-  </Card>
-</CardGrid>
+<ComponentsList />

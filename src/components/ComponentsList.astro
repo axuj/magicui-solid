@@ -1,0 +1,17 @@
+---
+import { CardGrid, LinkCard } from '@astrojs/starlight/components'
+import { getCollection } from 'astro:content'
+
+const components = (await getCollection('docs'))
+  .filter(entry => entry.id.startsWith('docs/components/') && !entry.id.endsWith('/index'))
+---
+
+<CardGrid>
+  {components.map(component => (
+    <LinkCard
+      href={`/${component.id}`}
+      title={component.data.title}
+      description={component.data.description}
+    />
+  ))}
+</CardGrid>
