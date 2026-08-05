@@ -15,6 +15,9 @@ import _DockDemoDirection from '@/demos/DockDemoDirection.tsx?raw'
 import _GlobeDemo from '@/demos/GlobeDemo.tsx?raw'
 import _HeroVideoDialogDemo from '@/demos/HeroVideoDialogDemo.tsx?raw'
 import _HeroVideoDialogDemoTopInBottomOut from '@/demos/HeroVideoDialogDemoTopInBottomOut.tsx?raw'
+import _LensDemo from '@/demos/LensDemo.tsx?raw'
+import _LensDemoDefaultPosition from '@/demos/LensDemoDefaultPosition.tsx?raw'
+import _LensDemoStatic from '@/demos/LensDemoStatic.tsx?raw'
 import _MarqueeDemo from '@/demos/MarqueeDemo.tsx?raw'
 import _MarqueeDemo3D from '@/demos/MarqueeDemo3D.tsx?raw'
 import _MarqueeDemoVertical from '@/demos/MarqueeDemoVertical.tsx?raw'
@@ -40,6 +43,9 @@ import { DockDemoDirection } from '@/demos/DockDemoDirection'
 import { GlobeDemo } from '@/demos/GlobeDemo'
 import { HeroVideoDialogDemo } from '@/demos/HeroVideoDialogDemo'
 import { HeroVideoDialogDemoTopInBottomOut } from '@/demos/HeroVideoDialogDemoTopInBottomOut'
+import { LensDemo } from '@/demos/LensDemo'
+import { LensDemoDefaultPosition } from '@/demos/LensDemoDefaultPosition'
+import { LensDemoStatic } from '@/demos/LensDemoStatic'
 import { MarqueeDemo } from '@/demos/MarqueeDemo'
 import { MarqueeDemo3D } from '@/demos/MarqueeDemo3D'
 import { MarqueeDemoVertical } from '@/demos/MarqueeDemoVertical'
@@ -66,6 +72,9 @@ export const demoPaths = {
   GlobeDemo: '/src/demos/GlobeDemo.tsx',
   HeroVideoDialogDemo: '/src/demos/HeroVideoDialogDemo.tsx',
   HeroVideoDialogDemoTopInBottomOut: '/src/demos/HeroVideoDialogDemoTopInBottomOut.tsx',
+  LensDemo: '/src/demos/LensDemo.tsx',
+  LensDemoDefaultPosition: '/src/demos/LensDemoDefaultPosition.tsx',
+  LensDemoStatic: '/src/demos/LensDemoStatic.tsx',
   MarqueeDemo: '/src/demos/MarqueeDemo.tsx',
   MarqueeDemo3D: '/src/demos/MarqueeDemo3D.tsx',
   MarqueeDemoVertical: '/src/demos/MarqueeDemoVertical.tsx',
@@ -93,6 +102,9 @@ export const demoRawMap = {
   GlobeDemo: _GlobeDemo,
   HeroVideoDialogDemo: _HeroVideoDialogDemo,
   HeroVideoDialogDemoTopInBottomOut: _HeroVideoDialogDemoTopInBottomOut,
+  LensDemo: _LensDemo,
+  LensDemoDefaultPosition: _LensDemoDefaultPosition,
+  LensDemoStatic: _LensDemoStatic,
   MarqueeDemo: _MarqueeDemo,
   MarqueeDemo3D: _MarqueeDemo3D,
   MarqueeDemoVertical: _MarqueeDemoVertical,
@@ -120,6 +132,9 @@ export const demoComponentMap = {
   GlobeDemo,
   HeroVideoDialogDemo,
   HeroVideoDialogDemoTopInBottomOut,
+  LensDemo,
+  LensDemoDefaultPosition,
+  LensDemoStatic,
   MarqueeDemo,
   MarqueeDemo3D,
   MarqueeDemoVertical,

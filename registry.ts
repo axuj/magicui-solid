@@ -192,6 +192,12 @@ const data = {
       title: 'Avatar Circles',
       description: 'Overlapping circles of avatars.',
     }),
+    uiItem({
+      name: 'lens',
+      title: 'Lens',
+      description: 'An interactive component that enables zooming into images, videos and other elements.',
+      dependencies: ['motion'],
+    }),
   ],
 }
 
