@@ -30,11 +30,13 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cobe": "0.6.5",
+    "countries-list": "^3.4.1",
     "lucide-solid": "^1.28.0",
     "motion": "^12.43.0",
     "shiki": "^4.3.1",
     "solid-js": "^1.9.5",
     "starlight-theme-black": "^0.7.1",
+    "svg-dotted-map": "^2.1.0",
     "tailwind-merge": "^3.6.0",
     "tailwindcss": "^4.3.3"
   },

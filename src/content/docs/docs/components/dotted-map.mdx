@@ -1,0 +1,153 @@
+---
+title: Dotted Map
+description: A component with a svg dotted map.
+---
+
+import DemoPreview from '@/components/DemoPreview.astro'
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+
+<div class="not-content">
+  <DemoPreview demo="DottedMapDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/dotted-map
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/dotted-map
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/dotted-map
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/dotted-map
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Examples
+
+### Smaller Dots
+
+<div class="not-content">
+  <DemoPreview demo="DottedMapDemo2" />
+</div>
+
+### Pulse Marker
+
+<div class="not-content">
+  <DemoPreview demo="DottedMapDemo3" />
+</div>
+
+## Import
+
+```tsx
+import { DottedMap } from '@/components/ui/dotted-map'
+```
+
+## Usage
+
+```tsx
+<div class="relative h-[400px] w-full overflow-hidden rounded-xl border">
+  <DottedMap />
+</div>
+```
+
+### With Custom Markers
+
+```tsx
+import { DottedMap, type Marker } from '@/components/ui/dotted-map'
+import type { TCountryCode } from 'countries-list'
+
+type CountryCode = Lowercase<TCountryCode>
+
+type MyMarker = Marker & {
+  overlay: {
+    countryCode: CountryCode
+    label: string
+  }
+}
+
+const markers: MyMarker[] = [
+  {
+    lat: 37.5665,
+    lng: 126.978,
+    size: 2.8,
+    overlay: { countryCode: 'kr', label: 'Seoul' },
+  },
+]
+
+<DottedMap<MyMarker>
+  markers={markers}
+  renderMarkerOverlay={({ marker, x, y, r }) => {
+    // Custom overlay rendering
+    return <text x={x} y={y}>{marker.overlay.label}</text>
+  }}
+/>
+```
+
+## Props
+
+| Prop                  | Type                    | Default        | Description                                                    |
+| --------------------- | ----------------------- | -------------- | -------------------------------------------------------------- |
+| `width`               | `number`                | `150`          | Width of the SVG map.                                          |
+| `height`              | `number`                | `75`           | Height of the SVG map.                                         |
+| `mapSamples`          | `number`                | `5000`         | Number of sample points for map generation.                    |
+| `markers`             | `Marker[]`              | `[]`           | Array of markers to display on the map.                        |
+| `dotColor`            | `string`                | `currentColor` | Color of the map dots.                                         |
+| `markerColor`         | `string`                | `"#FF6900"`    | Color of the markers.                                          |
+| `dotRadius`           | `number`                | `0.2`          | Radius of the map dots.                                        |
+| `stagger`             | `boolean`               | `true`         | Whether to stagger dots in alternating rows for visual effect. |
+| `pulse`               | `boolean`               | `false`        | Enables built-in pulse animation for markers.                  |
+| `renderMarkerOverlay` | `(args) => JSX.Element` | `undefined`    | Custom render function for marker overlays.                    |
+| `className`           | `string`                | `undefined`    | Additional class names applied to the SVG.                     |
+| `style`               | `CSSProperties`         | `undefined`    | Inline styles merged into the SVG.                             |
+
+## Types
+
+### Marker
+
+```ts
+interface Marker {
+  lat: number
+  lng: number
+  size?: number
+  pulse?: boolean
+}
+```
+
+Set `pulse` on `DottedMap` to animate all markers (and use `marker.pulse = false` to opt out per marker). Without the `pulse` prop, only markers with `marker.pulse = true` will pulse.
+
+The `DottedMap` component supports generic types, allowing you to extend the `Marker` interface with custom properties:
+
+```tsx
+import type { TCountryCode } from 'countries-list'
+
+type CountryCode = Lowercase<TCountryCode>
+
+type MyMarker = Marker & {
+  overlay: {
+    countryCode: CountryCode
+    label: string
+  }
+}
+
+<DottedMap<MyMarker> markers={markers} />
+```
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/dotted-map" target="_blank">
+    magicui.design/docs/components/dotted-map
+  </a>
+</p>

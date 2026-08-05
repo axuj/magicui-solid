@@ -216,6 +216,12 @@ const data = {
       description: 'A customizable, physics-based smooth cursor animation component.',
       dependencies: ['@solid-primitives/spring'],
     }),
+    uiItem({
+      name: 'dotted-map',
+      title: 'Dotted Map',
+      description: 'A component with a dotted map.',
+      dependencies: ['svg-dotted-map'],
+    }),
   ],
 }
 

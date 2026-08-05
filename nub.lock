@@ -50,6 +50,9 @@ importers:
       cobe:
         specifier: 0.6.5
         version: 0.6.5
+      countries-list:
+        specifier: ^3.4.1
+        version: 3.4.1
       lucide-solid:
         specifier: ^1.28.0
         version: 1.28.0(solid-js@1.9.14)
@@ -65,6 +68,9 @@ importers:
       starlight-theme-black:
         specifier: ^0.7.1
         version: 0.7.1(@astrojs/starlight@0.41.5(@astrojs/markdown-remark@7.2.1)(astro@7.1.5))(@emnapi/core@2.0.0-alpha.3)(@emnapi/runtime@2.0.0-alpha.3)(@types/node@24.13.3)(jiti@2.7.0)(typescript@6.0.3)(yaml@2.9.0)
+      svg-dotted-map:
+        specifier: ^2.1.0
+        version: 2.1.0
       tailwind-merge:
         specifier: ^3.6.0
         version: 3.6.0
@@ -2115,6 +2121,9 @@ packages:
     peerDependenciesMeta:
       typescript:
         optional: true
+
+  countries-list@3.4.1:
+    resolution: {integrity: sha512-sKLGAZD5EAdzQwQ19vOp/9u33MTjmZ0CkdXPYtp/An6cyIlJ/E8TwGf2FcPe1AnzHO+h7nbTfoHyXIi58Hpa+Q==}
 
   cross-spawn@7.0.6:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
@@ -4537,6 +4546,10 @@ packages:
   supports-color@9.4.0:
     resolution: {integrity: sha512-VL+lNrEoIXww1coLPOmiEmK/0sGigko5COxI09KzHc2VJXJsQ37UaQ+8quuxjDeA7+KnLGTWRyOXSLLR2Wb4jw==}
     engines: {node: '>=12'}
+
+  svg-dotted-map@2.1.0:
+    resolution: {integrity: sha512-4RnunTLPFMyQGnkeqL7BfFT+M/9disoFfDVZBq2eOfRrMgBQBmYbu09QcH/SAxez4JRmqM0UYSgo9u/cpkeykA==}
+    deprecated: This package has been renamed to piri. Please install that instead.
 
   svgo@4.0.2:
     resolution: {integrity: sha512-ekx94z1rRc5LDi6oSUaeRnYhd0UOJxdtQCL2rF8xpWxD3TPAsISWOrxezqGovqS38GRZOdpDfvQe3ts6F7nsng==}
@@ -7065,6 +7078,8 @@ snapshots:
       js-yaml: 4.3.0
       parse-json: 5.2.0
       typescript: 6.0.3
+
+  countries-list@3.4.1: {}
 
   cross-spawn@7.0.6:
     dependencies:
@@ -10130,6 +10145,8 @@ snapshots:
       has-flag: 4.0.0
 
   supports-color@9.4.0: {}
+
+  svg-dotted-map@2.1.0: {}
 
   svgo@4.0.2:
     dependencies:

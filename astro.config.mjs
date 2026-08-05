@@ -44,6 +44,7 @@ export default defineConfig({
             { slug: 'docs/components/icon-cloud' },
             { slug: 'docs/components/pointer' },
             { slug: 'docs/components/smooth-cursor' },
+            { slug: 'docs/components/dotted-map' },
           ],
         },
         {
