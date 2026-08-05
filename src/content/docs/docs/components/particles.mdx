@@ -1,0 +1,71 @@
+---
+title: Particles
+description: Particles are a fun way to add some visual flair to your website. They can be used to create a sense of depth, movement, and interactivity.
+---
+
+import DemoPreview from '@/components/DemoPreview.astro'
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+
+<div class="not-content">
+  <DemoPreview demo="ParticlesDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/particles
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/particles
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/particles
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/particles
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Import
+
+```tsx
+import { Particles } from '@/components/magicui/particles'
+```
+
+## Usage
+
+```tsx
+<div class="relative h-[500px] w-full overflow-hidden">
+  <Particles />
+</div>
+```
+
+## Props
+
+| Prop        | Type      | Default   | Description                      |
+| ----------- | --------- | --------- | -------------------------------- |
+| `class`     | `string`  | `-`       | The class name for the component |
+| `quantity`  | `number`  | `100`     | The number of particles          |
+| `staticity` | `number`  | `50`      | The staticity of the particles   |
+| `ease`      | `number`  | `50`      | The ease of the particles        |
+| `size`      | `number`  | `0.4`     | The size of the particles        |
+| `refresh`   | `boolean` | `false`   | Whether to refresh the particles |
+| `color`     | `string`  | `#ffffff` | The color of the particles       |
+| `vx`        | `number`  | `0`       | The x velocity of the particles  |
+| `vy`        | `number`  | `0`       | The y velocity of the particles  |
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/particles" target="_blank">
+    magicui.design/docs/components/particles
+  </a>
+</p>

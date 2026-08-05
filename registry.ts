@@ -117,6 +117,32 @@ const orbitingCirclesAnimation = {
   },
 }
 
+const meteorsAnimation = {
+  animation: {
+    meteor: 'meteor 5s linear infinite',
+  },
+  keyframes: {
+    meteor: {
+      '0%': {
+        transform: 'rotate(var(--angle)) translateX(0)',
+        opacity: '1',
+      },
+      '70%': { opacity: '1' },
+      '100%': {
+        transform: 'rotate(var(--angle)) translateX(-500px)',
+        opacity: '0',
+      },
+    },
+  },
+}
+
+const themeToggleViewTransitionCss = {
+  '::view-transition-old(root), ::view-transition-new(root)': {
+    'animation': 'none',
+    'mix-blend-mode': 'normal',
+  },
+}
+
 const data = {
   $schema: 'https://ui.shadcn.com/schema/registry.json',
   name: 'magicui-solid',
@@ -257,6 +283,31 @@ const data = {
       name: 'glare-hover',
       title: 'Glare Hover',
       description: 'A diagonal glare on hover using a ::before gradient and CSS variables (angle, size, duration, color).',
+    }),
+    uiItem({
+      name: 'meteors',
+      title: 'Meteors',
+      description: 'A meteor shower effect.',
+      tailwind: { config: { theme: { extend: meteorsAnimation } } },
+    }),
+    uiItem({
+      name: 'confetti',
+      title: 'Confetti',
+      description: 'Confetti animations are best used to delight your users when something special happens',
+      dependencies: ['canvas-confetti', '@types/canvas-confetti'],
+      registryDependencies: [dep('theme'), 'https://www.solid-ui.com/r/button.json'],
+    }),
+    uiItem({
+      name: 'particles',
+      title: 'Particles',
+      description: 'Particles are a fun way to add some visual flair to your website. They can be used to create a sense of depth, movement, and interactivity.',
+    }),
+    uiItem({
+      name: 'animated-theme-toggler',
+      title: 'Theme Toggler',
+      description: 'Theme toggle with View Transitions and animated clip-path masks (circle, polygons, star), optional viewport-centered origin.',
+      dependencies: ['lucide-solid'],
+      css: themeToggleViewTransitionCss,
     }),
   ],
 }

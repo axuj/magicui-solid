@@ -1,0 +1,69 @@
+---
+title: Meteors
+description: A meteor shower effect.
+---
+
+import DemoPreview from '@/components/DemoPreview.astro'
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+
+<div class="not-content">
+  <DemoPreview demo="MeteorsDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/meteors
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/meteors
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/meteors
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/meteors
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Import
+
+```tsx
+import { Meteors } from '@/components/magicui/meteors'
+```
+
+## Usage
+
+```tsx
+<div class="relative h-[500px] w-full overflow-hidden">
+  <Meteors />
+</div>
+```
+
+## Props
+
+| Prop          | Type     | Default | Description                                             |
+| ------------- | -------- | ------- | ------------------------------------------------------- |
+| `number`      | `number` | `20`    | Number of meteors                                       |
+| `minDelay`    | `number` | `0.2`   | Minimum delay in seconds before meteor animation starts |
+| `maxDelay`    | `number` | `1.2`   | Maximum delay in seconds before meteor animation starts |
+| `minDuration` | `number` | `2`     | Minimum duration in seconds for meteor animation        |
+| `maxDuration` | `number` | `10`    | Maximum duration in seconds for meteor animation        |
+| `angle`       | `number` | `215`   | Angle in degrees for meteor trajectory                  |
+| `class`       | `string` | `-`     | Optional additional CSS classes                         |
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/meteors" target="_blank">
+    magicui.design/docs/components/meteors
+  </a>
+</p>

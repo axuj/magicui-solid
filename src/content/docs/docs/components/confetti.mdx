@@ -1,0 +1,164 @@
+---
+title: Confetti
+description: Confetti animations are best used to delight your users when something special happens
+---
+
+import DemoPreview from '@/components/DemoPreview.astro'
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+
+<div class="not-content">
+  <DemoPreview demo="ConfettiDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/confetti
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/confetti
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/confetti
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/confetti
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Usage
+
+```tsx
+import { Confetti, type ConfettiRef } from '@/components/magicui/confetti'
+
+export function ConfettiDemo() {
+  let confettiRef: ConfettiRef | undefined
+
+  return (
+    <div>
+      <Confetti
+        ref={(api) => {
+          confettiRef = api
+        }}
+        manualstart
+      />
+      <button
+        onClick={() => {
+          confettiRef?.fire()
+        }}
+      >
+        Trigger Confetti
+      </button>
+    </div>
+  )
+}
+```
+
+## Examples
+
+### Basic Cannon
+
+<div class="not-content">
+  <DemoPreview demo="ConfettiBasicCannonDemo" />
+</div>
+
+### Random Direction
+
+<div class="not-content">
+  <DemoPreview demo="ConfettiRandomDirectionDemo" />
+</div>
+
+### Fireworks
+
+<div class="not-content">
+  <DemoPreview demo="ConfettiFireworksDemo" />
+</div>
+
+### Side Cannons
+
+<div class="not-content">
+  <DemoPreview demo="ConfettiSideCannonsDemo" />
+</div>
+
+### Stars
+
+<div class="not-content">
+  <DemoPreview demo="ConfettiStarsDemo" />
+</div>
+
+### Custom Shapes
+
+<div class="not-content">
+  <DemoPreview demo="ConfettiCustomShapesDemo" />
+</div>
+
+### Emoji
+
+<div class="not-content">
+  <DemoPreview demo="ConfettiEmojiDemo" />
+</div>
+
+## Props
+
+### Confetti
+
+| Prop            | Type                         | Default                             | Description                                                              |
+| --------------- | ---------------------------- | ----------------------------------- | ------------------------------------------------------------------------ |
+| `ref`           | `(api: ConfettiRef) => void` | `-`                                 | Callback exposing an imperative `fire(options?: ConfettiOptions)` method |
+| `options`       | `ConfettiOptions`            | `{}`                                | Default options for automatic or imperative confetti triggers            |
+| `globalOptions` | `ConfettiGlobalOptions`      | `{ resize: true, useWorker: true }` | Global options passed to `canvas-confetti.create()`                      |
+| `manualstart`   | `Boolean`                    | `false`                             | Prevents automatic confetti firing on component mount                    |
+| `class`         | `String`                     | `undefined`                         | Custom CSS classes applied to the canvas element                         |
+
+### ConfettiRef
+
+| Method | Parameters                  | Return Type            | Description                                                   |
+| ------ | --------------------------- | ---------------------- | ------------------------------------------------------------- |
+| `fire` | `options?: ConfettiOptions` | `Promise<void> / void` | Imperatively triggers a confetti burst on the canvas instance |
+
+### ConfettiOptions
+
+| Field           | Type                       | Default                        | Description                                             |
+| --------------- | -------------------------- | ------------------------------ | ------------------------------------------------------- |
+| `particleCount` | `Integer`                  | `50`                           | Number of confetti particles to launch                  |
+| `angle`         | `Number`                   | `90`                           | Launch angle in degrees                                 |
+| `spread`        | `Number`                   | `45`                           | Spread angle in degrees                                 |
+| `startVelocity` | `Number`                   | `45`                           | Initial particle velocity                               |
+| `decay`         | `Number`                   | `0.9`                          | Velocity decay rate                                     |
+| `gravity`       | `Number`                   | `1`                            | Gravity applied to particles                            |
+| `drift`         | `Number`                   | `0`                            | Horizontal drift factor                                 |
+| `flat`          | `Boolean`                  | `false`                        | Renders flat 2D shapes                                  |
+| `ticks`         | `Number`                   | `200`                          | Number of animation frames confetti lasts               |
+| `origin`        | `{ x: number, y: number }` | `{ x: 0.5, y: 0.5 }`           | Normalized viewport origin coordinates (`0.0` to `1.0`) |
+| `colors`        | `Array of Strings`         | `HEX array`                    | Custom HEX color palette                                |
+| `shapes`        | `Array of Strings`         | `['square', 'circle', 'star']` | Particle shapes or custom text shapes                   |
+| `zIndex`        | `Integer`                  | `9999`                         | Z-index of the confetti burst                           |
+| `scalar`        | `Number`                   | `1`                            | Scaling factor for particle dimensions                  |
+
+### ConfettiButton
+
+| Prop       | Type                                      | Default | Description                                       |
+| ---------- | ----------------------------------------- | ------- | ------------------------------------------------- |
+| `options`  | `ConfettiOptions & ConfettiGlobalOptions` | `{}`    | Options for the confetti launched on button click |
+| `children` | `JSX.Element`                             | `null`  | Button label and child elements                   |
+
+## Credits
+
+- Credit to [Bankk](https://www.x.com/bankkroll_eth)
+- Inspired by [canvas-confetti](https://www.npmjs.com/package/canvas-confetti)
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/confetti" target="_blank">
+    magicui.design/docs/components/confetti
+  </a>
+</p>
