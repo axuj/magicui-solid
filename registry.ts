@@ -88,6 +88,19 @@ const marqueeAnimation = {
   },
 }
 
+const shineBorderAnimation = {
+  animation: {
+    shine: 'shine var(--duration) infinite linear',
+  },
+  keyframes: {
+    shine: {
+      '0%': { 'background-position': '0% 0%' },
+      '50%': { 'background-position': '100% 100%' },
+      '100%': { 'background-position': '0% 0%' },
+    },
+  },
+}
+
 const orbitingCirclesAnimation = {
   animation: {
     orbit: 'orbit calc(var(--duration) * 1s) linear infinite',
@@ -221,6 +234,29 @@ const data = {
       title: 'Dotted Map',
       description: 'A component with a dotted map.',
       dependencies: ['svg-dotted-map'],
+    }),
+    uiItem({
+      name: 'border-beam',
+      title: 'Border Beam',
+      description: 'An animated beam of light which travels along the border of its container.',
+      dependencies: ['motion'],
+    }),
+    uiItem({
+      name: 'shine-border',
+      title: 'Shine Border',
+      description: 'Shine border is an animated background border effect.',
+      tailwind: { config: { theme: { extend: shineBorderAnimation } } },
+    }),
+    uiItem({
+      name: 'magic-card',
+      title: 'Magic Card',
+      description: 'A spotlight effect that follows your mouse cursor and highlights borders on hover.',
+      dependencies: ['motion', '@solid-primitives/spring'],
+    }),
+    uiItem({
+      name: 'glare-hover',
+      title: 'Glare Hover',
+      description: 'A diagonal glare on hover using a ::before gradient and CSS variables (angle, size, duration, color).',
     }),
   ],
 }

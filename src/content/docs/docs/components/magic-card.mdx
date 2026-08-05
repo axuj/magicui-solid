@@ -1,0 +1,89 @@
+---
+title: Magic Card
+description: A spotlight effect that follows your mouse cursor and highlights borders on hover.
+---
+
+import DemoPreview from '@/components/DemoPreview.astro'
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+
+<div class="not-content">
+  <DemoPreview demo="MagicCardDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash 
+    npx shadcn@latest add @magicui-solid/magic-card
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/magic-card
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/magic-card
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/magic-card
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Examples
+
+### Orb
+
+<div class="not-content">
+  <DemoPreview demo="MagicCardDemo2" />
+</div>
+
+## Import
+
+```tsx
+import { MagicCard } from "@/components/magicui/magic-card";
+```
+
+## Usage
+
+```tsx
+<MagicCard>
+  <div class="p-4">
+    <p>Hello World</p>
+    <span>Hover me</span>
+  </div>
+</MagicCard>
+```
+
+## Props
+
+### MagicCard
+
+| Prop name         | Type                 | Default      | Description                                        |
+| ----------------- | -------------------- | ------------ | -------------------------------------------------- |
+| `children`        | `JSX.Element`        | `-`          | The content to be rendered inside the card         |
+| `class`           | `string`             | `-`          | Additional CSS classes to apply to the card        |
+| `mode`            | `"gradient"`/`"orb"` | `"gradient"` | Display mode: gradient or orb effect               |
+| `gradientSize`    | `number`             | `200`        | Size of the gradient effect                        |
+| `gradientColor`   | `string`             | `#262626`    | Color of the gradient effect                       |
+| `gradientOpacity` | `number`             | `0.8`        | Opacity of the gradient effect                     |
+| `gradientFrom`    | `string`             | `#9E7AFF`    | Start color of the gradient border                 |
+| `gradientTo`      | `string`             | `#FE8BBB`    | End color of the gradient border                   |
+| `glowFrom`        | `string`             | `#ee4f27`    | Start color of the orb glow effect (orb mode only) |
+| `glowTo`          | `string`             | `#6b21ef`    | End color of the orb glow effect (orb mode only)   |
+| `glowAngle`       | `number`             | `90`         | Angle of the orb glow gradient (orb mode only)     |
+| `glowSize`        | `number`             | `420`        | Size of the orb glow effect (orb mode only)        |
+| `glowBlur`        | `number`             | `60`         | Blur amount of the orb glow effect (orb mode only) |
+| `glowOpacity`     | `number`             | `0.9`        | Opacity of the orb glow effect (orb mode only)     |
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/magic-card" target="_blank">
+    magicui.design/docs/components/magic-card
+  </a>
+</p>

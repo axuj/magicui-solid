@@ -1,0 +1,95 @@
+---
+title: Border Beam
+description: An animated beam of light which travels along the border of its container.
+---
+
+import DemoPreview from '@/components/DemoPreview.astro'
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+
+<div class="not-content">
+  <DemoPreview demo="BorderBeamDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/border-beam
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/border-beam
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/border-beam
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/border-beam
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Examples
+
+### 2 Border Beams
+
+<div class="not-content">
+  <DemoPreview demo="BorderBeamDemo2" />
+</div>
+
+### Reverse
+
+<div class="not-content">
+  <DemoPreview demo="BorderBeamDemo3" />
+</div>
+
+### Spring Animation
+
+<div class="not-content">
+  <DemoPreview demo="BorderBeamDemo4" />
+</div>
+
+## Import
+
+```tsx
+import { BorderBeam } from '@/components/magicui/border-beam'
+```
+
+## Usage
+
+```tsx
+<div class="relative h-[500px] w-full overflow-hidden">
+  <BorderBeam />
+</div>
+```
+
+## Props
+
+### BorderBeam
+
+| Prop            | Type            | Default   | Description                            |
+| --------------- | --------------- | --------- | -------------------------------------- |
+| `class`         | `string`        | `-`       | Custom class to apply to the component |
+| `size`          | `number`        | `50`      | Size of the beam                       |
+| `duration`      | `number`        | `6`       | Duration of the animation in seconds   |
+| `delay`         | `number`        | `0`       | Delay before the animation starts      |
+| `colorFrom`     | `string`        | `#ffaa40` | Start color of the beam gradient       |
+| `colorTo`       | `string`        | `#9c40ff` | End color of the beam gradient         |
+| `transition`    | `Transition`    | `-`       | Custom motion transition configuration |
+| `style`         | `CSSProperties` | `-`       | Custom CSS styles to apply             |
+| `reverse`       | `boolean`       | `false`   | Whether to reverse animation direction |
+| `initialOffset` | `number`        | `0`       | Initial offset position (0-100)        |
+| `borderWidth`   | `number`        | `1`       | Border width of the beam               |
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/border-beam" target="_blank">
+    magicui.design/docs/components/border-beam
+  </a>
+</p>

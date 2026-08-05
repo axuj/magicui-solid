@@ -51,6 +51,10 @@ export default defineConfig({
           label: 'Special Effects',
           items: [
             { slug: 'docs/components/animated-beam' },
+            { slug: 'docs/components/border-beam' },
+            { slug: 'docs/components/shine-border' },
+            { slug: 'docs/components/magic-card' },
+            { slug: 'docs/components/glare-hover' },
           ],
         },
       ],

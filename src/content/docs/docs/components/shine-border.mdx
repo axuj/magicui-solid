@@ -1,0 +1,69 @@
+---
+title: Shine Border
+description: Shine border is an animated background border effect.
+---
+
+import DemoPreview from '@/components/DemoPreview.astro'
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+
+<div class="not-content">
+  <DemoPreview demo="ShineBorderDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```
+    bash npx shadcn@latest add @magicui-solid/shine-border 
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash pnpm dlx shadcn@latest add @magicui-solid/shine-border ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash yarn dlx shadcn@latest add @magicui-solid/shine-border ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash bunx shadcn@latest add @magicui-solid/shine-border ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Examples
+
+### Monotone
+
+<div class="not-content">
+  <DemoPreview demo="ShineBorderDemo2" />
+</div>
+
+## Import
+
+```tsx
+import { ShineBorder } from "@/components/magicui/shine-border";
+```
+
+## Usage
+
+```tsx
+<div class="relative h-[500px] w-full overflow-hidden">
+  <ShineBorder />
+</div>
+```
+
+## Props
+
+| Prop          | Type                | Default     | Description                                                         |
+| ------------- | ------------------- | ----------- | ------------------------------------------------------------------- |
+| `class`       | `string`            | `-`         | The class name to be applied to the component.                      |
+| `style`       | `CSSProperties`     | `-`         | Additional styles to be applied to the component.                   |
+| `duration`    | `number`            | `14`        | Defines the animation duration to be applied on the shining border. |
+| `shineColor`  | `string`/`string[]` | `"#000000"` | Color of the border, can be a single color or an array of colors.   |
+| `borderWidth` | `number`            | `1`         | Width of the border in pixels.                                      |
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/shine-border" target="_blank">
+    magicui.design/docs/components/shine-border
+  </a>
+</p>
