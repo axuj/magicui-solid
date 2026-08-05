@@ -1,0 +1,67 @@
+---
+title: Pointer
+description: A component that displays a pointer when hovering over an element.
+---
+
+import DemoPreview from '@/components/DemoPreview.astro'
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+
+<div class="not-content">
+  <DemoPreview demo="PointerDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/pointer
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/pointer
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/pointer
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/pointer
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Import
+
+```tsx
+import { Pointer } from '@/components/ui/pointer'
+```
+
+## Usage
+
+```tsx
+<div class="relative">
+  <Pointer />
+</div>
+```
+
+Add the Pointer as a child of any element to enable a custom pointer when hovering over it. You can pass custom children to render as the pointer; by default a cursor arrow SVG is shown.
+
+## Props
+
+| Prop       | Type          | Default | Description                                                             |
+| ---------- | ------------- | ------- | ----------------------------------------------------------------------- |
+| `children` | `JSX.Element` | `-`     | Custom content rendered as the pointer. Defaults to a cursor arrow SVG. |
+| `class`    | `string`      | `-`     | Optional CSS class applied to the default pointer SVG.                  |
+| `style`    | `object`      | `-`     | Inline styles merged into the pointer element, overriding top/left.     |
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/pointer" target="_blank">
+    magicui.design/docs/components/pointer
+  </a>
+</p>

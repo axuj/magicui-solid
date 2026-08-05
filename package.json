@@ -9,6 +9,7 @@
     "dev": "astro dev",
     "build": "nub scripts/build-registry.ts && nubx shadcn build __generated__/registry.json && astro build",
     "preview": "astro preview",
+    "ts-check": "tsc --noEmit",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "astro": "astro",

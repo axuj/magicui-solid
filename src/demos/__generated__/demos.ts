@@ -25,6 +25,7 @@ import _MarqueeDemo from '@/demos/MarqueeDemo.tsx?raw'
 import _MarqueeDemo3D from '@/demos/MarqueeDemo3D.tsx?raw'
 import _MarqueeDemoVertical from '@/demos/MarqueeDemoVertical.tsx?raw'
 import _OrbitingCirclesDemo from '@/demos/OrbitingCirclesDemo.tsx?raw'
+import _PointerDemo from '@/demos/PointerDemo.tsx?raw'
 import _TerminalDemo from '@/demos/TerminalDemo.tsx?raw'
 import _TerminalDemo2 from '@/demos/TerminalDemo2.tsx?raw'
 import _TweetCardDemo from '@/demos/TweetCardDemo.tsx?raw'
@@ -56,6 +57,7 @@ import { MarqueeDemo } from '@/demos/MarqueeDemo'
 import { MarqueeDemo3D } from '@/demos/MarqueeDemo3D'
 import { MarqueeDemoVertical } from '@/demos/MarqueeDemoVertical'
 import { OrbitingCirclesDemo } from '@/demos/OrbitingCirclesDemo'
+import { PointerDemo } from '@/demos/PointerDemo'
 import { TerminalDemo } from '@/demos/TerminalDemo'
 import { TerminalDemo2 } from '@/demos/TerminalDemo2'
 import { TweetCardDemo } from '@/demos/TweetCardDemo'
@@ -88,6 +90,7 @@ export const demoPaths = {
   MarqueeDemo3D: '/src/demos/MarqueeDemo3D.tsx',
   MarqueeDemoVertical: '/src/demos/MarqueeDemoVertical.tsx',
   OrbitingCirclesDemo: '/src/demos/OrbitingCirclesDemo.tsx',
+  PointerDemo: '/src/demos/PointerDemo.tsx',
   TerminalDemo: '/src/demos/TerminalDemo.tsx',
   TerminalDemo2: '/src/demos/TerminalDemo2.tsx',
   TweetCardDemo: '/src/demos/TweetCardDemo.tsx',
@@ -121,6 +124,7 @@ export const demoRawMap = {
   MarqueeDemo3D: _MarqueeDemo3D,
   MarqueeDemoVertical: _MarqueeDemoVertical,
   OrbitingCirclesDemo: _OrbitingCirclesDemo,
+  PointerDemo: _PointerDemo,
   TerminalDemo: _TerminalDemo,
   TerminalDemo2: _TerminalDemo2,
   TweetCardDemo: _TweetCardDemo,
@@ -154,6 +158,7 @@ export const demoComponentMap = {
   MarqueeDemo3D,
   MarqueeDemoVertical,
   OrbitingCirclesDemo,
+  PointerDemo,
   TerminalDemo,
   TerminalDemo2,
   TweetCardDemo,

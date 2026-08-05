@@ -42,6 +42,7 @@ export default defineConfig({
             { slug: 'docs/components/avatar-circles' },
             { slug: 'docs/components/lens' },
             { slug: 'docs/components/icon-cloud' },
+            { slug: 'docs/components/pointer' },
           ],
         },
         {

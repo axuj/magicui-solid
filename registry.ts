@@ -204,6 +204,12 @@ const data = {
       description: 'An interactive 3D tag cloud component.',
       registryDependencies: [dep('theme'), 'https://www.solid-ui.com/r/button.json'],
     }),
+    uiItem({
+      name: 'pointer',
+      title: 'Pointer',
+      description: 'A custom pointer component that displays an animated cursor when hovering over an element.',
+      dependencies: ['motion'],
+    }),
   ],
 }
 
