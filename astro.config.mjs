@@ -43,6 +43,7 @@ export default defineConfig({
             { slug: 'docs/components/lens' },
             { slug: 'docs/components/icon-cloud' },
             { slug: 'docs/components/pointer' },
+            { slug: 'docs/components/smooth-cursor' },
           ],
         },
         {

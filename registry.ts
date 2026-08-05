@@ -210,6 +210,12 @@ const data = {
       description: 'A custom pointer component that displays an animated cursor when hovering over an element.',
       dependencies: ['motion'],
     }),
+    uiItem({
+      name: 'smooth-cursor',
+      title: 'Smooth Cursor',
+      description: 'A customizable, physics-based smooth cursor animation component.',
+      dependencies: ['@solid-primitives/spring'],
+    }),
   ],
 }
 

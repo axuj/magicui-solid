@@ -15,17 +15,18 @@ import _DockDemoDirection from '@/demos/DockDemoDirection.tsx?raw'
 import _GlobeDemo from '@/demos/GlobeDemo.tsx?raw'
 import _HeroVideoDialogDemo from '@/demos/HeroVideoDialogDemo.tsx?raw'
 import _HeroVideoDialogDemoTopInBottomOut from '@/demos/HeroVideoDialogDemoTopInBottomOut.tsx?raw'
-import _LensDemo from '@/demos/LensDemo.tsx?raw'
-import _LensDemoDefaultPosition from '@/demos/LensDemoDefaultPosition.tsx?raw'
-import _LensDemoStatic from '@/demos/LensDemoStatic.tsx?raw'
 import _IconCloudDemo from '@/demos/IconCloudDemo.tsx?raw'
 import _IconCloudIconsDemo from '@/demos/IconCloudIconsDemo.tsx?raw'
 import _IconCloudImagesDemo from '@/demos/IconCloudImagesDemo.tsx?raw'
+import _LensDemo from '@/demos/LensDemo.tsx?raw'
+import _LensDemoDefaultPosition from '@/demos/LensDemoDefaultPosition.tsx?raw'
+import _LensDemoStatic from '@/demos/LensDemoStatic.tsx?raw'
 import _MarqueeDemo from '@/demos/MarqueeDemo.tsx?raw'
 import _MarqueeDemo3D from '@/demos/MarqueeDemo3D.tsx?raw'
 import _MarqueeDemoVertical from '@/demos/MarqueeDemoVertical.tsx?raw'
 import _OrbitingCirclesDemo from '@/demos/OrbitingCirclesDemo.tsx?raw'
 import _PointerDemo from '@/demos/PointerDemo.tsx?raw'
+import _SmoothCursorDemo from '@/demos/SmoothCursorDemo.tsx?raw'
 import _TerminalDemo from '@/demos/TerminalDemo.tsx?raw'
 import _TerminalDemo2 from '@/demos/TerminalDemo2.tsx?raw'
 import _TweetCardDemo from '@/demos/TweetCardDemo.tsx?raw'
@@ -47,17 +48,18 @@ import { DockDemoDirection } from '@/demos/DockDemoDirection'
 import { GlobeDemo } from '@/demos/GlobeDemo'
 import { HeroVideoDialogDemo } from '@/demos/HeroVideoDialogDemo'
 import { HeroVideoDialogDemoTopInBottomOut } from '@/demos/HeroVideoDialogDemoTopInBottomOut'
-import { LensDemo } from '@/demos/LensDemo'
-import { LensDemoDefaultPosition } from '@/demos/LensDemoDefaultPosition'
-import { LensDemoStatic } from '@/demos/LensDemoStatic'
 import { IconCloudDemo } from '@/demos/IconCloudDemo'
 import { IconCloudIconsDemo } from '@/demos/IconCloudIconsDemo'
 import { IconCloudImagesDemo } from '@/demos/IconCloudImagesDemo'
+import { LensDemo } from '@/demos/LensDemo'
+import { LensDemoDefaultPosition } from '@/demos/LensDemoDefaultPosition'
+import { LensDemoStatic } from '@/demos/LensDemoStatic'
 import { MarqueeDemo } from '@/demos/MarqueeDemo'
 import { MarqueeDemo3D } from '@/demos/MarqueeDemo3D'
 import { MarqueeDemoVertical } from '@/demos/MarqueeDemoVertical'
 import { OrbitingCirclesDemo } from '@/demos/OrbitingCirclesDemo'
 import { PointerDemo } from '@/demos/PointerDemo'
+import { SmoothCursorDemo } from '@/demos/SmoothCursorDemo'
 import { TerminalDemo } from '@/demos/TerminalDemo'
 import { TerminalDemo2 } from '@/demos/TerminalDemo2'
 import { TweetCardDemo } from '@/demos/TweetCardDemo'
@@ -80,17 +82,18 @@ export const demoPaths = {
   GlobeDemo: '/src/demos/GlobeDemo.tsx',
   HeroVideoDialogDemo: '/src/demos/HeroVideoDialogDemo.tsx',
   HeroVideoDialogDemoTopInBottomOut: '/src/demos/HeroVideoDialogDemoTopInBottomOut.tsx',
-  LensDemo: '/src/demos/LensDemo.tsx',
-  LensDemoDefaultPosition: '/src/demos/LensDemoDefaultPosition.tsx',
-  LensDemoStatic: '/src/demos/LensDemoStatic.tsx',
   IconCloudDemo: '/src/demos/IconCloudDemo.tsx',
   IconCloudIconsDemo: '/src/demos/IconCloudIconsDemo.tsx',
   IconCloudImagesDemo: '/src/demos/IconCloudImagesDemo.tsx',
+  LensDemo: '/src/demos/LensDemo.tsx',
+  LensDemoDefaultPosition: '/src/demos/LensDemoDefaultPosition.tsx',
+  LensDemoStatic: '/src/demos/LensDemoStatic.tsx',
   MarqueeDemo: '/src/demos/MarqueeDemo.tsx',
   MarqueeDemo3D: '/src/demos/MarqueeDemo3D.tsx',
   MarqueeDemoVertical: '/src/demos/MarqueeDemoVertical.tsx',
   OrbitingCirclesDemo: '/src/demos/OrbitingCirclesDemo.tsx',
   PointerDemo: '/src/demos/PointerDemo.tsx',
+  SmoothCursorDemo: '/src/demos/SmoothCursorDemo.tsx',
   TerminalDemo: '/src/demos/TerminalDemo.tsx',
   TerminalDemo2: '/src/demos/TerminalDemo2.tsx',
   TweetCardDemo: '/src/demos/TweetCardDemo.tsx',
@@ -114,17 +117,18 @@ export const demoRawMap = {
   GlobeDemo: _GlobeDemo,
   HeroVideoDialogDemo: _HeroVideoDialogDemo,
   HeroVideoDialogDemoTopInBottomOut: _HeroVideoDialogDemoTopInBottomOut,
-  LensDemo: _LensDemo,
-  LensDemoDefaultPosition: _LensDemoDefaultPosition,
-  LensDemoStatic: _LensDemoStatic,
   IconCloudDemo: _IconCloudDemo,
   IconCloudIconsDemo: _IconCloudIconsDemo,
   IconCloudImagesDemo: _IconCloudImagesDemo,
+  LensDemo: _LensDemo,
+  LensDemoDefaultPosition: _LensDemoDefaultPosition,
+  LensDemoStatic: _LensDemoStatic,
   MarqueeDemo: _MarqueeDemo,
   MarqueeDemo3D: _MarqueeDemo3D,
   MarqueeDemoVertical: _MarqueeDemoVertical,
   OrbitingCirclesDemo: _OrbitingCirclesDemo,
   PointerDemo: _PointerDemo,
+  SmoothCursorDemo: _SmoothCursorDemo,
   TerminalDemo: _TerminalDemo,
   TerminalDemo2: _TerminalDemo2,
   TweetCardDemo: _TweetCardDemo,
@@ -148,17 +152,18 @@ export const demoComponentMap = {
   GlobeDemo,
   HeroVideoDialogDemo,
   HeroVideoDialogDemoTopInBottomOut,
-  LensDemo,
-  LensDemoDefaultPosition,
-  LensDemoStatic,
   IconCloudDemo,
   IconCloudIconsDemo,
   IconCloudImagesDemo,
+  LensDemo,
+  LensDemoDefaultPosition,
+  LensDemoStatic,
   MarqueeDemo,
   MarqueeDemo3D,
   MarqueeDemoVertical,
   OrbitingCirclesDemo,
   PointerDemo,
+  SmoothCursorDemo,
   TerminalDemo,
   TerminalDemo2,
   TweetCardDemo,

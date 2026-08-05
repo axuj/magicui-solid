@@ -32,6 +32,9 @@ importers:
       '@solid-primitives/intersection-observer':
         specifier: ^2.2.5
         version: 2.2.5(solid-js@1.9.14)
+      '@solid-primitives/spring':
+        specifier: ^0.1.2
+        version: 0.1.2(solid-js@1.9.14)
       '@tailwindcss/vite':
         specifier: ^4.3.3
         version: 4.3.3(vite@8.1.5(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0))
@@ -1448,6 +1451,11 @@ packages:
 
   '@solid-primitives/rootless@1.5.4':
     resolution: {integrity: sha512-TOIZa1VUfVJ+9nkCcRajw3U4t9vBOP1HxX1WHNTbXq32mXwlqTvUnC4CRIilohcryBkT9u2ZkhUDSHRTaGp55g==}
+    peerDependencies:
+      solid-js: ^1.6.12
+
+  '@solid-primitives/spring@0.1.2':
+    resolution: {integrity: sha512-t1pI9cIScYBmRFpy50duLVvkTJqulgdxveHNONvzVvwZbjRCEbvHseK6pq6ipzpQxq12nZ2xhK96pDAaoXXg1Q==}
     peerDependencies:
       solid-js: ^1.6.12
 
@@ -6318,6 +6326,10 @@ snapshots:
   '@solid-primitives/rootless@1.5.4(solid-js@1.9.14)':
     dependencies:
       '@solid-primitives/utils': 6.4.1(solid-js@1.9.14)
+      solid-js: 1.9.14
+
+  '@solid-primitives/spring@0.1.2(solid-js@1.9.14)':
+    dependencies:
       solid-js: 1.9.14
 
   '@solid-primitives/static-store@0.1.4(solid-js@1.9.14)':
