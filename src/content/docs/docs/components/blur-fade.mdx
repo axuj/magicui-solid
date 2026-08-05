@@ -1,0 +1,80 @@
+---
+title: Blur Fade
+description: Blur fade in and out animation. Used to smoothly fade in and out content.
+---
+
+import DemoPreview from '@/components/DemoPreview.astro'
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+
+<div class="not-content">
+  <DemoPreview demo="BlurFadeDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/blur-fade
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/blur-fade
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/blur-fade
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/blur-fade
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Examples
+
+<div class="not-content">
+  <DemoPreview demo="BlurFadeTextDemo" />
+</div>
+
+## Import
+
+```tsx
+import { BlurFade } from '@/components/magicui/blur-fade'
+```
+
+## Usage
+
+```tsx
+<BlurFade>
+  <img src="https://picsum.photos/300/200?random=1" alt="Sample 1" />
+  <img src="https://picsum.photos/300/200?random=2" alt="Sample 2" />
+  <img src="https://picsum.photos/300/200?random=3" alt="Sample 3" />
+</BlurFade>
+```
+
+## Props
+
+| Prop           | Type          | Default   | Description                                                 |
+| -------------- | ------------- | --------- | ----------------------------------------------------------- |
+| `children`     | `JSX.Element` | `-`       | The content to be animated                                  |
+| `class`        | `string`      | `-`       | The class name to be applied to the component               |
+| `variant`      | `object`      | `-`       | Custom animation variants for the motion component          |
+| `duration`     | `number`      | `0.4`     | Duration (seconds) for the animation                        |
+| `delay`        | `number`      | `0`       | Delay (seconds) before the animation starts                 |
+| `offset`       | `number`      | `6`       | Offset for the animation                                    |
+| `direction`    | `string`      | `"down"`  | Direction for the animation (`up`, `down`, `left`, `right`) |
+| `inView`       | `boolean`     | `false`   | Whether to trigger animation when component is in view      |
+| `inViewMargin` | `string`      | `"-50px"` | Margin for triggering the in-view animation                 |
+| `blur`         | `string`      | `"6px"`   | Amount of blur to apply during the animation                |
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/blur-fade" target="_blank">
+    magicui.design/docs/components/blur-fade
+  </a>
+</p>

@@ -309,6 +309,12 @@ const data = {
       dependencies: ['lucide-solid'],
       css: themeToggleViewTransitionCss,
     }),
+    uiItem({
+      name: 'blur-fade',
+      title: 'Blur Fade',
+      description: 'Blur fade in and out animation. Used to smoothly fade in and out content.',
+      dependencies: ['motion'],
+    }),
   ],
 }
 

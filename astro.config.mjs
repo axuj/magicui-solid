@@ -61,6 +61,12 @@ export default defineConfig({
             { slug: 'docs/components/animated-theme-toggler' },
           ],
         },
+        {
+          label: 'Animations',
+          items: [
+            { slug: 'docs/components/blur-fade' },
+          ],
+        },
       ],
     }),
   ],
