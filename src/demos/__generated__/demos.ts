@@ -18,6 +18,9 @@ import _HeroVideoDialogDemoTopInBottomOut from '@/demos/HeroVideoDialogDemoTopIn
 import _LensDemo from '@/demos/LensDemo.tsx?raw'
 import _LensDemoDefaultPosition from '@/demos/LensDemoDefaultPosition.tsx?raw'
 import _LensDemoStatic from '@/demos/LensDemoStatic.tsx?raw'
+import _IconCloudDemo from '@/demos/IconCloudDemo.tsx?raw'
+import _IconCloudIconsDemo from '@/demos/IconCloudIconsDemo.tsx?raw'
+import _IconCloudImagesDemo from '@/demos/IconCloudImagesDemo.tsx?raw'
 import _MarqueeDemo from '@/demos/MarqueeDemo.tsx?raw'
 import _MarqueeDemo3D from '@/demos/MarqueeDemo3D.tsx?raw'
 import _MarqueeDemoVertical from '@/demos/MarqueeDemoVertical.tsx?raw'
@@ -46,6 +49,9 @@ import { HeroVideoDialogDemoTopInBottomOut } from '@/demos/HeroVideoDialogDemoTo
 import { LensDemo } from '@/demos/LensDemo'
 import { LensDemoDefaultPosition } from '@/demos/LensDemoDefaultPosition'
 import { LensDemoStatic } from '@/demos/LensDemoStatic'
+import { IconCloudDemo } from '@/demos/IconCloudDemo'
+import { IconCloudIconsDemo } from '@/demos/IconCloudIconsDemo'
+import { IconCloudImagesDemo } from '@/demos/IconCloudImagesDemo'
 import { MarqueeDemo } from '@/demos/MarqueeDemo'
 import { MarqueeDemo3D } from '@/demos/MarqueeDemo3D'
 import { MarqueeDemoVertical } from '@/demos/MarqueeDemoVertical'
@@ -75,6 +81,9 @@ export const demoPaths = {
   LensDemo: '/src/demos/LensDemo.tsx',
   LensDemoDefaultPosition: '/src/demos/LensDemoDefaultPosition.tsx',
   LensDemoStatic: '/src/demos/LensDemoStatic.tsx',
+  IconCloudDemo: '/src/demos/IconCloudDemo.tsx',
+  IconCloudIconsDemo: '/src/demos/IconCloudIconsDemo.tsx',
+  IconCloudImagesDemo: '/src/demos/IconCloudImagesDemo.tsx',
   MarqueeDemo: '/src/demos/MarqueeDemo.tsx',
   MarqueeDemo3D: '/src/demos/MarqueeDemo3D.tsx',
   MarqueeDemoVertical: '/src/demos/MarqueeDemoVertical.tsx',
@@ -105,6 +114,9 @@ export const demoRawMap = {
   LensDemo: _LensDemo,
   LensDemoDefaultPosition: _LensDemoDefaultPosition,
   LensDemoStatic: _LensDemoStatic,
+  IconCloudDemo: _IconCloudDemo,
+  IconCloudIconsDemo: _IconCloudIconsDemo,
+  IconCloudImagesDemo: _IconCloudImagesDemo,
   MarqueeDemo: _MarqueeDemo,
   MarqueeDemo3D: _MarqueeDemo3D,
   MarqueeDemoVertical: _MarqueeDemoVertical,
@@ -135,6 +147,9 @@ export const demoComponentMap = {
   LensDemo,
   LensDemoDefaultPosition,
   LensDemoStatic,
+  IconCloudDemo,
+  IconCloudIconsDemo,
+  IconCloudImagesDemo,
   MarqueeDemo,
   MarqueeDemo3D,
   MarqueeDemoVertical,

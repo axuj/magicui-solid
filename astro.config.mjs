@@ -41,6 +41,7 @@ export default defineConfig({
             { slug: 'docs/components/orbiting-circles' },
             { slug: 'docs/components/avatar-circles' },
             { slug: 'docs/components/lens' },
+            { slug: 'docs/components/icon-cloud' },
           ],
         },
         {

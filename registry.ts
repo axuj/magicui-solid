@@ -198,6 +198,12 @@ const data = {
       description: 'An interactive component that enables zooming into images, videos and other elements.',
       dependencies: ['motion'],
     }),
+    uiItem({
+      name: 'icon-cloud',
+      title: 'Icon Cloud',
+      description: 'An interactive 3D tag cloud component.',
+      registryDependencies: [dep('theme'), 'https://www.solid-ui.com/r/button.json'],
+    }),
   ],
 }
 
