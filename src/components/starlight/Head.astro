@@ -5,3 +5,41 @@ import ThemeHead from 'starlight-theme-black/overrides/Head.astro'
 
 <ThemeHead />
 <ClientRouter />
+<script is:inline>
+;(() => {
+  const KEY = 'sl-sidebar-content-scroll'
+  const scrollerSel = '#starlight__sidebar .sidebar-content'
+  const readHash = () =>
+    document.querySelector('sl-sidebar-state-persist')?.getAttribute('data-hash') ?? ''
+  const save = () => {
+    const scroller = document.querySelector(scrollerSel)
+    if (!scroller)
+      return
+    try {
+      sessionStorage.setItem(KEY, JSON.stringify({ hash: readHash(), scrollTop: scroller.scrollTop }))
+    }
+    catch {}
+  }
+  const restore = () => {
+    const scroller = document.querySelector(scrollerSel)
+    if (!scroller)
+      return
+    try {
+      const state = JSON.parse(sessionStorage.getItem(KEY) || 'null')
+      if (state && state.scrollTop > 0 && state.hash === readHash())
+        scroller.scrollTop = state.scrollTop
+    }
+    catch {}
+  }
+  document.addEventListener('astro:before-preparation', save)
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden')
+      save()
+  })
+  window.addEventListener('pagehide', save)
+  document.addEventListener('astro:page-load', restore)
+  if (document.readyState !== 'loading')
+    restore()
+  else document.addEventListener('DOMContentLoaded', restore)
+})()
+</script>
