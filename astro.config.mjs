@@ -65,6 +65,11 @@ export default defineConfig({
           label: 'Animations',
           items: [
             { slug: 'docs/components/blur-fade' },
+          label: 'Text Animations',
+          items: [
+            { slug: 'docs/components/text-animate' },
+            { slug: 'docs/components/typing-animation' },
+            { slug: 'docs/components/line-shadow-text' },
           ],
         },
       ],

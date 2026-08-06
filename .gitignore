@@ -20,6 +20,9 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
+# eslint cache
+.eslintcache
+
 # environment variables
 .env
 .env.production

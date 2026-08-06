@@ -291,3 +291,16 @@ html:root:not([data-has-sidebar]) {
 [data-theme='light'] .shiki code span {
   color: var(--shiki-light, currentColor);
 }
+
+/*
+ * starlight-theme-black 的 `.sl-markdown-content *` 在 ≥40rem 视口强制
+ * font-size: 15px，会误伤 demo 预览容器（.not-content）内的所有元素。
+ * 这里恢复 demo 区域的继承：components 层（高于 black）压过 15px，
+ * 同时用 :where 把特异性归零，确保 demo 内 text-* 工具类的字号不受影响。
+ */
+@layer components {
+  .not-content,
+  :where(.not-content) * {
+    font-size: inherit;
+  }
+}

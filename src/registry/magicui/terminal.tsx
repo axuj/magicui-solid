@@ -1,7 +1,7 @@
 import type { Accessor, JSX } from 'solid-js'
-import { createVisibilityObserver } from '@solid-primitives/intersection-observer'
 import { createContext, createEffect, createSignal, mergeProps, onCleanup, splitProps, untrack, useContext } from 'solid-js'
 import { Dynamic } from 'solid-js/web'
+import { createInView } from '@/lib/create-in-view'
 import { cn } from '@/lib/utils'
 
 interface SequenceContextValue {
@@ -18,8 +18,7 @@ function useSequence() {
 }
 
 function useElementVisibility(element: Accessor<HTMLElement | undefined>) {
-  const observer = createVisibilityObserver({ threshold: 0.3 })
-  return observer(element)
+  return createInView(element, { amount: 0.3, once: true })
 }
 
 interface AnimatedSpanProps {

@@ -136,6 +136,30 @@ const meteorsAnimation = {
   },
 }
 
+const lineShadowAnimation = {
+  animation: {
+    'line-shadow': 'line-shadow 15s linear infinite',
+  },
+  keyframes: {
+    'line-shadow': {
+      '0%': { 'background-position': '0 0' },
+      '100%': { 'background-position': '100% -100%' },
+    },
+  },
+}
+
+const blinkCursorAnimation = {
+  animation: {
+    'blink-cursor': 'blink-cursor 1.2s step-end infinite',
+  },
+  keyframes: {
+    'blink-cursor': {
+      '0%, 49%': { opacity: '1' },
+      '50%, 100%': { opacity: '0' },
+    },
+  },
+}
+
 const themeToggleViewTransitionCss = {
   '::view-transition-old(root), ::view-transition-new(root)': {
     'animation': 'none',
@@ -164,12 +188,21 @@ const data = {
       dependencies: ['motion', 'solid-js'],
       files: [{ path: 'src/lib/flip.ts', type: 'registry:lib' }],
     },
+    {
+      name: 'create-in-view',
+      type: 'registry:lib',
+      title: 'Create In View',
+      description: 'Reactive wrapper around motion\'s inView. Returns a signal that is true while the target is inside the viewport, with built-in once support.',
+      dependencies: ['motion', 'solid-js'],
+      files: [{ path: 'src/lib/create-in-view.ts', type: 'registry:lib' }],
+    },
     theme,
     uiItem({
       name: 'terminal',
       title: 'Terminal',
       description: 'An implementation of the MacOS terminal. Useful for showcasing a command line interface.',
-      dependencies: ['@solid-primitives/intersection-observer'],
+      dependencies: ['motion'],
+      registryDependencies: [dep('theme'), dep('create-in-view')],
     }),
     uiItem({
       name: 'hero-video-dialog',
@@ -314,6 +347,26 @@ const data = {
       title: 'Blur Fade',
       description: 'Blur fade in and out animation. Used to smoothly fade in and out content.',
       dependencies: ['motion'],
+      name: 'text-animate',
+      title: 'Text Animate',
+      description: 'Animate text word by word with a variety of animation variants.',
+      dependencies: ['motion'],
+      registryDependencies: [dep('theme'), dep('create-in-view')],
+    }),
+    uiItem({
+      name: 'typing-animation',
+      title: 'Typing Animation',
+      description: 'Characters appearing in typed animation',
+      dependencies: ['motion'],
+      registryDependencies: [dep('theme'), dep('create-in-view')],
+      tailwind: { config: { theme: { extend: blinkCursorAnimation } } },
+    }),
+    uiItem({
+      name: 'line-shadow-text',
+      title: 'Line Shadow Text',
+      description: 'A text component with a moving line shadow.',
+      dependencies: ['motion'],
+      tailwind: { config: { theme: { extend: lineShadowAnimation } } },
     }),
   ],
 }

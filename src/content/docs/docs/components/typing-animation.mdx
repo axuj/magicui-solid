@@ -1,0 +1,124 @@
+---
+title: Typing Animation
+description: Characters appearing in typed animation.
+---
+
+import DemoPreview from '@/components/DemoPreview.astro'
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+
+<div class="not-content">
+  <DemoPreview demo="TypingAnimationDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/typing-animation
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/typing-animation
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/typing-animation
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/typing-animation
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Examples
+
+### Basic Usage
+
+<div class="not-content">
+  <DemoPreview demo="TypingAnimationDemo" />
+</div>
+
+### Multiple Words with Loop
+
+<div class="not-content">
+  <DemoPreview demo="TypingAnimationDemo2" />
+</div>
+
+### Custom Speed
+
+<div class="not-content">
+  <DemoPreview demo="TypingAnimationDemo3" />
+</div>
+
+### Start on View
+
+<div class="not-content">
+  <DemoPreview demo="TypingAnimationDemo4" />
+</div>
+
+### Without Cursor
+
+<div class="not-content">
+  <DemoPreview demo="TypingAnimationDemo5" />
+</div>
+
+### Single Play (No Loop)
+
+<div class="not-content">
+  <DemoPreview demo="TypingAnimationDemo6" />
+</div>
+
+### Cursor Blinking
+
+<div class="not-content">
+  <DemoPreview demo="TypingAnimationDemo7" />
+</div>
+
+### Cursor Styles
+
+<div class="not-content">
+  <DemoPreview demo="TypingAnimationDemo8" />
+</div>
+
+## Import
+
+```tsx
+import { TypingAnimation } from '@/components/magicui/typing-animation'
+```
+
+## Usage
+
+```tsx
+<TypingAnimation>Hello World! 👋</TypingAnimation>
+```
+
+## Props
+
+| Prop          | Type                              | Default  | Description                                     |
+| ------------- | --------------------------------- | -------- | ----------------------------------------------- |
+| `children`    | `string`                          | `-`      | Single string to animate                        |
+| `words`       | `string[]`                        | `-`      | Array of strings to type and delete in sequence |
+| `class`       | `string`                          | `-`      | The class name to be applied to the component   |
+| `duration`    | `number`                          | `100`    | Duration for each character                     |
+| `typeSpeed`   | `number`                          | `100`    | Speed of typing animation (ms per character)    |
+| `deleteSpeed` | `number`                          | `50`     | Speed of deleting animation (ms per character)  |
+| `delay`       | `number`                          | `0`      | Delay before animation starts (in ms)           |
+| `pauseDelay`  | `number`                          | `1000`   | Pause duration between words (in ms)            |
+| `loop`        | `boolean`                         | `false`  | Whether to loop the animation                   |
+| `as`          | `keyof JSX.IntrinsicElements`     | `"span"` | Component to render as                          |
+| `startOnView` | `boolean`                         | `true`   | Start animation when component is in view       |
+| `showCursor`  | `boolean`                         | `true`   | Whether to show the typing cursor               |
+| `blinkCursor` | `boolean`                         | `true`   | Whether the cursor should blink                 |
+| `cursorStyle` | `"line"` `"block"` `"underscore"` | `"line"` | Style of the cursor (like VSCode)               |
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/typing-animation" target="_blank">
+    magicui.design/docs/components/typing-animation
+  </a>
+</p>

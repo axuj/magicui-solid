@@ -1,0 +1,63 @@
+---
+title: Line Shadow Text
+description: A text component with a moving line shadow.
+---
+
+import DemoPreview from '@/components/DemoPreview.astro'
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+
+<div class="not-content">
+  <DemoPreview demo="LineShadowTextDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/line-shadow-text
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/line-shadow-text
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/line-shadow-text
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/line-shadow-text
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Import
+
+```tsx
+import { LineShadowText } from '@/components/magicui/line-shadow-text'
+```
+
+## Usage
+
+```tsx
+<LineShadowText>Magic UI</LineShadowText>
+```
+
+## Props
+
+| Prop          | Type                          | Default   | Description                            |
+| ------------- | ----------------------------- | --------- | -------------------------------------- |
+| `shadowColor` | `string`                      | `"black"` | The color of the shadow effect         |
+| `children`    | `string`                      | `-`       | The text to display with shadow effect |
+| `as`          | `keyof JSX.IntrinsicElements` | `"span"`  | The HTML element to render the text as |
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/line-shadow-text" target="_blank">
+    magicui.design/docs/components/line-shadow-text
+  </a>
+</p>
