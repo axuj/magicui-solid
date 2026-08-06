@@ -1,0 +1,64 @@
+---
+title: Aurora Text
+description: A beautiful aurora text effect
+---
+
+import DemoPreview from '@/components/DemoPreview.astro'
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+
+<div class="not-content">
+  <DemoPreview demo="AuroraTextDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/aurora-text
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/aurora-text
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/aurora-text
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/aurora-text
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Import
+
+```tsx
+import { AuroraText } from '@/components/magicui/aurora-text'
+```
+
+## Usage
+
+```tsx
+<AuroraText>Aurora Text</AuroraText>
+```
+
+## Props
+
+| Prop       | Type          | Default                                         | Description                                                   |
+| ---------- | ------------- | ----------------------------------------------- | ------------------------------------------------------------- |
+| `class`    | `string`      | `""`                                            | The class name to be applied to the component                 |
+| `children` | `JSX.Element` | `-`                                             | Children elements                                             |
+| `colors`   | `string[]`    | ` ["#FF0080", "#7928CA", "#0070F3", "#38bdf8"]` | Array of colors used for the aurora effect                    |
+| `speed`    | `number`      | `1`                                             | Animation speed multiplier (1 is default, 2 is twice as fast) |
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/aurora-text" target="_blank">
+    magicui.design/docs/components/aurora-text
+  </a>
+</p>

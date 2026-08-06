@@ -1,0 +1,75 @@
+---
+title: Video Text
+description: A text component with a video background.
+---
+
+import DemoPreview from '@/components/DemoPreview.astro'
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+
+<div class="not-content">
+  <DemoPreview demo="VideoTextDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/video-text
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/video-text
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/video-text
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/video-text
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Import
+
+```tsx
+import { VideoText } from '@/components/magicui/video-text'
+```
+
+## Usage
+
+```tsx
+<div class="relative h-[500px] w-full overflow-hidden">
+  <VideoText src="https://cdn.magicui.design/ocean-small.webm">OCEAN</VideoText>
+</div>
+```
+
+## Props
+
+| Prop               | Type                                 | Default        | Description                                              |
+| ------------------ | ------------------------------------ | -------------- | -------------------------------------------------------- |
+| `src`              | `string`                             | Required       | The video source URL                                     |
+| `as`               | `ValidComponent`                     | `"div"`        | The element type to render for the text                  |
+| `children`         | `JSX.Element`                        | Required       | The content to display (will have the video "inside" it) |
+| `class`            | `string`                             | `""`           | Additional class for the container                       |
+| `autoPlay`         | `boolean`                            | `true`         | Whether to autoplay the video                            |
+| `muted`            | `boolean`                            | `true`         | Whether to mute the video                                |
+| `loop`             | `boolean`                            | `true`         | Whether to loop the video                                |
+| `preload`          | `` `"auto"`/`"metadata"`/`"none"` `` | `"auto"`       | Whether to preload the video                             |
+| `fontSize`         | `string`/`number`                    | `20`           | Font size for the text mask                              |
+| `fontWeight`       | `string`/`number`                    | `"bold"`       | Font weight for the text mask                            |
+| `textAnchor`       | `string`                             | `"middle"`     | Text anchor for the text mask                            |
+| `dominantBaseline` | `string`                             | `"middle"`     | Dominant baseline for the text mask                      |
+| `fontFamily`       | `string`                             | `"sans-serif"` | Font family for the text mask                            |
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/video-text" target="_blank">
+    magicui.design/docs/components/video-text
+  </a>
+</p>

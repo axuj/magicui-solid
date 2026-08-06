@@ -156,6 +156,32 @@ const blinkCursorAnimation = {
     'blink-cursor': {
       '0%, 49%': { opacity: '1' },
       '50%, 100%': { opacity: '0' },
+const auroraAnimation = {
+  animation: {
+    aurora: 'aurora 8s ease-in-out infinite alternate',
+  },
+  keyframes: {
+    aurora: {
+      '0%': {
+        'background-position': '0% 50%',
+        'transform': 'rotate(-5deg) scale(0.9)',
+      },
+      '25%': {
+        'background-position': '50% 100%',
+        'transform': 'rotate(5deg) scale(1.1)',
+      },
+      '50%': {
+        'background-position': '100% 50%',
+        'transform': 'rotate(-3deg) scale(0.95)',
+      },
+      '75%': {
+        'background-position': '50% 0%',
+        'transform': 'rotate(3deg) scale(1.05)',
+      },
+      '100%': {
+        'background-position': '0% 50%',
+        'transform': 'rotate(-5deg) scale(0.9)',
+      },
     },
   },
 }
@@ -369,6 +395,15 @@ const data = {
       description: 'A text component with a moving line shadow.',
       dependencies: ['motion'],
       tailwind: { config: { theme: { extend: lineShadowAnimation } } },
+      name: 'aurora-text',
+      title: 'Aurora Text',
+      description: 'A beautiful aurora text effect.',
+      tailwind: { config: { theme: { extend: auroraAnimation } } },
+    }),
+    uiItem({
+      name: 'video-text',
+      title: 'Video Text',
+      description: 'A component that displays text with a video playing in the background.',
     }),
   ],
 }
