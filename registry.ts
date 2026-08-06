@@ -347,6 +347,8 @@ const data = {
       title: 'Blur Fade',
       description: 'Blur fade in and out animation. Used to smoothly fade in and out content.',
       dependencies: ['motion'],
+    }),
+    uiItem({
       name: 'text-animate',
       title: 'Text Animate',
       description: 'Animate text word by word with a variety of animation variants.',

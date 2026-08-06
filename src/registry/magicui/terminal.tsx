@@ -1,4 +1,4 @@
-import type { Accessor, JSX } from 'solid-js'
+import type { Accessor, JSX, ValidComponent } from 'solid-js'
 import { createContext, createEffect, createSignal, mergeProps, onCleanup, splitProps, untrack, useContext } from 'solid-js'
 import { Dynamic } from 'solid-js/web'
 import { createInView } from '@/lib/create-in-view'
@@ -82,7 +82,7 @@ interface TypingAnimationProps {
   class?: string
   duration?: number
   delay?: number
-  as?: string
+  as?: ValidComponent
   startOnView?: boolean
 }
 

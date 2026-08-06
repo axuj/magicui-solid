@@ -1,5 +1,5 @@
 import type { TargetAndTransition, Transition, ValueTransition, Variant, Variants } from 'motion'
-import type { JSX } from 'solid-js'
+import type { JSX, ValidComponent } from 'solid-js'
 import { animate } from 'motion'
 import { createEffect, For, mergeProps, onCleanup, Show, splitProps, untrack } from 'solid-js'
 import { Dynamic } from 'solid-js/web'
@@ -31,8 +31,6 @@ type AnimationVariant
     | 'scaleUp'
     | 'scaleDown'
 
-type MotionElementType = keyof JSX.IntrinsicElements
-
 interface TextAnimateProps extends Omit<JSX.HTMLAttributes<HTMLElement>, 'children'> {
   /**
    * The text content to animate
@@ -57,7 +55,7 @@ interface TextAnimateProps extends Omit<JSX.HTMLAttributes<HTMLElement>, 'childr
   /**
    * The element type to render
    */
-  as?: MotionElementType
+  as?: ValidComponent
   /**
    * How to split the text ("text", "word", "character")
    */

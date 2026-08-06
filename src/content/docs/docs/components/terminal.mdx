@@ -84,14 +84,14 @@ The terminal sequences its children automatically. Each TypingAnimation or Anima
 
 ### TypingAnimation
 
-| Prop          | Type      | Default  | Description                                                            |
-| ------------- | --------- | -------- | ---------------------------------------------------------------------- |
-| `children`    | `string`  | `-`      | Text to be typed.                                                      |
-| `class`       | `string`  | `-`      | Custom CSS class for styling.                                          |
-| `duration`    | `number`  | `60`     | Milliseconds per character.                                            |
-| `delay`       | `number`  | `0`      | Delay in ms before typing starts (used when sequence is false).        |
-| `as`          | `string`  | `"span"` | The HTML element to render.                                            |
-| `startOnView` | `boolean` | `true`   | If true, waits for viewport visibility before typing when unsequenced. |
+| Prop          | Type             | Default  | Description                                                            |
+| ------------- | ---------------- | -------- | ---------------------------------------------------------------------- |
+| `children`    | `string`         | `-`      | Text to be typed.                                                      |
+| `class`       | `string`         | `-`      | Custom CSS class for styling.                                          |
+| `duration`    | `number`         | `60`     | Milliseconds per character.                                            |
+| `delay`       | `number`         | `0`      | Delay in ms before typing starts (used when sequence is false).        |
+| `as`          | `ValidComponent` | `"span"` | The element to render.                                                 |
+| `startOnView` | `boolean`        | `true`   | If true, waits for viewport visibility before typing when unsequenced. |
 
 <p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
   Original:{' '}

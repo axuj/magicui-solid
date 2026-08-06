@@ -1,10 +1,8 @@
-import type { JSX } from 'solid-js'
+import type { JSX, ValidComponent } from 'solid-js'
 import { createEffect, createMemo, createSignal, mergeProps, on, onCleanup, Show, splitProps } from 'solid-js'
 import { Dynamic } from 'solid-js/web'
 import { createInView } from '@/lib/create-in-view'
 import { cn } from '@/lib/utils'
-
-type MotionElementType = keyof JSX.IntrinsicElements
 
 interface TypingAnimationProps extends Omit<JSX.HTMLAttributes<HTMLElement>, 'children'> {
   children?: string
@@ -15,7 +13,7 @@ interface TypingAnimationProps extends Omit<JSX.HTMLAttributes<HTMLElement>, 'ch
   delay?: number
   pauseDelay?: number
   loop?: boolean
-  as?: MotionElementType
+  as?: ValidComponent
   startOnView?: boolean
   showCursor?: boolean
   blinkCursor?: boolean

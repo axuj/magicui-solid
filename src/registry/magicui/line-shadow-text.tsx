@@ -1,14 +1,12 @@
-import type { JSX } from 'solid-js'
+import type { JSX, ValidComponent } from 'solid-js'
 import { mergeProps, splitProps } from 'solid-js'
 import { Dynamic } from 'solid-js/web'
 import { cn } from '@/lib/utils'
 
-type MotionElementType = keyof JSX.IntrinsicElements
-
 interface LineShadowTextProps extends Omit<JSX.HTMLAttributes<HTMLElement>, 'children'> {
   children: string
   shadowColor?: string
-  as?: MotionElementType
+  as?: ValidComponent
 }
 
 export function LineShadowText(props: LineShadowTextProps) {
