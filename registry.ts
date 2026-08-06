@@ -156,6 +156,10 @@ const blinkCursorAnimation = {
     'blink-cursor': {
       '0%, 49%': { opacity: '1' },
       '50%, 100%': { opacity: '0' },
+    },
+  },
+}
+
 const auroraAnimation = {
   animation: {
     aurora: 'aurora 8s ease-in-out infinite alternate',
@@ -395,6 +399,8 @@ const data = {
       description: 'A text component with a moving line shadow.',
       dependencies: ['motion'],
       tailwind: { config: { theme: { extend: lineShadowAnimation } } },
+    }),
+    uiItem({
       name: 'aurora-text',
       title: 'Aurora Text',
       description: 'A beautiful aurora text effect.',
