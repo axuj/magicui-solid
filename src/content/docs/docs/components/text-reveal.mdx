@@ -1,0 +1,62 @@
+---
+title: Text Reveal
+description: Fade in text as you scroll down the page.
+---
+
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+import DemoRenderer from '@/demos/__generated__/DemoRenderer.astro'
+
+<div class="not-content">
+  <DemoRenderer demo="TextRevealDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/text-reveal
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/text-reveal
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/text-reveal
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/text-reveal
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Import
+
+```tsx
+import { TextReveal } from '@/components/magicui/text-reveal'
+```
+
+## Usage
+
+```tsx
+<TextReveal>Magic UI will change the way you design.</TextReveal>
+```
+
+## Props
+
+| Prop       | Type     | Default  | Description                        |
+| ---------- | -------- | -------- | ---------------------------------- |
+| `children` | `string` | Required | The text content to reveal         |
+| `class`    | `string` | `-`      | Additional class for the container |
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/text-reveal" target="_blank">
+    magicui.design/docs/components/text-reveal
+  </a>
+</p>

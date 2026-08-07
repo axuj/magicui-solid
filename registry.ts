@@ -455,6 +455,18 @@ const data = {
       description: 'An animated gradient background which transitions between colors for text.',
       tailwind: { config: { theme: { extend: gradientAnimation } } },
     }),
+    uiItem({
+      name: 'text-reveal',
+      title: 'Text Reveal',
+      description: 'Fade in text as you scroll down the page.',
+      dependencies: ['motion'],
+    }),
+    uiItem({
+      name: 'dia-text-reveal',
+      title: 'Dia Text Reveal',
+      description: 'A horizontal color band sweeps across text with a gradient shine, then settles on your theme foreground color.',
+      dependencies: ['motion'],
+    }),
   ],
 }
 

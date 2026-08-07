@@ -1,0 +1,114 @@
+---
+title: Dia Text Reveal
+description: A horizontal color band sweeps across text with a gradient shine, then settles on your theme foreground color.
+---
+
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+import DemoRenderer from '@/demos/__generated__/DemoRenderer.astro'
+
+<div class="not-content">
+  <DemoRenderer demo="DiaTextRevealDemo" />
+</div>
+
+## Examples
+
+### Custom gradient
+
+Override `colors` for a shorter or softer palette on a single line of text.
+
+<div class="not-content">
+  <DemoRenderer demo="DiaTextRevealDemo2" />
+</div>
+
+### Rotating phrases in a heading
+
+Pass `text` as an array and set `repeat` to cycle strings after each sweep. You can place static words in the same `<h1>` (or paragraph) before the component—no extra layout wrappers are required for basic inline use.
+
+<div class="not-content">
+  <DemoRenderer demo="DiaTextRevealDemo3" />
+</div>
+
+Use `fixedWidth` when the strings differ a lot in length and you want to avoid horizontal layout shift (not shown in this example).
+
+### Duration and delay
+
+Slow the sweep with `duration`, or add a short `delay` before the band moves.
+
+<div class="not-content">
+  <DemoRenderer demo="DiaTextRevealDemo4" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/dia-text-reveal
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/dia-text-reveal
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/dia-text-reveal
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/dia-text-reveal
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Import
+
+```tsx
+import { DiaTextReveal } from '@/components/magicui/dia-text-reveal'
+```
+
+## Usage
+
+```tsx
+<DiaTextReveal text="Magic UI" />
+```
+
+```tsx
+<h1 class="text-3xl font-semibold">
+  Learn to{' '}
+  <DiaTextReveal
+    repeat
+    repeatDelay={1.2}
+    text={['build faster', 'ship smarter', 'scale easier']}
+  />
+</h1>
+```
+
+## Props
+
+| Prop          | Type                | Default                                                   | Description                                                                     |
+| ------------- | ------------------- | --------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| `text`        | `string`/`string[]` | —                                                         | Text to display. Use an array to rotate between strings when `repeat` is on.    |
+| `colors`      | `string[]`          | `["#c679c4", "#fa3d1d", "#ffb005", "#e1e1fe", "#0358f7"]` | Colors in the sweeping gradient band.                                           |
+| `textColor`   | `string`            | `var(--foreground)`                                       | Solid text color after the animation (matches your theme by default).           |
+| `duration`    | `number`            | `1.5`                                                     | Sweep duration in seconds.                                                      |
+| `delay`       | `number`            | `0`                                                       | Delay before the sweep starts, in seconds.                                      |
+| `repeat`      | `boolean`           | `false`                                                   | When `text` is an array, advance to the next string after each cycle.           |
+| `repeatDelay` | `number`            | `0.5`                                                     | Pause in seconds before replaying or advancing (when `repeat` is true).         |
+| `startOnView` | `boolean`           | `true`                                                    | Start the animation when the element enters the viewport.                       |
+| `once`        | `boolean`           | `true`                                                    | Play only the first time (when `startOnView` is used).                          |
+| `class`       | `string`            | —                                                         | Additional CSS classes on the root `span`.                                      |
+| `fixedWidth`  | `boolean`           | `false`                                                   | Lock width to the widest string when `text` is an array to reduce layout shift. |
+
+## Credits
+
+- Credit to [@chishiyac](https://github.com/chishiyac)
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/dia-text-reveal" target="_blank">
+    magicui.design/docs/components/dia-text-reveal
+  </a>
+</p>

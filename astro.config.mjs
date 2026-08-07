@@ -79,6 +79,8 @@ export default defineConfig({
             { slug: 'docs/components/number-ticker' },
             { slug: 'docs/components/animated-shiny-text' },
             { slug: 'docs/components/animated-gradient-text' },
+            { slug: 'docs/components/text-reveal' },
+            { slug: 'docs/components/dia-text-reveal' },
           ],
         },
       ],
