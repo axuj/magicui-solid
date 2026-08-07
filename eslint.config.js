@@ -70,6 +70,6 @@ export default antfu({
     },
   },
   rules: {
-    'better-tailwindcss/no-unknown-classes': ['error', { ignore: ['^not-content$', '^tab-trigger$', '^sl-', '^md:sl-', '^dialog-frame$', '^search-container$'] }],
+    'better-tailwindcss/no-unknown-classes': ['error', { ignore: ['^not-content$', '^tab-trigger$', '^sl-', '^md:sl-', '^dialog-frame$', '^search-container$', '^text-3d-flip-char$'] }],
   },
 })

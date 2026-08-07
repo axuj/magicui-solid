@@ -502,6 +502,19 @@ const data = {
       description: 'The Spinning Text component animates text in a circular motion with customizable speed, direction, color, and transitions for dynamic and engaging effects.',
       dependencies: ['motion'],
     }),
+    uiItem({
+      name: 'highlighter',
+      title: 'Text Highlighter',
+      description: 'A text highlighter that mimics the effect of a human-drawn marker stroke.',
+      dependencies: ['motion', 'rough-notation'],
+      registryDependencies: [dep('create-in-view')],
+    }),
+    uiItem({
+      name: 'text-3d-flip',
+      title: 'Text 3D Flip',
+      description: 'A text effect that flips each letter in 3D with a staggered animation on hover.',
+      dependencies: ['motion'],
+    }),
   ],
 }
 

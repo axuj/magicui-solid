@@ -1,0 +1,86 @@
+---
+title: Text 3D Flip
+description: A text effect that flips each letter in 3D with a staggered animation on hover.
+---
+
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+import DemoRenderer from '@/demos/__generated__/DemoRenderer.astro'
+
+<div class="not-content">
+  <DemoRenderer demo="Text3DFlipDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/text-3d-flip
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/text-3d-flip
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/text-3d-flip
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/text-3d-flip
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Usage
+
+```tsx
+import Text3DFlip from '@/components/magicui/text-3d-flip'
+```
+
+```tsx
+<Text3DFlip
+  class="bg-background"
+  textClassName="bg-background text-foreground"
+  flipTextClassName="bg-background text-foreground"
+  rotateDirection="top"
+>
+  Stay hungry, stay foolish
+</Text3DFlip>
+```
+
+## Examples
+
+### Stagger from center
+
+<div class="not-content">
+  <DemoRenderer demo="Text3DFlipDemo2" />
+</div>
+
+## Props
+
+| Prop                | Type                                              | Default                                           | Description                                                                                   |
+| ------------------- | ------------------------------------------------- | ------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `children`          | `JSX.Element`                                     | Required                                          | The content to be displayed and animated                                                      |
+| `as`                | `ValidComponent`                                  | `"p"`                                             | HTML element to render the component as                                                       |
+| `class`             | `string`                                          | `-`                                               | Class name for the main container element                                                     |
+| `textClassName`     | `string`                                          | `-`                                               | Class name for each letter (visible before flip)                                              |
+| `flipTextClassName` | `string`                                          | `-`                                               | Class name for each letter (revealed after flip)                                              |
+| `staggerDuration`   | `number`                                          | `0.05`                                            | Duration of stagger delay between each letter in seconds                                      |
+| `staggerFrom`       | `"first"` `"last"` `"center"` `number` `"random"` | `"first"`                                         | Direction to stagger animations from. Use a number to stagger from a specific character index |
+| `transition`        | `ValueAnimationTransition` `AnimationOptions`     | `{ type: "spring", damping: 30, stiffness: 300 }` | Animation transition configuration from Motion                                                |
+| `rotateDirection`   | `"top"` `"right"` `"bottom"` `"left"`             | `"right"`                                         | Direction of 3D rotation on hover                                                             |
+
+## Credits
+
+- Credit to [@AayushBharti](https://github.com/AayushBharti)
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/text-3d-flip" target="_blank">
+    magicui.design/docs/components/text-3d-flip
+  </a>
+</p>

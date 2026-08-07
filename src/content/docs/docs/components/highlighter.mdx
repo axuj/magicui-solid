@@ -1,0 +1,83 @@
+---
+title: Text Highlighter
+description: A text highlighter that mimics the effect of a human-drawn marker stroke.
+---
+
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+import DemoRenderer from '@/demos/__generated__/DemoRenderer.astro'
+
+<div class="not-content">
+  <DemoRenderer demo="HighlighterDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/highlighter
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/highlighter
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/highlighter
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/highlighter
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Import
+
+```tsx
+import { Highlighter } from '@/components/magicui/highlighter'
+```
+
+## Usage
+
+```tsx
+<p>
+  The{' '}
+  <Highlighter action="underline" color="#FF9800">
+    Magic UI Highlighter
+  </Highlighter>{' '}
+  makes important{' '}
+  <Highlighter action="highlight" color="#87CEFA">
+    text stand out
+  </Highlighter>{' '}
+  effortlessly.
+</p>
+```
+
+## Props
+
+| Prop                | Type                                                                                          | Default       | Description                                                                  |
+| ------------------- | --------------------------------------------------------------------------------------------- | ------------- | ---------------------------------------------------------------------------- |
+| `children`          | `JSX.Element`                                                                                 | Required      | The content to be highlighted/annotated.                                     |
+| `color`             | `string`                                                                                      | `"#ffd1dc"`   | The color of the highlight.                                                  |
+| `action`            | `"highlight"` `"circle"` `"box"` `"bracket"` `"crossed-off"` `"strike-through"` `"underline"` | `"highlight"` | The type of annotation effect to apply.                                      |
+| `strokeWidth`       | `number`                                                                                      | `1.5px`       | The width of the annotation stroke.                                          |
+| `animationDuration` | `number`                                                                                      | `600ms`       | Duration of the animation in milliseconds.                                   |
+| `iterations`        | `number`                                                                                      | `2`           | Number of times to draw the annotation (adds a sketchy effect when > 1).     |
+| `padding`           | `number`                                                                                      | `2px`         | Padding between the element and the annotation.                              |
+| `multiline`         | `boolean`                                                                                     | `true`        | Whether to annotate across multiple lines or treat content as a single line. |
+| `isView`            | `boolean`                                                                                     | `false`       | Controls whether the animation starts only when the element enters viewport. |
+
+## Credits
+
+- Credit to [@pratiyank](https://github.com/Pratiyankkumar) for this component!
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/highlighter" target="_blank">
+    magicui.design/docs/components/highlighter
+  </a>
+</p>

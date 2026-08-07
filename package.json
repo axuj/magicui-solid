@@ -34,6 +34,7 @@
     "countries-list": "^3.4.1",
     "lucide-solid": "^1.28.0",
     "motion": "^12.43.0",
+    "rough-notation": "^0.5.1",
     "shiki": "^4.3.1",
     "solid-js": "^1.9.5",
     "starlight-theme-black": "^0.7.1",

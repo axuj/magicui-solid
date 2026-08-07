@@ -87,6 +87,8 @@ export default defineConfig({
             { slug: 'docs/components/sparkles-text' },
             { slug: 'docs/components/morphing-text' },
             { slug: 'docs/components/spinning-text' },
+            { slug: 'docs/components/highlighter' },
+            { slug: 'docs/components/text-3d-flip' },
           ],
         },
       ],
