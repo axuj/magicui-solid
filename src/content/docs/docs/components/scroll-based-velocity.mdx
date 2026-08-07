@@ -1,0 +1,93 @@
+---
+title: Scroll Based Velocity
+description: Scrolling text whose speed changes based on scroll speed
+---
+
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+import DemoRenderer from '@/demos/__generated__/DemoRenderer.astro'
+
+<div class="not-content">
+  <DemoRenderer demo="ScrollBasedVelocityDemo" />
+</div>
+
+<div class="not-content">
+  <DemoRenderer demo="ScrollBasedVelocityImagesDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/scroll-based-velocity
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/scroll-based-velocity
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/scroll-based-velocity
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/scroll-based-velocity
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Import
+
+```tsx
+import {
+  ScrollVelocityContainer,
+  ScrollVelocityRow,
+} from '@/components/magicui/scroll-based-velocity'
+```
+
+## Usage
+
+```tsx
+<ScrollVelocityContainer class="text-4xl font-bold md:text-7xl">
+  <ScrollVelocityRow baseVelocity={20} direction={1}>
+    Velocity Scroll
+  </ScrollVelocityRow>
+  <ScrollVelocityRow baseVelocity={20} direction={-1}>
+    Velocity Scroll
+  </ScrollVelocityRow>
+</ScrollVelocityContainer>
+```
+
+## Props
+
+### ScrollVelocityContainer
+
+| Prop       | Type          | Default | Description                                   |
+| ---------- | ------------- | ------- | --------------------------------------------- |
+| `class`    | `string`      | `-`     | The class name to be applied to the component |
+| `children` | `JSX.Element` | `-`     | Content to be animated                        |
+
+### ScrollVelocityRow
+
+| Prop               | Type          | Default | Description                                        |
+| ------------------ | ------------- | ------- | -------------------------------------------------- |
+| `class`            | `string`      | `-`     | The class name to be applied to the row container  |
+| `children`         | `JSX.Element` | `-`     | Content to be duplicated and scrolled              |
+| `baseVelocity`     | `number`      | `5`     | Base scroll velocity percentage of content width   |
+| `direction`        | `1` or `-1`   | `1`     | Scroll direction (1 = left-to-right, -1 = reverse) |
+| `scrollReactivity` | `boolean`     | `true`  | Toggles scroll interactivity                       |
+
+## Performance
+
+- Pauses updates when offscreen and when the tab is hidden.
+- Respects user preference for reduced motion.
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/scroll-based-velocity" target="_blank">
+    magicui.design/docs/components/scroll-based-velocity
+  </a>
+</p>

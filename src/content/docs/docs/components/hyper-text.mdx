@@ -1,0 +1,68 @@
+---
+title: Hyper Text
+description: A text animation that scrambles letters before revealing the final text.
+---
+
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+import DemoRenderer from '@/demos/__generated__/DemoRenderer.astro'
+
+<div class="not-content">
+  <DemoRenderer demo="HyperTextDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/hyper-text
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/hyper-text
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/hyper-text
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/hyper-text
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Import
+
+```tsx
+import { HyperText } from '@/components/magicui/hyper-text'
+```
+
+## Usage
+
+```tsx
+<HyperText>Hover me</HyperText>
+```
+
+## Props
+
+| Prop             | Type             | Default | Description                                   |
+| ---------------- | ---------------- | ------- | --------------------------------------------- |
+| `children`       | `string`         | `-`     | Text content to animate                       |
+| `class`          | `string`         | `-`     | The class name to be applied to the component |
+| `duration`       | `number`         | `800`   | Duration of the animation in milliseconds     |
+| `delay`          | `number`         | `0`     | Delay before animation starts (in ms)         |
+| `as`             | `ValidComponent` | `"div"` | Component to render as                        |
+| `startOnView`    | `boolean`        | `false` | Start animation when component is in view     |
+| `animateOnHover` | `boolean`        | `true`  | Enable hover animation                        |
+| `characterSet`   | `string[]`       | `A-Z`   | Custom character set for scramble effect      |
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/hyper-text" target="_blank">
+    magicui.design/docs/components/hyper-text
+  </a>
+</p>

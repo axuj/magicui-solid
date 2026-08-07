@@ -1,0 +1,64 @@
+---
+title: Word Rotate
+description: A vertical rotation of words
+---
+
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+import DemoRenderer from '@/demos/__generated__/DemoRenderer.astro'
+
+<div class="not-content">
+  <DemoRenderer demo="WordRotateDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/word-rotate
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/word-rotate
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/word-rotate
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/word-rotate
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Import
+
+```tsx
+import { WordRotate } from '@/components/magicui/word-rotate'
+```
+
+## Usage
+
+```tsx
+<WordRotate words={['Word', 'Rotate']} />
+```
+
+## Props
+
+| Prop          | Type          | Default | Description                                   |
+| ------------- | ------------- | ------- | --------------------------------------------- |
+| `class`       | `string`      | `-`     | The class name to be applied to the component |
+| `duration`    | `number`      | `2500`  | Duration of the animation                     |
+| `words`       | `string[]`    | `""`    | An array of words to rotate through           |
+| `motionProps` | `MotionProps` | `{}`    | An object containing motion animation props   |
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/word-rotate" target="_blank">
+    magicui.design/docs/components/word-rotate
+  </a>
+</p>

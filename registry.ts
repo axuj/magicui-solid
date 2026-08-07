@@ -467,6 +467,24 @@ const data = {
       description: 'A horizontal color band sweeps across text with a gradient shine, then settles on your theme foreground color.',
       dependencies: ['motion'],
     }),
+    uiItem({
+      name: 'hyper-text',
+      title: 'Hyper Text',
+      description: 'A text animation that scrambles letters before revealing the final text.',
+      dependencies: ['motion'],
+    }),
+    uiItem({
+      name: 'word-rotate',
+      title: 'Word Rotate',
+      description: 'A vertical rotation of words',
+      dependencies: ['motion'],
+    }),
+    uiItem({
+      name: 'scroll-based-velocity',
+      title: 'Scroll Based Velocity',
+      description: 'Scrolling text whose speed changes based on scroll speed',
+      dependencies: ['motion'],
+    }),
   ],
 }
 
