@@ -3,11 +3,11 @@ title: Lens
 description: A interactive component that enables zooming into images, videos and other elements.
 ---
 
-import DemoPreview from '@/components/DemoPreview.astro'
 import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+import DemoRenderer from '@/demos/__generated__/DemoRenderer.astro'
 
 <div class="not-content">
-  <DemoPreview demo="LensDemo" />
+  <DemoRenderer demo="LensDemo" />
 </div>
 
 ## Installation
@@ -40,13 +40,13 @@ import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
 ### Static Lens
 
 <div class="not-content">
-  <DemoPreview demo="LensDemoStatic" />
+  <DemoRenderer demo="LensDemoStatic" />
 </div>
 
 ### Lens with a Default Position
 
 <div class="not-content">
-  <DemoPreview demo="LensDemoDefaultPosition" />
+  <DemoRenderer demo="LensDemoDefaultPosition" />
 </div>
 
 ## Import

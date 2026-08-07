@@ -3,11 +3,11 @@ title: Dock
 description: An implementation of the macOS dock using SolidJS + TailwindCSS + motion.
 ---
 
-import DemoPreview from '@/components/DemoPreview.astro'
 import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+import DemoRenderer from '@/demos/__generated__/DemoRenderer.astro'
 
 <div class="not-content">
-  <DemoPreview demo="DockDemo" />
+  <DemoRenderer demo="DockDemo" />
 </div>
 
 ## Installation
@@ -40,13 +40,13 @@ import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
 ### Custom Direction
 
 <div class="not-content">
-  <DemoPreview demo="DockDemoDirection" />
+  <DemoRenderer demo="DockDemoDirection" />
 </div>
 
 ### Custom magnification
 
 <div class="not-content">
-  <DemoPreview demo="DockDemoCustom" />
+  <DemoRenderer demo="DockDemoCustom" />
 </div>
 
 ## Import

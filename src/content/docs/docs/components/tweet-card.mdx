@@ -3,11 +3,11 @@ title: Tweet Card
 description: A card that displays a tweet with the author's name, handle, and profile picture.
 ---
 
-import DemoPreview from '@/components/DemoPreview.astro'
 import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+import DemoRenderer from '@/demos/__generated__/DemoRenderer.astro'
 
 <div class="not-content">
-  <DemoPreview demo="TweetCardDemo" />
+  <DemoRenderer demo="TweetCardDemo" />
 </div>
 
 ## Installation
@@ -52,13 +52,13 @@ import { ClientTweetCard } from '@/components/magicui/client-tweet-card'
 ### Tweet Card With Image Carousel
 
 <div class="not-content">
-  <DemoPreview demo="TweetCardImagesDemo" />
+  <DemoRenderer demo="TweetCardImagesDemo" />
 </div>
 
 ### Tweet Card With Meta URL Preview
 
 <div class="not-content">
-  <DemoPreview demo="TweetCardMetaPreviewDemo" />
+  <DemoRenderer demo="TweetCardMetaPreviewDemo" />
 </div>
 
 ## Props

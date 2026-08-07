@@ -3,11 +3,11 @@ title: Theme Toggler
 description: Animated theme toggle using the View Transitions API with configurable clip-path shapes and origin.
 ---
 
-import DemoPreview from '@/components/DemoPreview.astro'
 import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+import DemoRenderer from '@/demos/__generated__/DemoRenderer.astro'
 
 <div class="not-content">
-  <DemoPreview demo="AnimatedThemeTogglerDemo" />
+  <DemoRenderer demo="AnimatedThemeTogglerDemo" />
 </div>
 
 ## Installation
@@ -66,37 +66,37 @@ The preview at the top of this page uses the default **circle** reveal. Below, e
 ### Square
 
 <div class="not-content">
-  <DemoPreview demo="AnimatedThemeTogglerSquareDemo" />
+  <DemoRenderer demo="AnimatedThemeTogglerSquareDemo" />
 </div>
 
 ### Diamond
 
 <div class="not-content">
-  <DemoPreview demo="AnimatedThemeTogglerDiamondDemo" />
+  <DemoRenderer demo="AnimatedThemeTogglerDiamondDemo" />
 </div>
 
 ### Rectangle
 
 <div class="not-content">
-  <DemoPreview demo="AnimatedThemeTogglerRectangleDemo" />
+  <DemoRenderer demo="AnimatedThemeTogglerRectangleDemo" />
 </div>
 
 ### Hexagon
 
 <div class="not-content">
-  <DemoPreview demo="AnimatedThemeTogglerHexagonDemo" />
+  <DemoRenderer demo="AnimatedThemeTogglerHexagonDemo" />
 </div>
 
 ### Triangle
 
 <div class="not-content">
-  <DemoPreview demo="AnimatedThemeTogglerTriangleDemo" />
+  <DemoRenderer demo="AnimatedThemeTogglerTriangleDemo" />
 </div>
 
 ### Star
 
 <div class="not-content">
-  <DemoPreview demo="AnimatedThemeTogglerStarDemo" />
+  <DemoRenderer demo="AnimatedThemeTogglerStarDemo" />
 </div>
 
 ### Controlled
@@ -104,7 +104,7 @@ The preview at the top of this page uses the default **circle** reveal. Below, e
 Pass `theme` and `onThemeChange` to keep the parent theme state in sync on toggle. When controlled, the component skips `localStorage` and lets the parent own persistence.
 
 <div class="not-content">
-  <DemoPreview demo="AnimatedThemeTogglerControlledDemo" />
+  <DemoRenderer demo="AnimatedThemeTogglerControlledDemo" />
 </div>
 
 ## CSS
