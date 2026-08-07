@@ -1,5 +1,6 @@
 import type { JSX } from 'solid-js'
 import { createResource, For, mergeProps, Show, splitProps, untrack } from 'solid-js'
+import { isServer } from 'solid-js/web'
 import { cn } from '@/lib/utils'
 
 /* ---------- types (mirrors react-tweet) ---------- */
@@ -800,7 +801,7 @@ export function ClientTweetCard(props: TweetProps & { class?: string }) {
   const [local, rest] = splitProps(merged, ['id', 'apiUrl', 'fallback', 'components', 'fetchOptions', 'onError'])
 
   const [tweet] = createResource(
-    () => local.id,
+    () => (isServer ? undefined : local.id),
     async (id) => {
       const url = untrack(() => local.apiUrl) || `https://react-tweet.vercel.app/api/tweet/${id}`
       const res = await fetch(url, untrack(() => local.fetchOptions))
@@ -825,7 +826,7 @@ export function ClientTweetCard(props: TweetProps & { class?: string }) {
   }
 
   return (
-    <Show when={!tweet.loading} fallback={local.fallback}>
+    <Show when={!isServer && !tweet.loading} fallback={local.fallback}>
       <Show when={!tweet.error && tweet()} fallback={<NotFound />}>
         <MagicTweet tweet={tweet()!} {...rest} />
       </Show>
