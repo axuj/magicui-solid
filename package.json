@@ -16,13 +16,14 @@
     "registry": "nub scripts/build-registry.ts && nubx shadcn build __generated__/registry.json"
   },
   "dependencies": {
-    "@astrojs/solid-js": "https://pkg.pr.new/@astrojs/solid-js@8a486ea",
+    "@astrojs/solid-js": "^7.0.2",
     "@astrojs/starlight": "^0.41.4",
     "@astrojs/starlight-tailwind": "^5.0.0",
     "@fontsource-variable/geist": "^5.3.0",
     "@fontsource-variable/geist-mono": "^5.3.0",
     "@iconify-json/ri": "^1.2.5",
     "@kobalte/core": "^0.13.12",
+    "@pagefind/default-ui": "^1.5.2",
     "@solid-primitives/spring": "^0.1.2",
     "@tailwindcss/vite": "^4.3.3",
     "astro": "^7.1.5",

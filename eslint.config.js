@@ -28,6 +28,14 @@ export default antfu({
     // astro: 'prettier',
   },
 }, {
+  files: ['**/*.astro'],
+  name: 'custom/astro-style',
+  rules: {
+    'style/no-multiple-empty-lines': ['error', { max: 1 }],
+    'style/no-trailing-spaces': 'error',
+    'style/indent': ['error', 2],
+  },
+}, {
   files: ['**/*.md'],
   languageOptions: { parser: parserPlain },
   name: 'custom/markdown-formatter',
@@ -62,6 +70,6 @@ export default antfu({
     },
   },
   rules: {
-    'better-tailwindcss/no-unknown-classes': ['error', { ignore: ['^not-content$', '^tab-trigger$'] }],
+    'better-tailwindcss/no-unknown-classes': ['error', { ignore: ['^not-content$', '^tab-trigger$', '^sl-', '^md:sl-', '^dialog-frame$', '^search-container$'] }],
   },
 })

@@ -17,6 +17,7 @@ export default defineConfig({
       customCss: ['./src/styles/global.css'],
       components: {
         Head: './src/components/starlight/Head.astro',
+        Search: './src/components/starlight/Search.astro',
       },
       plugins: [starlightThemeBlack({})],
       sidebar: [
