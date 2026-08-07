@@ -1,0 +1,71 @@
+---
+title: Animated Gradient Text
+description: An animated gradient background which transitions between colors for text.
+---
+
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+import DemoRenderer from '@/demos/__generated__/DemoRenderer.astro'
+
+<div class="not-content">
+  <DemoRenderer demo="AnimatedGradientTextDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/animated-gradient-text
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/animated-gradient-text
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/animated-gradient-text
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/animated-gradient-text
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Example
+
+### Custom Speed
+
+<div class="not-content">
+  <DemoRenderer demo="AnimatedGradientTextDemo2" />
+</div>
+
+### Usage
+
+```tsx
+import { AnimatedGradientText } from '@/components/magicui/animated-gradient-text'
+```
+
+```tsx
+<AnimatedGradientText>Animated Gradient Text</AnimatedGradientText>
+```
+
+## Props
+
+| Prop        | Type          | Default     | Description                            |
+| ----------- | ------------- | ----------- | -------------------------------------- |
+| `children`  | `JSX.Element` | `-`         | The children passed into the component |
+| `class`     | `string`      | `-`         | The class name to be applied           |
+| `speed`     | `number`      | `1`         | The speed of the gradient animation    |
+| `colorFrom` | `string`      | `"#ffaa40"` | The starting color of the gradient     |
+| `colorTo`   | `string`      | `"#9c40ff"` | The ending color of the gradient       |
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/animated-gradient-text" target="_blank">
+    magicui.design/docs/components/animated-gradient-text
+  </a>
+</p>

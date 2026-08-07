@@ -77,6 +77,8 @@ export default defineConfig({
             { slug: 'docs/components/aurora-text' },
             { slug: 'docs/components/video-text' },
             { slug: 'docs/components/number-ticker' },
+            { slug: 'docs/components/animated-shiny-text' },
+            { slug: 'docs/components/animated-gradient-text' },
           ],
         },
       ],

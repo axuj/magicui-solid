@@ -1,0 +1,63 @@
+---
+title: Animated Shiny Text
+description: A light glare effect which pans across text making it appear as if it is shimmering.
+---
+
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+import DemoRenderer from '@/demos/__generated__/DemoRenderer.astro'
+
+<div class="not-content">
+  <DemoRenderer demo="AnimatedShinyTextDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/animated-shiny-text
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/animated-shiny-text
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/animated-shiny-text
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/animated-shiny-text
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Import
+
+```tsx
+import { AnimatedShinyText } from '@/components/magicui/animated-shiny-text'
+```
+
+## Usage
+
+```tsx
+<AnimatedShinyText>Hello</AnimatedShinyText>
+```
+
+## Props
+
+| Prop           | Type          | Default | Description                                  |
+| -------------- | ------------- | ------- | -------------------------------------------- |
+| `children`     | `JSX.Element` | `-`     | The text to be shimmered.                    |
+| `class`        | `string`      | `-`     | The class name to be applied to the shimmer. |
+| `shimmerWidth` | `number`      | `100`   | The width of the shimmer in pixels.          |
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/animated-shiny-text" target="_blank">
+    magicui.design/docs/components/animated-shiny-text
+  </a>
+</p>

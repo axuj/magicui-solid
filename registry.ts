@@ -162,6 +162,29 @@ const blinkCursorAnimation = {
   },
 }
 
+const shinyTextAnimation = {
+  animation: {
+    'shiny-text': 'shiny-text 8s infinite',
+  },
+  keyframes: {
+    'shiny-text': {
+      '0%, 90%, 100%': { 'background-position': 'calc(-100% - var(--shiny-width)) 0' },
+      '30%, 60%': { 'background-position': 'calc(100% + var(--shiny-width)) 0' },
+    },
+  },
+}
+
+const gradientAnimation = {
+  animation: {
+    gradient: 'gradient 8s linear infinite',
+  },
+  keyframes: {
+    gradient: {
+      to: { 'background-position': 'var(--bg-size, 300%) 0' },
+    },
+  },
+}
+
 const auroraAnimation = {
   animation: {
     aurora: 'aurora 8s ease-in-out infinite alternate',
@@ -419,6 +442,18 @@ const data = {
       description: 'Animate numbers to count up or down to a target number.',
       dependencies: ['motion'],
       registryDependencies: [dep('create-in-view')],
+    }),
+    uiItem({
+      name: 'animated-shiny-text',
+      title: 'Animated Shiny Text',
+      description: 'A light glare effect which pans across text making it appear as if it is shimmering.',
+      tailwind: { config: { theme: { extend: shinyTextAnimation } } },
+    }),
+    uiItem({
+      name: 'animated-gradient-text',
+      title: 'Animated Gradient Text',
+      description: 'An animated gradient background which transitions between colors for text.',
+      tailwind: { config: { theme: { extend: gradientAnimation } } },
     }),
   ],
 }
