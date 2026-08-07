@@ -1,0 +1,78 @@
+---
+title: Spinning Text
+description: The Spinning Text component animates text in a circular motion with customizable speed, direction, color, and transitions for dynamic and engaging effects.
+---
+
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+import DemoRenderer from '@/demos/__generated__/DemoRenderer.astro'
+
+<div class="not-content">
+  <DemoRenderer demo="SpinningTextDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/spinning-text
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/spinning-text
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/spinning-text
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/spinning-text
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Examples
+
+### Reverse
+
+<div class="not-content">
+  <DemoRenderer demo="SpinningTextDemo2" />
+</div>
+
+### Usage
+
+```tsx
+import { SpinningText } from '@/components/magicui/spinning-text'
+```
+
+```tsx
+<SpinningText>learn more • earn more • grow more •</SpinningText>
+```
+
+## Props
+
+| Prop         | Type                                         | Default | Description                                             |
+| ------------ | -------------------------------------------- | ------- | ------------------------------------------------------- |
+| `children`   | `string` `string[]`                          |         | The text content to be animated in a circular motion.   |
+| `style`      | `CSSProperties`                              | `{}`    | Custom styles for the text container.                   |
+| `duration`   | `number`                                     | `10`    | The duration of the full circular rotation animation.   |
+| `class`      | `string`                                     |         | A custom class name for the text container.             |
+| `reverse`    | `boolean`                                    | `false` | Determines if the animation should rotate in reverse.   |
+| `radius`     | `number`                                     | `5`     | The radius of the circular path for the text animation. |
+| `transition` | `Transition`                                 |         | Custom transition effects for the animation.            |
+| `variants`   | `{ container?: Variants; item?: Variants; }` |         | Variants for container and item animations.             |
+
+## Credits
+
+- Credit to [@AayushBharti](https://github.com/AayushBharti)
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/spinning-text" target="_blank">
+    magicui.design/docs/components/spinning-text
+  </a>
+</p>

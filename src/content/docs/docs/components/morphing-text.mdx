@@ -1,0 +1,68 @@
+---
+title: Morphing Text
+description: A dynamic text morphing component for Magic UI.
+---
+
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+import DemoRenderer from '@/demos/__generated__/DemoRenderer.astro'
+
+<div class="not-content">
+  <DemoRenderer demo="MorphingTextDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/morphing-text
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/morphing-text
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/morphing-text
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/morphing-text
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Import
+
+```tsx
+import { MorphingText } from '@/components/magicui/morphing-text'
+```
+
+## Usage
+
+```tsx
+<MorphingText texts={['Hello', 'World']} />
+```
+
+## Props
+
+| Prop    | Type       | Default | Description                          |
+| ------- | ---------- | ------- | ------------------------------------ |
+| `texts` | `string[]` | `[]`    | Array of texts to morph between      |
+| `class` | `string?`  | `""`    | Additional classes for the container |
+
+This `MorphingText` component dynamically transitions between an array of text strings, creating a smooth, engaging visual effect.
+
+## Credits
+
+- Credit to [@luis-code](https://luis-code.vercel.app/)
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/morphing-text" target="_blank">
+    magicui.design/docs/components/morphing-text
+  </a>
+</p>

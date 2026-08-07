@@ -1,0 +1,68 @@
+---
+title: Sparkles Text
+description: A dynamic text that generates continuous sparkles with smooth transitions, perfect for highlighting text with animated stars.
+---
+
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+import DemoRenderer from '@/demos/__generated__/DemoRenderer.astro'
+
+<div class="not-content">
+  <DemoRenderer demo="SparklesTextDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/sparkles-text
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/sparkles-text
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/sparkles-text
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/sparkles-text
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Import
+
+```tsx
+import { SparklesText } from '@/components/magicui/sparkles-text'
+```
+
+## Usage
+
+```tsx
+<SparklesText>Sparkles Text</SparklesText>
+```
+
+## Props
+
+| Prop            | Type     | Default                                 | Description                                        |
+| --------------- | -------- | --------------------------------------- | -------------------------------------------------- |
+| `children`      | `string` | `-`                                     | The content to display                             |
+| `class`         | `string` | `-`                                     | The class name to be applied to the sparkles text. |
+| `sparklesCount` | `number` | `10`                                    | sparkles count that appears on the text            |
+| `colors`        | `object` | `{first: '#A07CFE', second: '#FE8FB5'}` | the sparkles colors                                |
+
+## Credits
+
+- Credit to [@simonlejeune](https://www.simlej.dev/)
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/sparkles-text" target="_blank">
+    magicui.design/docs/components/sparkles-text
+  </a>
+</p>

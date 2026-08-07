@@ -485,6 +485,23 @@ const data = {
       description: 'Scrolling text whose speed changes based on scroll speed',
       dependencies: ['motion'],
     }),
+    uiItem({
+      name: 'sparkles-text',
+      title: 'Sparkles Text',
+      description: 'A dynamic text that generates continuous sparkles with smooth transitions, perfect for highlighting text with animated stars.',
+      dependencies: ['motion'],
+    }),
+    uiItem({
+      name: 'morphing-text',
+      title: 'Morphing Text',
+      description: 'A dynamic text morphing component for Magic UI.',
+    }),
+    uiItem({
+      name: 'spinning-text',
+      title: 'Spinning Text',
+      description: 'The Spinning Text component animates text in a circular motion with customizable speed, direction, color, and transitions for dynamic and engaging effects.',
+      dependencies: ['motion'],
+    }),
   ],
 }
 
