@@ -24,7 +24,9 @@ function uiItem(opts: UiItemOpts): RegistryItem {
     ...rest,
     name,
     type: 'registry:ui' as const,
-    registryDependencies: registryDependencies ?? [dep('theme')],
+    registryDependencies: registryDependencies
+      ? Array.from(new Set([dep('theme'), ...registryDependencies]))
+      : [dep('theme')],
     files: [{ path: `src/registry/magicui/${name}.tsx`, type: 'registry:ui' as const, target: target(name) }],
   }
 }
@@ -232,7 +234,7 @@ const data = {
       title: 'Terminal',
       description: 'An implementation of the MacOS terminal. Useful for showcasing a command line interface.',
       dependencies: ['motion'],
-      registryDependencies: [dep('theme'), dep('create-in-view')],
+      registryDependencies: [dep('create-in-view')],
     }),
     uiItem({
       name: 'hero-video-dialog',
@@ -257,14 +259,14 @@ const data = {
       title: 'Bento Grid',
       description: 'A bento grid layout component that showcases content in a grid of cards with hover effects.',
       dependencies: ['lucide-solid'],
-      registryDependencies: [dep('theme'), 'https://www.solid-ui.com/r/button.json'],
+      registryDependencies: ['https://www.solid-ui.com/r/button.json'],
     }),
     uiItem({
       name: 'animated-list',
       title: 'Animated List',
       description: 'An animated list component that reveals items one by one with a spring entrance animation.',
       dependencies: ['motion'],
-      registryDependencies: [dep('theme'), dep('flip')],
+      registryDependencies: [dep('flip')],
     }),
     uiItem({
       name: 'animated-beam',
@@ -304,7 +306,7 @@ const data = {
       name: 'icon-cloud',
       title: 'Icon Cloud',
       description: 'An interactive 3D tag cloud component.',
-      registryDependencies: [dep('theme'), 'https://www.solid-ui.com/r/button.json'],
+      registryDependencies: ['https://www.solid-ui.com/r/button.json'],
     }),
     uiItem({
       name: 'pointer',
@@ -358,7 +360,7 @@ const data = {
       title: 'Confetti',
       description: 'Confetti animations are best used to delight your users when something special happens',
       dependencies: ['canvas-confetti', '@types/canvas-confetti'],
-      registryDependencies: [dep('theme'), 'https://www.solid-ui.com/r/button.json'],
+      registryDependencies: ['https://www.solid-ui.com/r/button.json'],
     }),
     uiItem({
       name: 'particles',
@@ -383,14 +385,14 @@ const data = {
       title: 'Text Animate',
       description: 'Animate text word by word with a variety of animation variants.',
       dependencies: ['motion'],
-      registryDependencies: [dep('theme'), dep('create-in-view')],
+      registryDependencies: [dep('create-in-view')],
     }),
     uiItem({
       name: 'typing-animation',
       title: 'Typing Animation',
       description: 'Characters appearing in typed animation',
       dependencies: ['motion'],
-      registryDependencies: [dep('theme'), dep('create-in-view')],
+      registryDependencies: [dep('create-in-view')],
       tailwind: { config: { theme: { extend: blinkCursorAnimation } } },
     }),
     uiItem({
@@ -410,6 +412,13 @@ const data = {
       name: 'video-text',
       title: 'Video Text',
       description: 'A component that displays text with a video playing in the background.',
+    }),
+    uiItem({
+      name: 'number-ticker',
+      title: 'Number Ticker',
+      description: 'Animate numbers to count up or down to a target number.',
+      dependencies: ['motion'],
+      registryDependencies: [dep('create-in-view')],
     }),
   ],
 }

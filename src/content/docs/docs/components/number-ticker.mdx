@@ -1,0 +1,77 @@
+---
+title: Number Ticker
+description: Animate numbers to count up or down to a target number.
+---
+
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+import DemoRenderer from '@/demos/__generated__/DemoRenderer.astro'
+
+<div class="not-content">
+  <DemoRenderer demo="NumberTickerDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/number-ticker
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/number-ticker
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/number-ticker
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/number-ticker
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Example
+
+### Decimal
+
+<div class="not-content">
+  <DemoRenderer demo="NumberTickerDecimalDemo" />
+</div>
+
+### Start Value
+
+<div class="not-content">
+  <DemoRenderer demo="NumberTickerDemo2" />
+</div>
+
+### Usage
+
+```tsx
+import { NumberTicker } from '@/components/magicui/number-ticker'
+```
+
+```tsx
+<NumberTicker value={100} />
+```
+
+## Props
+
+| Prop            | Type            | Default | Description                          |
+| --------------- | --------------- | ------- | ------------------------------------ |
+| `value`         | `int`           | `0`     | The value to count to                |
+| `direction`     | `"up"` `"down"` | `"up"`  | The direction to count in            |
+| `delay`         | `number`        | `0`     | The delay before counting            |
+| `decimalPlaces` | `number`        | `0`     | The number of decimal places to show |
+| `startValue`    | `number`        | `0`     | The value to start counting from     |
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/number-ticker" target="_blank">
+    magicui.design/docs/components/number-ticker
+  </a>
+</p>

@@ -76,6 +76,7 @@ export default defineConfig({
             { slug: 'docs/components/line-shadow-text' },
             { slug: 'docs/components/aurora-text' },
             { slug: 'docs/components/video-text' },
+            { slug: 'docs/components/number-ticker' },
           ],
         },
       ],
