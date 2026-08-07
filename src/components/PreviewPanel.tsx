@@ -2,7 +2,7 @@ import type { JSX } from 'solid-js'
 import { RefreshCw } from 'lucide-solid'
 import { createSignal, Show } from 'solid-js'
 
-interface PreviewPanelProps {
+export interface PreviewPanelProps {
   children: JSX.Element
   align?: 'center' | 'start' | 'end'
 }
