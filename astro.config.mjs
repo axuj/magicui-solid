@@ -107,6 +107,7 @@ export default defineConfig({
             { slug: 'docs/components/ripple-button' },
           ],
         },
+
         {
           label: 'Backgrounds',
           items: [
@@ -126,12 +127,15 @@ export default defineConfig({
         {
           label: 'Community',
           items: [
+            { slug: 'docs/components/shiny-button' },
+            { slug: 'docs/components/neon-gradient-card' },
             { slug: 'docs/components/comic-text' },
             { slug: 'docs/components/kinetic-text', label: 'New' },
             { slug: 'docs/components/cool-mode' },
-            { slug: 'docs/components/neon-gradient-card' },
             { slug: 'docs/components/pixel-image' },
+            { slug: 'docs/components/pulsating-button' },
             { slug: 'docs/components/warp-background' },
+            { slug: 'docs/components/interactive-hover-button' },
             { slug: 'docs/components/glyph-matrix' },
           ],
         },

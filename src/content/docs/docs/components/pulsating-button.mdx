@@ -1,0 +1,78 @@
+---
+title: Pulsating Button
+description: An animated pulsating button useful for capturing attention of users.
+---
+
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+import DemoRenderer from '@/demos/__generated__/DemoRenderer.astro'
+
+<div class="not-content">
+  <DemoRenderer demo="PulsatingButtonDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/pulsating-button
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/pulsating-button
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/pulsating-button
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/pulsating-button
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Import
+
+```tsx
+import { PulsatingButton } from '@/components/magicui/pulsating-button'
+```
+
+## Usage
+
+```tsx
+<PulsatingButton>Pulsating Button</PulsatingButton>
+```
+
+## Examples
+
+### Ripple Variant
+
+<div class="not-content">
+  <DemoRenderer demo="PulsatingButtonDemo2" />
+</div>
+
+## Props
+
+| Prop         | Type                   | Default                          | Description                                |
+| ------------ | ---------------------- | -------------------------------- | ------------------------------------------ |
+| `children`   | `JSX.Element`          | `-`                              | The content of the button.                 |
+| `class`      | `string`               | `-`                              | Additional class names for the button.     |
+| `pulseColor` | `string`               | `Derived from button background` | Any valid CSS color for the pulsing waves. |
+| `duration`   | `string`               | `1.5s`                           | The duration of one pulse.                 |
+| `distance`   | `string`               | `8px`                            | How far the pulse expands from the button. |
+| `variant`    | `"pulse"` / `"ripple"` | `pulse`                          | The pulse animation style.                 |
+
+## Credits
+
+Credit to [@shikhap04](https://github.com/shikhap04) & [@abdmjd1](https://github.com/abdmjd1) for the inspiration behind this component.
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/pulsating-button" target="_blank">
+    magicui.design/docs/components/pulsating-button
+  </a>
+</p>

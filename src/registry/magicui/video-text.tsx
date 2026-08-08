@@ -1,7 +1,7 @@
 import type { JSX, ValidComponent } from 'solid-js'
 import { children, createMemo, mergeProps } from 'solid-js'
 import { Dynamic } from 'solid-js/web'
-import { cn } from '~/lib/utils'
+import { cn } from '@/lib/utils'
 
 export interface VideoTextProps {
   /**

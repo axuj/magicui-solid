@@ -82,6 +82,27 @@ html:root:not([data-has-sidebar]) {
   --animate-pulse-ring: pulse-ring var(--duration, 1.5s) ease-out infinite;
   --animate-background-position-spin: background-position-spin 3000ms infinite alternate;
   --animate-warp-beam: warp-beam var(--beam-duration) linear infinite;
+  --animate-pulse: pulse var(--duration) ease-out infinite;
+  --animate-pulse-ripple: pulse-ripple var(--duration) cubic-bezier(0.16, 1, 0.3, 1) infinite;
+
+  @keyframes pulse {
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 var(--pulse-color, oklch(from var(--bg) l c h / 0.5));
+    }
+    50% {
+      box-shadow: 0 0 0 var(--distance) var(--pulse-color, oklch(from var(--bg) l c h / 0.5));
+    }
+  }
+
+  @keyframes pulse-ripple {
+    0% {
+      box-shadow: 0 0 0 0 oklch(from var(--pulse-color, var(--bg)) l c h / 1);
+    }
+    100% {
+      box-shadow: 0 0 0 var(--distance) oklch(from var(--pulse-color, var(--bg)) l c h / 0);
+    }
+  }
 }
 
 @keyframes aurora {

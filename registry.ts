@@ -281,6 +281,31 @@ const ripplingAnimation = {
   },
 }
 
+const pulsatingAnimation = {
+  animation: {
+    'pulse': 'pulse var(--duration) ease-out infinite',
+    'pulse-ripple': 'pulse-ripple var(--duration) cubic-bezier(0.16, 1, 0.3, 1) infinite',
+  },
+  keyframes: {
+    'pulse': {
+      '0%, 100%': {
+        'box-shadow': '0 0 0 0 var(--pulse-color, oklch(from var(--bg) l c h / 0.5))',
+      },
+      '50%': {
+        'box-shadow': '0 0 0 var(--distance) var(--pulse-color, oklch(from var(--bg) l c h / 0.5))',
+      },
+    },
+    'pulse-ripple': {
+      '0%': {
+        'box-shadow': '0 0 0 0 oklch(from var(--pulse-color, var(--bg)) l c h / 1)',
+      },
+      '100%': {
+        'box-shadow': '0 0 0 var(--distance) oklch(from var(--pulse-color, var(--bg)) l c h / 0)',
+      },
+    },
+  },
+}
+
 const themeToggleViewTransitionCss = {
   '::view-transition-old(root), ::view-transition-new(root)': {
     'animation': 'none',
@@ -407,6 +432,7 @@ const data = {
       name: 'icon-cloud',
       title: 'Icon Cloud',
       description: 'An interactive 3D tag cloud component.',
+      dependencies: ['lucide-solid'],
       registryDependencies: ['https://www.solid-ui.com/r/button.json'],
     }),
     uiItem({
@@ -544,6 +570,7 @@ const data = {
       title: 'Dia Text Reveal',
       description: 'A horizontal color band sweeps across text with a gradient shine, then settles on your theme foreground color.',
       dependencies: ['motion'],
+      registryDependencies: [dep('create-in-view')],
     }),
     uiItem({
       name: 'hyper-text',
@@ -703,6 +730,18 @@ const data = {
       description: 'An SVG fractal noise layer using feTurbulence for subtle texture overlays.',
     }),
     uiItem({
+      name: 'shiny-button',
+      title: 'Shiny Button',
+      description: 'A shiny button component with dynamic styles in the dark mode or light mode.',
+      dependencies: ['motion'],
+    }),
+    uiItem({
+      name: 'neon-gradient-card',
+      title: 'Neon Gradient Card',
+      description: 'A beautiful neon card effect.',
+      tailwind: { config: { theme: { extend: neonGradientCardAnimation } } },
+    }),
+    uiItem({
       name: 'comic-text',
       title: 'Comic Text',
       description: 'Comic text animation',
@@ -719,21 +758,27 @@ const data = {
       description: 'Cool mode effect for buttons, links, and other DOMs',
     }),
     uiItem({
-      name: 'neon-gradient-card',
-      title: 'Neon Gradient Card',
-      description: 'A beautiful neon card effect.',
-      tailwind: { config: { theme: { extend: neonGradientCardAnimation } } },
-    }),
-    uiItem({
       name: 'pixel-image',
       title: 'Pixel Image',
       description: 'A component that displays your image with a pixelated effect, enhancing the visual appeal of any image in your website.',
+    }),
+    uiItem({
+      name: 'pulsating-button',
+      title: 'Pulsating Button',
+      description: 'An animated pulsating button useful for capturing attention of users.',
+      tailwind: { config: { theme: { extend: pulsatingAnimation } } },
     }),
     uiItem({
       name: 'warp-background',
       title: 'Warp Background',
       description: 'A card with a time warping background effect.',
       tailwind: { config: { theme: { extend: warpBeamAnimation } } },
+    }),
+    uiItem({
+      name: 'interactive-hover-button',
+      title: 'Interactive Hover Button',
+      description: 'A visually engaging button component that responds to hover with dynamic transitions, adapting smoothly between light and dark modes for enhanced user interactivity.',
+      dependencies: ['lucide-solid'],
     }),
     uiItem({
       name: 'glyph-matrix',

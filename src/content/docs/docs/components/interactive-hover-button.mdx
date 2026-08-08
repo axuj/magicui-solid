@@ -1,0 +1,66 @@
+---
+title: Interactive Hover Button
+description: A visually engaging button component that responds to hover with dynamic transitions, adapting smoothly between light and dark modes for enhanced user interactivity.
+---
+
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+import DemoRenderer from '@/demos/__generated__/DemoRenderer.astro'
+
+<div class="not-content">
+  <DemoRenderer demo="InteractiveHoverButtonDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/interactive-hover-button
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/interactive-hover-button
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/interactive-hover-button
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/interactive-hover-button
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Import
+
+```tsx
+import { InteractiveHoverButton } from '@/components/magicui/interactive-hover-button'
+```
+
+## Usage
+
+```tsx
+<InteractiveHoverButton>Interactive Hover Button</InteractiveHoverButton>
+```
+
+## Props
+
+| Prop       | Type          | Default | Description                                   |
+| ---------- | ------------- | ------- | --------------------------------------------- |
+| `class`    | `string`      | `-`     | Additional class names to style the component |
+| `children` | `JSX.Element` | `-`     | The content to be displayed inside the button |
+
+## Credits
+
+Credit to [@AayushBharti](https://github.com/AayushBharti) for the inspiration behind this component.
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/interactive-hover-button" target="_blank">
+    magicui.design/docs/components/interactive-hover-button
+  </a>
+</p>

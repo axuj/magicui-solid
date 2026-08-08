@@ -1,0 +1,66 @@
+---
+title: Shiny Button
+description: A shiny button component with dynamic styles in the dark mode or light mode.
+---
+
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+import DemoRenderer from '@/demos/__generated__/DemoRenderer.astro'
+
+<div class="not-content">
+  <DemoRenderer demo="ShinyButtonDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/shiny-button
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/shiny-button
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/shiny-button
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/shiny-button
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Import
+
+```tsx
+import { ShinyButton } from '@/components/magicui/shiny-button'
+```
+
+## Usage
+
+```tsx
+<ShinyButton>Shiny Button</ShinyButton>
+```
+
+## Props
+
+| Prop       | Type          | Description                                   |
+| ---------- | ------------- | --------------------------------------------- |
+| `class`    | `string`      | The class name to be applied to the component |
+| `children` | `JSX.Element` | The content to be displayed inside the button |
+
+## Credits
+
+Credit to [@luis-code](https://luis-code.vercel.app/) for the inspiration behind this component.
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/shiny-button" target="_blank">
+    magicui.design/docs/components/shiny-button
+  </a>
+</p>
