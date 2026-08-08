@@ -1,6 +1,6 @@
 import type { Accessor } from 'solid-js'
 import { animate } from 'motion'
-import { createEffect, createSignal, mergeProps, onCleanup, splitProps, untrack } from 'solid-js'
+import { createEffect, createSignal, createUniqueId, mergeProps, onCleanup, splitProps, untrack } from 'solid-js'
 import { cn } from '@/lib/utils'
 
 export interface AnimatedBeamProps {
@@ -25,10 +25,8 @@ export interface AnimatedBeamProps {
   endYOffset?: number
 }
 
-let gradientIdCounter = 0
-
 export function AnimatedBeam(props: AnimatedBeamProps) {
-  const id = `magicui-beam-${++gradientIdCounter}`
+  const id = createUniqueId()
   const merged = mergeProps(
     {
       curvature: 0,
