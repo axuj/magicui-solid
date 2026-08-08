@@ -264,6 +264,18 @@ const themeToggleViewTransitionCss = {
   },
 }
 
+const rippleAnimation = {
+  animation: {
+    ripple: 'ripple var(--duration, 2s) ease calc(var(--i, 0) * 0.2s) infinite',
+  },
+  keyframes: {
+    ripple: {
+      '0%, 100%': { transform: 'translate(-50%, -50%) scale(1)' },
+      '50%': { transform: 'translate(-50%, -50%) scale(0.9)' },
+    },
+  },
+}
+
 const data = {
   $schema: 'https://ui.shadcn.com/schema/registry.json',
   name: 'magicui-solid',
@@ -606,6 +618,28 @@ const data = {
       title: 'Ripple Button',
       description: 'An animated button with ripple useful for user engagement.',
       tailwind: { config: { theme: { extend: ripplingAnimation } } },
+    }),
+    uiItem({
+      name: 'flickering-grid',
+      title: 'Flickering Grid',
+      description: 'A flickering grid background made with SVGs, fully customizable using Tailwind CSS.',
+    }),
+    uiItem({
+      name: 'animated-grid-pattern',
+      title: 'Animated Grid Pattern',
+      description: 'A animated background grid pattern made with SVGs, fully customizable using Tailwind CSS.',
+      dependencies: ['motion'],
+    }),
+    uiItem({
+      name: 'retro-grid',
+      title: 'Retro Grid',
+      description: 'An animated scrolling retro grid effect',
+    }),
+    uiItem({
+      name: 'ripple',
+      title: 'Ripple',
+      description: 'An animated ripple effect typically used behind elements to emphasize them.',
+      tailwind: { config: { theme: { extend: rippleAnimation } } },
     }),
     uiItem({
       name: 'dot-pattern',

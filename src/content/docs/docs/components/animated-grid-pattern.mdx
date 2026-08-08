@@ -1,0 +1,70 @@
+---
+title: Animated Grid Pattern
+description: A animated background grid pattern made with SVGs, fully customizable using Tailwind CSS.
+---
+
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+import DemoRenderer from '@/demos/__generated__/DemoRenderer.astro'
+
+<div class="not-content">
+  <DemoRenderer demo="AnimatedGridPatternDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/animated-grid-pattern
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/animated-grid-pattern
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/animated-grid-pattern
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/animated-grid-pattern
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Usage
+
+```tsx showLineNumbers
+import { AnimatedGridPattern } from '@/components/magicui/animated-grid-pattern'
+```
+
+```tsx showLineNumbers
+<AnimatedGridPattern />
+```
+
+## Props
+
+### GridPattern
+
+| Prop              | Type     | Default | Description                                   |
+| ----------------- | -------- | ------- | --------------------------------------------- |
+| `class`           | `string` | `-`     | Additional classes to be added to the pattern |
+| `width`           | `number` | `40`    | Width of the pattern                          |
+| `height`          | `number` | `40`    | Height of the pattern                         |
+| `x`               | `number` | `-1`    | X offset of the pattern                       |
+| `y`               | `number` | `-1`    | Y offset of the pattern                       |
+| `strokeDasharray` | `number` | `0`     | Stroke dash array of the pattern              |
+| `numSquares`      | `number` | `50`    | Number of squares in the pattern              |
+| `maxOpacity`      | `number` | `0.5`   | Maximum opacity of the pattern                |
+| `duration`        | `number` | `4`     | Duration of the animation                     |
+| `repeatDelay`     | `number` | `0.5`   | Repeat delay of the animation                 |
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/animated-grid-pattern" target="_blank">
+    magicui.design/docs/components/animated-grid-pattern
+  </a>
+</p>

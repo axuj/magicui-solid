@@ -1,0 +1,63 @@
+---
+title: Ripple
+description: An animated ripple effect typically used behind elements to emphasize them.
+---
+
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+import DemoRenderer from '@/demos/__generated__/DemoRenderer.astro'
+
+<div class="not-content">
+  <DemoRenderer demo="RippleDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/ripple
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/ripple
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/ripple
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/ripple
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Usage
+
+```tsx showLineNumbers
+import { Ripple } from '@/components/magicui/ripple'
+```
+
+```tsx showLineNumbers
+<div className="relative h-[500px] w-full overflow-hidden">
+  <Ripple />
+</div>
+```
+
+## Props
+
+| Prop                | Type     | Default | Description                            |
+| ------------------- | -------- | ------- | -------------------------------------- |
+| `mainCircleSize`    | `number` | `210`   | The size of the main circle in pixels  |
+| `mainCircleOpacity` | `number` | `0.24`  | The opacity of the main circle         |
+| `numCircles`        | `number` | `8`     | The number of ripple circles to render |
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/ripple" target="_blank">
+    magicui.design/docs/components/ripple
+  </a>
+</p>

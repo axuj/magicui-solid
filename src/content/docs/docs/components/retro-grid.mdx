@@ -1,0 +1,66 @@
+---
+title: Retro Grid
+description: An animated scrolling retro grid effect
+---
+
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+import DemoRenderer from '@/demos/__generated__/DemoRenderer.astro'
+
+<div class="not-content">
+  <DemoRenderer demo="RetroGridDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/retro-grid
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/retro-grid
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/retro-grid
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/retro-grid
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Usage
+
+```tsx showLineNumbers
+import { RetroGrid } from '@/components/magicui/retro-grid'
+```
+
+```tsx showLineNumbers
+<div className="relative h-[500px] w-full overflow-hidden">
+  <RetroGrid />
+</div>
+```
+
+## Props
+
+| Prop             | Type     | Default  | Description                                   |
+| ---------------- | -------- | -------- | --------------------------------------------- |
+| `class`          | `string` | `-`      | Additional CSS classes for the grid container |
+| `angle`          | `number` | `65`     | Rotation angle of the grid in degrees         |
+| `cellSize`       | `number` | `60`     | Grid cell size in pixels                      |
+| `opacity`        | `number` | `0.5`    | Grid opacity value between 0 and 1            |
+| `lightLineColor` | `string` | `"gray"` | Grid line color in light mode                 |
+| `darkLineColor`  | `string` | `"gray"` | Grid line color in dark mode                  |
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/retro-grid" target="_blank">
+    magicui.design/docs/components/retro-grid
+  </a>
+</p>

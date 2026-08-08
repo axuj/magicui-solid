@@ -1,0 +1,74 @@
+---
+title: Flickering Grid
+description: A flickering grid background made with SVGs, fully customizable using Tailwind CSS.
+---
+
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+import DemoRenderer from '@/demos/__generated__/DemoRenderer.astro'
+
+<div class="not-content">
+  <DemoRenderer demo="FlickeringGridDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/flickering-grid
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/flickering-grid
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/flickering-grid
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/flickering-grid
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Examples
+
+### Rounded
+
+<div class="not-content">
+  <DemoRenderer demo="FlickeringGridRoundedDemo" />
+</div>
+
+### Usage
+
+```tsx showLineNumbers
+import { FlickeringGrid } from '@/components/magicui/flickering-grid'
+```
+
+```tsx showLineNumbers
+<FlickeringGrid />
+```
+
+## Props
+
+| Prop            | Type     | Default          | Description                           |
+| --------------- | -------- | ---------------- | ------------------------------------- |
+| `squareSize`    | `number` | `4`              | Size of each square in the grid       |
+| `gridGap`       | `number` | `6`              | Gap between squares in the grid       |
+| `flickerChance` | `number` | `0.3`            | Probability of a square flickering    |
+| `color`         | `string` | `"rgb(0, 0, 0)"` | Color of the squares                  |
+| `width`         | `number` | `-`              | Width of the canvas                   |
+| `height`        | `number` | `-`              | Height of the canvas                  |
+| `class`         | `string` | `-`              | Additional CSS classes for the canvas |
+| `maxOpacity`    | `number` | `0.3`            | Maximum opacity of the squares        |
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/flickering-grid" target="_blank">
+    magicui.design/docs/components/flickering-grid
+  </a>
+</p>

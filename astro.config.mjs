@@ -110,6 +110,10 @@ export default defineConfig({
         {
           label: 'Backgrounds',
           items: [
+            { slug: 'docs/components/flickering-grid' },
+            { slug: 'docs/components/animated-grid-pattern' },
+            { slug: 'docs/components/retro-grid' },
+            { slug: 'docs/components/ripple' },
             { slug: 'docs/components/dot-pattern' },
             { slug: 'docs/components/grid-pattern' },
             { slug: 'docs/components/hexagon-pattern' },
