@@ -1,0 +1,71 @@
+---
+title: Shimmer Button
+description: A button with a shimmering light which travels around the perimeter
+---
+
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+import DemoRenderer from '@/demos/__generated__/DemoRenderer.astro'
+
+<div class="not-content">
+  <DemoRenderer demo="ShimmerButtonDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/shimmer-button
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/shimmer-button
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/shimmer-button
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/shimmer-button
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Import
+
+```tsx
+import { ShimmerButton } from '@/components/magicui/shimmer-button'
+```
+
+## Usage
+
+```tsx
+<ShimmerButton>Shimmer Button</ShimmerButton>
+```
+
+## Props
+
+| Prop              | Type          | Default            | Description                         |
+| ----------------- | ------------- | ------------------ | ----------------------------------- |
+| `shimmerColor`    | `string`      | `#ffffff`          | The color of the shimmer            |
+| `shimmerSize`     | `string`      | `0.05em`           | The size of the shimmer             |
+| `borderRadius`    | `string`      | `100px`            | The border radius of the button     |
+| `shimmerDuration` | `string`      | `3s`               | The duration of the spark animation |
+| `background`      | `string`      | `rgba(0, 0, 0, 1)` | The background of the button        |
+| `class`           | `string`      | `undefined`        | The class name of the button        |
+| `children`        | `JSX.Element` | `undefined`        | The children of the button          |
+
+## Credits
+
+Credit to [@jh3yy](https://twitter.com/jh3yy/status/1656423856276488192) for the inspiration behind this component.
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/components/shimmer-button" target="_blank">
+    magicui.design/components/shimmer-button
+  </a>
+</p>

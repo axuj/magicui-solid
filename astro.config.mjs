@@ -99,6 +99,14 @@ export default defineConfig({
             { slug: 'docs/components/android' },
           ],
         },
+        {
+          label: 'Buttons',
+          items: [
+            { slug: 'docs/components/rainbow-button' },
+            { slug: 'docs/components/shimmer-button' },
+            { slug: 'docs/components/ripple-button' },
+          ],
+        },
       ],
     }),
   ],

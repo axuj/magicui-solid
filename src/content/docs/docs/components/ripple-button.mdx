@@ -1,0 +1,68 @@
+---
+title: Ripple Button
+description: An animated button with ripple useful for user engagement
+---
+
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+import DemoRenderer from '@/demos/__generated__/DemoRenderer.astro'
+
+<div class="not-content">
+  <DemoRenderer demo="RippleButtonDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/ripple-button
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/ripple-button
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/ripple-button
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/ripple-button
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Import
+
+```tsx
+import { RippleButton } from '@/components/magicui/ripple-button'
+```
+
+## Usage
+
+```tsx
+<RippleButton>Ripple Button</RippleButton>
+```
+
+## Props
+
+| Prop          | Type          | Default | Description                                               |
+| ------------- | ------------- | ------- | --------------------------------------------------------- |
+| `children`    | `JSX.Element` | `-`     | The content of the button.                                |
+| `class`       | `string`      | `-`     | Additional class names for the button.                    |
+| `rippleColor` | `string`      | `-`     | The rbg numbers only for the color of the rippling waves. |
+| `duration`    | `string`      | `-`     | The time span of one ripple.                              |
+
+## Credits
+
+- Credit to [@Sidd5arth](https://github.com/Sidd5arth)
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/components/ripple-button" target="_blank">
+    magicui.design/components/ripple-button
+  </a>
+</p>

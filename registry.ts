@@ -215,6 +215,48 @@ const auroraAnimation = {
   },
 }
 
+const rainbowAnimation = {
+  animation: {
+    rainbow: 'rainbow var(--speed, 2s) infinite linear',
+  },
+  keyframes: {
+    rainbow: {
+      '0%': { 'background-position': '0%' },
+      '100%': { 'background-position': '200%' },
+    },
+  },
+}
+
+const shimmerButtonAnimation = {
+  animation: {
+    'shimmer-slide': 'shimmer-slide var(--speed) ease-in-out infinite alternate',
+    'spin-around': 'spin-around calc(var(--speed) * 2) infinite linear',
+  },
+  keyframes: {
+    'shimmer-slide': {
+      to: { transform: 'translate(calc(100cqw - 100%), 0)' },
+    },
+    'spin-around': {
+      '0%': { transform: 'translateZ(0) rotate(0)' },
+      '15%, 35%': { transform: 'translateZ(0) rotate(90deg)' },
+      '65%, 85%': { transform: 'translateZ(0) rotate(270deg)' },
+      '100%': { transform: 'translateZ(0) rotate(360deg)' },
+    },
+  },
+}
+
+const ripplingAnimation = {
+  animation: {
+    rippling: 'rippling var(--duration) ease-out',
+  },
+  keyframes: {
+    rippling: {
+      '0%': { opacity: '1' },
+      '100%': { transform: 'scale(2)', opacity: '0' },
+    },
+  },
+}
+
 const themeToggleViewTransitionCss = {
   '::view-transition-old(root), ::view-transition-new(root)': {
     'animation': 'none',
@@ -529,6 +571,41 @@ const data = {
       name: 'android',
       title: 'Android',
       description: 'A mockup of an Android device.',
+    }),
+    uiItem({
+      name: 'rainbow-button',
+      title: 'Rainbow Button',
+      description: 'An animated button with a rainbow effect.',
+      dependencies: ['class-variance-authority'],
+      cssVars: {
+        light: {
+          'color-1': 'oklch(66.2% 0.225 25.9)',
+          'color-2': 'oklch(60.4% 0.26 302)',
+          'color-3': 'oklch(69.6% 0.165 251)',
+          'color-4': 'oklch(80.2% 0.134 225)',
+          'color-5': 'oklch(90.7% 0.231 133)',
+        },
+        dark: {
+          'color-1': 'oklch(66.2% 0.225 25.9)',
+          'color-2': 'oklch(60.4% 0.26 302)',
+          'color-3': 'oklch(69.6% 0.165 251)',
+          'color-4': 'oklch(80.2% 0.134 225)',
+          'color-5': 'oklch(90.7% 0.231 133)',
+        },
+      },
+      tailwind: { config: { theme: { extend: rainbowAnimation } } },
+    }),
+    uiItem({
+      name: 'shimmer-button',
+      title: 'Shimmer Button',
+      description: 'A button with a shimmering light which travels around the perimeter.',
+      tailwind: { config: { theme: { extend: shimmerButtonAnimation } } },
+    }),
+    uiItem({
+      name: 'ripple-button',
+      title: 'Ripple Button',
+      description: 'An animated button with ripple useful for user engagement.',
+      tailwind: { config: { theme: { extend: ripplingAnimation } } },
     }),
   ],
 }
