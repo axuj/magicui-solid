@@ -1,0 +1,59 @@
+---
+title: Comic Text
+description: Comic text animation that looks like a comic book text
+---
+
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+import DemoRenderer from '@/demos/__generated__/DemoRenderer.astro'
+
+<div class="not-content">
+  <DemoRenderer demo="ComicTextDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/comic-text
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/comic-text
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/comic-text
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/comic-text
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Usage
+
+```tsx
+import { ComicText } from "@/components/magicui/comic-text"
+```
+
+```tsx
+<ComicText>Comic Text</ComicText>
+```
+
+## Props
+
+| Prop       | Type            | Default | Description                                   |
+| ---------- | --------------- | ------- | --------------------------------------------- |
+| `class`    | `string`        | `-`     | The class name to be applied to the component |
+| `fontSize` | `number`        | `5`     | The font size of the text                     |
+| `style`    | `CSSProperties` | `-`     | The style of the text                         |
+| `children` | `string`        | `-`     | The text to be displayed                      |
+
+## Credits
+
+- Credit to @iambharathpadhu](https://github.com/iambharathpadhu)

@@ -123,6 +123,13 @@ export default defineConfig({
             { slug: 'docs/components/noise-texture' },
           ],
         },
+        {
+          label: 'Community',
+          items: [
+            { slug: 'docs/components/comic-text' },
+            { slug: 'docs/components/kinetic-text', label: 'New' },
+          ],
+        },
       ],
     }),
   ],

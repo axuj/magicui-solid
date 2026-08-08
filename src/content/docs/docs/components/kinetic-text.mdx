@@ -1,0 +1,58 @@
+---
+title: Kinetic Text
+description: A text component that animates font weight of characters on hover.
+---
+
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+import DemoRenderer from '@/demos/__generated__/DemoRenderer.astro'
+
+<div class="not-content">
+  <DemoRenderer demo="KineticTextDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/kinetic-text
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/kinetic-text
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/kinetic-text
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/kinetic-text
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Usage
+
+```tsx
+import { KineticText } from "@/components/magicui/kinetic-text"
+```
+
+```tsx
+<KineticText text="some text" />
+```
+
+## Props
+
+| Prop    | Type             | Default | Description                                         |
+| ------- | ---------------- | ------- | --------------------------------------------------- |
+| `text`  | `string`         | `-`     | The text content to render with the kinetic effect. |
+| `as`    | `ValidComponent` | `"h1"`  | The HTML element to render as.                      |
+| `class` | `string`         | `-`     | Additional class names for the wrapper element.     |
+
+## Credits
+
+- Credit to @abdmjd1](https://github.com/abdmjd1)

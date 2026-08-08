@@ -678,6 +678,17 @@ const data = {
       title: 'Noise Texture',
       description: 'An SVG fractal noise layer using feTurbulence for subtle texture overlays.',
     }),
+    uiItem({
+      name: 'comic-text',
+      title: 'Comic Text',
+      description: 'Comic text animation',
+      dependencies: ['motion'],
+    }),
+    uiItem({
+      name: 'kinetic-text',
+      title: 'Kinetic Text',
+      description: 'A text component that animates font weight of characters on hover.',
+    }),
   ],
 }
 
