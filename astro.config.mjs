@@ -92,6 +92,22 @@ export default defineConfig({
           ],
         },
         {
+          label: 'Device Mocks',
+          items: [
+            { slug: 'docs/components/safari' },
+            { slug: 'docs/components/iphone' },
+            { slug: 'docs/components/android' },
+          ],
+        },
+        {
+          label: 'Buttons',
+          items: [
+            { slug: 'docs/components/rainbow-button' },
+            { slug: 'docs/components/shimmer-button' },
+            { slug: 'docs/components/ripple-button' },
+          ],
+        },
+        {
           label: 'Backgrounds',
           items: [
             { slug: 'docs/components/flickering-grid' },
