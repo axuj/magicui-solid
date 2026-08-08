@@ -14,6 +14,7 @@
 :root {
   --content-width: 50rem;
   --sl-content-width: var(--content-width);
+  --sl-sidebar-width: 21rem;
 
   /* Starlight 默认 dark 下 bg-accent = accent-high，被 starlight-black 重映射为前景色（白），
      改用 gray-6（light oklch(87%) / dark oklch(26.9%)）恢复 shadcn accent 语义 */
@@ -380,4 +381,9 @@ html:root:not([data-has-sidebar]) {
   :where(.not-content) * {
     font-size: inherit;
   }
+}
+
+/* 侧边栏链接禁用折行：容器宽度与长标题零余量，字体回退/DPI 差异会导致意外换行 */
+#starlight__sidebar a {
+  white-space: nowrap;
 }

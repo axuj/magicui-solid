@@ -767,6 +767,12 @@ const data = {
       dependencies: ['shiki', '@shikijs/transformers', 'lucide-solid'],
     }),
     uiItem({
+      name: 'scroll-progress',
+      title: 'Scroll Progress',
+      description: 'Animated Scroll Progress for your pages',
+      dependencies: ['motion'],
+    }),
+    uiItem({
       name: 'neon-gradient-card',
       title: 'Neon Gradient Card',
       description: 'A beautiful neon card effect.',
@@ -810,6 +816,16 @@ const data = {
       title: 'Interactive Hover Button',
       description: 'A visually engaging button component that responds to hover with dynamic transitions, adapting smoothly between light and dark modes for enhanced user interactivity.',
       dependencies: ['lucide-solid'],
+    }),
+    uiItem({
+      name: 'animated-circular-progress-bar',
+      title: 'Animated Circular Progress Bar',
+      description: 'Animated Circular Progress Bar is a component that displays a circular gauge with a percentage value.',
+    }),
+    uiItem({
+      name: 'backlight',
+      title: 'Backlight',
+      description: 'A backlight glow effect for videos, images, and SVGs.',
     }),
     uiItem({
       name: 'glyph-matrix',

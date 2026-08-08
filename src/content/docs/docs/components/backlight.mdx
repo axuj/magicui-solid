@@ -1,0 +1,81 @@
+---
+title: Backlight
+description: A backlight glow effect for videos, images, and SVGs.
+---
+
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+import DemoRenderer from '@/demos/__generated__/DemoRenderer.astro'
+
+<div class="not-content">
+  <DemoRenderer demo="BacklightVideoDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/backlight
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/backlight
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/backlight
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/backlight
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Examples
+
+### Image
+
+<div class="not-content">
+  <DemoRenderer demo="BacklightImageDemo" />
+</div>
+
+### SVG
+
+<div class="not-content">
+  <DemoRenderer demo="BacklightSVGDemo" />
+</div>
+
+## Usage
+
+```tsx showLineNumbers
+import { Backlight } from "@/components/magicui/backlight"
+```
+
+```tsx showLineNumbers
+<Backlight>
+  <img src="https://some-url/image.png" />
+</Backlight>
+```
+
+## Props
+
+| Prop       | Type          | Default | Description                                                        |
+| ---------- | ------------- | ------- | ------------------------------------------------------------------ |
+| `blur`     | `number`      | `20`    | The blur intensity of the backlight glow effect.                   |
+| `children` | `JSX.Element` | `-`     | The video, image, or SVG element to apply the backlight effect to. |
+| `class`    | `string`      | `-`     | Additional class names for the wrapper div.                        |
+
+## Credits
+
+- Credit to [@abdmjd1](https://github.com/abdmjd1)
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/backlight" target="_blank">
+    magicui.design/docs/components/backlight
+  </a>
+</p>

@@ -1,0 +1,65 @@
+---
+title: Scroll Progress
+description: Animated Scroll Progress for your pages
+---
+
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+import DemoRenderer from '@/demos/__generated__/DemoRenderer.astro'
+
+<div class="not-content">
+  <DemoRenderer demo="ScrollProgressDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/scroll-progress
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/scroll-progress
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/scroll-progress
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/scroll-progress
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Usage
+
+```tsx showLineNumbers
+import { ScrollProgress } from "@/components/magicui/scroll-progress"
+```
+
+```tsx showLineNumbers
+<ScrollProgress />
+```
+
+## Props
+
+| Prop    | Type     | Default | Description                                   |
+| ------- | -------- | ------- | --------------------------------------------- |
+| `class` | `string` | `-`     | The class name to be applied to the component |
+
+The `ScrollProgress` component also accepts all properties of the `HTMLDivElement` type.
+
+## Credits
+
+- Credit to [dipesh_the_dev](https://twitter.com/dipesh_the_dev)
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/scroll-progress" target="_blank">
+    magicui.design/docs/components/scroll-progress
+  </a>
+</p>
