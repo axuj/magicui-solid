@@ -1,0 +1,71 @@
+---
+title: Glyph Matrix
+description: An animated grid of subtly shifting glyphs on a canvas, with a theme-aware color driven by the consumer.
+---
+
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+import DemoRenderer from '@/demos/__generated__/DemoRenderer.astro'
+
+<div class="not-content">
+  <DemoRenderer demo="GlyphMatrixDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/glyph-matrix
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/glyph-matrix
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/glyph-matrix
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/glyph-matrix
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Usage
+
+```tsx showLineNumbers
+import { GlyphMatrix } from "@/components/magicui/glyph-matrix"
+```
+
+```tsx showLineNumbers
+<div className="border-border bg-background h-[400px] w-full overflow-hidden rounded-lg border">
+  <GlyphMatrix />
+</div>
+```
+
+## Props
+
+| Prop           | Type     | Default          | Description                                  |
+| -------------- | -------- | ---------------- | -------------------------------------------- |
+| `glyphs`       | `string` | `"01·•+*/\\<>="` | Characters to randomly pick from.            |
+| `cellSize`     | `number` | `14`             | Cell size in pixels and font size.           |
+| `mutationRate` | `number` | `0.04`           | Probability a cell mutates each tick.        |
+| `interval`     | `number` | `90`             | Tick interval in milliseconds.               |
+| `class`        | `string` | `-`              | Classes applied to the canvas element.       |
+| `fadeBottom`   | `number` | `0.6`            | Fade strength toward the bottom of the grid. |
+| `color`        | `string` | `"#6B7280"`      | Glyph color (any CSS color).                 |
+
+## Notes
+
+The component draws with the `color` prop, which accepts any CSS color (hex, `rgb()`, `hsl()`, `oklch()`, ...) and is normalized through canvas before drawing. For light/dark support, drive `color` from the consumer — e.g. with `next-themes` as shown in the demo above.
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/glyph-matrix" target="_blank">
+    magicui.design/docs/components/glyph-matrix
+  </a>
+</p>

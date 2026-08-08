@@ -1,0 +1,78 @@
+---
+title: Cool Mode
+description: Cool mode effect for buttons, links, and other DOMs
+---
+
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+import DemoRenderer from '@/demos/__generated__/DemoRenderer.astro'
+
+<div class="not-content">
+  <DemoRenderer demo="CoolModeDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/cool-mode
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/cool-mode
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/cool-mode
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/cool-mode
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Examples
+
+### Custom Particle
+
+<div class="not-content">
+  <DemoRenderer demo="CoolModeCustomDemo" />
+</div>
+
+### Usage
+
+```tsx showLineNumbers
+import { CoolMode } from "@/components/magicui/cool-mode"
+```
+
+```tsx showLineNumbers
+<CoolMode>
+  <button>Click me</button>
+</CoolMode>
+```
+
+## Props
+
+| Prop            | Type     | Default    | Description                            |
+| --------------- | -------- | ---------- | -------------------------------------- |
+| `particle`      | `string` | `"circle"` | The particle URL for a custom particle |
+| `size`          | `number` | `Varies`   | Size of the particle                   |
+| `particleCount` | `number` | `Varies`   | The number of particles to generate    |
+| `speedHorz`     | `number` | `Varies`   | Horizontal speed of the particles      |
+| `speedUp`       | `number` | `Varies`   | Upward speed of the particles          |
+
+## Credits
+
+- Credit to [Bankk](https://www.x.com/bankkroll_eth)
+- Inspired by [ClickFusion](https://github.com/BankkRoll/ClickFusion)
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/cool-mode" target="_blank">
+    magicui.design/docs/components/cool-mode
+  </a>
+</p>

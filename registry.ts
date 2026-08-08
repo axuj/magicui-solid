@@ -689,6 +689,16 @@ const data = {
       title: 'Kinetic Text',
       description: 'A text component that animates font weight of characters on hover.',
     }),
+    uiItem({
+      name: 'cool-mode',
+      title: 'Cool Mode',
+      description: 'Cool mode effect for buttons, links, and other DOMs',
+    }),
+    uiItem({
+      name: 'glyph-matrix',
+      title: 'Glyph Matrix',
+      description: 'An animated grid of subtly shifting glyphs with fade effect and theme support.',
+    }),
   ],
 }
 

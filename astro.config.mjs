@@ -128,6 +128,8 @@ export default defineConfig({
           items: [
             { slug: 'docs/components/comic-text' },
             { slug: 'docs/components/kinetic-text', label: 'New' },
+            { slug: 'docs/components/cool-mode' },
+            { slug: 'docs/components/glyph-matrix' },
           ],
         },
       ],
