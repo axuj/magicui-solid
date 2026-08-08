@@ -52,7 +52,7 @@ function toSpringOptions(stiffness: number, damping: number, mass: number): Spri
 }
 
 export function MagicCard(props: MagicCardProps) {
-  const isOrb = untrack(() => props.mode) === 'orb'
+  const isOrb = () => props.mode === 'orb'
 
   const initialGradientSize = untrack(() => props.gradientSize) ?? 200
 
@@ -76,7 +76,7 @@ export function MagicCard(props: MagicCardProps) {
   })
 
   const reset = (reason: ResetReason = 'leave') => {
-    if (isOrb) {
+    if (isOrb()) {
       setOrbVisible(reason === 'enter' ? (props.glowOpacity ?? 0.9) : 0)
       return
     }
@@ -90,7 +90,7 @@ export function MagicCard(props: MagicCardProps) {
     const y = e.clientY - rect.top
     setMouseX(x)
     setMouseY(y)
-    if (isOrb) {
+    if (isOrb()) {
       setOrbX(x)
       setOrbY(y)
     }
@@ -150,7 +150,7 @@ export function MagicCard(props: MagicCardProps) {
     >
       <div class="absolute inset-px z-20 rounded-[inherit] bg-background" />
 
-      {!isOrb && (
+      {!isOrb() && (
         <div
           class="
             pointer-events-none absolute inset-px z-30 rounded-[inherit]
@@ -164,7 +164,7 @@ export function MagicCard(props: MagicCardProps) {
         />
       )}
 
-      {isOrb && (
+      {isOrb() && (
         <div
           aria-hidden="true"
           class="pointer-events-none absolute z-30"

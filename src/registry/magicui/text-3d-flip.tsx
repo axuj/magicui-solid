@@ -9,7 +9,6 @@ import {
   onCleanup,
   onMount,
   splitProps,
-  untrack,
 } from 'solid-js'
 import { Dynamic } from 'solid-js/web'
 import { cn } from '@/lib/utils'
@@ -161,7 +160,7 @@ export default function Text3DFlip(props: Text3DFlipProps) {
       await scopedAnimate(
         '.text-3d-flip-char',
         { transform: rotationTransform() },
-        { ...untrack(() => local.transition), delay: (i: number) => delays[i] },
+        { ...local.transition, delay: (i: number) => delays[i] },
       )
 
       if (!isMounted)

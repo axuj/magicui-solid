@@ -6,7 +6,6 @@ import {
   on,
   onCleanup,
   splitProps,
-  untrack,
 } from 'solid-js'
 
 import { cn } from '@/lib/utils'
@@ -102,7 +101,7 @@ export function Particles(props: ParticlesProps) {
   const dpr = typeof window !== 'undefined' ? window.devicePixelRatio : 1
   let rafID: number | null = null
   let resizeTimeout: ReturnType<typeof setTimeout> | null = null
-  let rgb = hexToRgb(untrack(() => local.color))
+  let rgb: number[] = []
 
   createEffect(on(() => local.color, () => {
     rgb = hexToRgb(local.color)

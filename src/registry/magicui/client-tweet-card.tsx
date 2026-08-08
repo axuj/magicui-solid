@@ -801,9 +801,12 @@ export function ClientTweetCard(props: TweetProps & { class?: string }) {
   const [local, rest] = splitProps(merged, ['id', 'apiUrl', 'fallback', 'components', 'fetchOptions', 'onError'])
 
   const [tweet] = createResource(
-    () => (isServer ? undefined : local.id),
-    async (id) => {
-      const url = untrack(() => local.apiUrl) || `https://react-tweet.vercel.app/api/tweet/${id}`
+    () => (isServer || !local.id ? undefined : `${local.id}::${local.apiUrl ?? ''}`),
+    async (key) => {
+      const sep = key.indexOf('::')
+      const id = key.slice(0, sep)
+      const apiUrl = key.slice(sep + 2) || undefined
+      const url = apiUrl || `https://react-tweet.vercel.app/api/tweet/${id}`
       const res = await fetch(url, untrack(() => local.fetchOptions))
       const json = await res.json() as { data?: Tweet }
 
