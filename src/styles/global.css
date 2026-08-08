@@ -15,6 +15,10 @@
   --content-width: 50rem;
   --sl-content-width: var(--content-width);
 
+  /* Starlight 默认 dark 下 bg-accent = accent-high，被 starlight-black 重映射为前景色（白），
+     改用 gray-6（light oklch(87%) / dark oklch(26.9%)）恢复 shadcn accent 语义 */
+  --sl-color-bg-accent: var(--sl-color-gray-6);
+
   --muted: oklch(0.97 0 0);
 
   --color-1: oklch(66.2% 0.225 25.9);
