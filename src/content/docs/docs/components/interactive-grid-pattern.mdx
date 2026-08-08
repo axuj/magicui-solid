@@ -1,0 +1,73 @@
+---
+title: Interactive Grid Pattern
+description: A interactive background grid pattern made with SVGs, fully customizable using Tailwind CSS.
+---
+
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+import DemoRenderer from '@/demos/__generated__/DemoRenderer.astro'
+
+<div class="not-content">
+  <DemoRenderer demo="InteractiveGridPatternDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/interactive-grid-pattern
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/interactive-grid-pattern
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/interactive-grid-pattern
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/interactive-grid-pattern
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Examples
+
+### Colorful
+
+<div class="not-content">
+  <DemoRenderer demo="InteractiveGridPatternDemo2" />
+</div>
+
+### Usage
+
+```tsx showLineNumbers
+import { InteractiveGridPattern } from '@/components/magicui/interactive-grid-pattern'
+```
+
+```tsx showLineNumbers
+<div className="relative h-[500px] w-full overflow-hidden">
+  <InteractiveGridPattern />
+</div>
+```
+
+## Props
+
+| Prop               | Type               | Default   | Description                                                                                   |
+| ------------------ | ------------------ | --------- | --------------------------------------------------------------------------------------------- |
+| `width`            | `number`           | `40`      | Width of each square in the grid                                                              |
+| `height`           | `number`           | `40`      | Height of each square in the grid                                                             |
+| `squares`          | `[number, number]` | `[24,24]` | Number of squares in the grid. First number is horizontal squares, second is vertical squares |
+| `class`            | `string`           | `-`       | Class name applied to the grid container                                                      |
+| `squaresClassName` | `string`           | `-`       | Class name applied to individual squares in the grid                                          |
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/interactive-grid-pattern" target="_blank">
+    magicui.design/docs/components/interactive-grid-pattern
+  </a>
+</p>

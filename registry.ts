@@ -662,6 +662,22 @@ const data = {
       title: 'Striped Pattern',
       description: 'A background striped pattern made with SVGs, fully customizable using Tailwind CSS.',
     }),
+    uiItem({
+      name: 'interactive-grid-pattern',
+      title: 'Interactive Grid Pattern',
+      description: 'A interactive background grid pattern made with SVGs, fully customizable using Tailwind CSS.',
+    }),
+    uiItem({
+      name: 'light-rays',
+      title: 'Light Rays',
+      description: 'A component with animated light rays which shine down from above.',
+      dependencies: ['motion'],
+    }),
+    uiItem({
+      name: 'noise-texture',
+      title: 'Noise Texture',
+      description: 'An SVG fractal noise layer using feTurbulence for subtle texture overlays.',
+    }),
   ],
 }
 

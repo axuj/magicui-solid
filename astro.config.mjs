@@ -92,22 +92,6 @@ export default defineConfig({
           ],
         },
         {
-          label: 'Device Mocks',
-          items: [
-            { slug: 'docs/components/safari' },
-            { slug: 'docs/components/iphone' },
-            { slug: 'docs/components/android' },
-          ],
-        },
-        {
-          label: 'Buttons',
-          items: [
-            { slug: 'docs/components/rainbow-button' },
-            { slug: 'docs/components/shimmer-button' },
-            { slug: 'docs/components/ripple-button' },
-          ],
-        },
-        {
           label: 'Backgrounds',
           items: [
             { slug: 'docs/components/flickering-grid' },
@@ -118,6 +102,9 @@ export default defineConfig({
             { slug: 'docs/components/grid-pattern' },
             { slug: 'docs/components/hexagon-pattern' },
             { slug: 'docs/components/striped-pattern' },
+            { slug: 'docs/components/interactive-grid-pattern' },
+            { slug: 'docs/components/light-rays' },
+            { slug: 'docs/components/noise-texture' },
           ],
         },
       ],

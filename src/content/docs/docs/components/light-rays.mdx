@@ -1,0 +1,68 @@
+---
+title: Light Rays
+description: A component with animated light rays which shine down from above.
+---
+
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+import DemoRenderer from '@/demos/__generated__/DemoRenderer.astro'
+
+<div class="not-content">
+  <DemoRenderer demo="LightRaysDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/light-rays
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/light-rays
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/light-rays
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/light-rays
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Usage
+
+```tsx showLineNumbers
+import { LightRays } from '@/components/magicui/light-rays'
+```
+
+```tsx showLineNumbers
+<div className="relative h-[400px] w-full overflow-hidden rounded-xl border">
+  <LightRays />
+</div>
+```
+
+## Props
+
+| Prop      | Type              | Default                      | Description                                         |
+| --------- | ----------------- | ---------------------------- | --------------------------------------------------- |
+| `count`   | `number`          | `7`                          | Total number of animated rays.                      |
+| `color`   | `string`          | `"rgba(160, 210, 255, 0.2)"` | Base colour used for the gradients.                 |
+| `blur`    | `number`          | `36`                         | Pixel radius applied to the blur filter.            |
+| `opacity` | `number`          | `0.65`                       | Maximum opacity that rays reach (0 – 1).            |
+| `speed`   | `number`          | `14`                         | Average seconds each ray takes to complete a cycle. |
+| `length`  | `string` `number` | `"70vh"`                     | CSS length for the ray height.                      |
+| `class`   | `string`          | `undefined`                  | Additional class names applied to the wrapper.      |
+| `style`   | `object`          | `undefined`                  | Inline styles merged into the wrapper.              |
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/light-rays" target="_blank">
+    magicui.design/docs/components/light-rays
+  </a>
+</p>

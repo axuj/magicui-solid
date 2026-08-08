@@ -1,0 +1,95 @@
+---
+title: Noise Texture
+description: An SVG fractal noise layer using feTurbulence for subtle texture overlays.
+---
+
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+import DemoRenderer from '@/demos/__generated__/DemoRenderer.astro'
+
+<div class="not-content">
+  <DemoRenderer demo="NoiseTextureDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/noise-texture
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/noise-texture
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/noise-texture
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/noise-texture
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Examples
+
+### Newsletter digest
+
+<div class="not-content">
+  <DemoRenderer demo="NoiseTextureDemo2" />
+</div>
+
+### Button
+
+<div class="not-content">
+  <DemoRenderer demo="NoiseTextureDemo3" />
+</div>
+
+### Input field
+
+<div class="not-content">
+  <DemoRenderer demo="NoiseTextureDemo4" />
+</div>
+
+## Usage
+
+`NoiseTexture` renders a full-size `svg` (absolute, inset 0). Put it inside a `relative` container and layer content above with `z-10` when needed.
+
+```tsx showLineNumbers
+import { NoiseTexture } from '@/components/magicui/noise-texture'
+```
+
+```tsx showLineNumbers
+<div className="relative h-64 overflow-hidden rounded-lg border">
+  <NoiseTexture />
+</div>
+```
+
+## Props
+
+`NoiseTextureProps` extends the SVG component props. Besides standard SVG attributes, these props are supported:
+
+### NoiseTexture
+
+| Prop           | Type     | Default | Description                                 |
+| -------------- | -------- | ------- | ------------------------------------------- |
+| `class`        | `string` | `-`     | Merged onto the root `svg` (via `cn`)       |
+| `frequency`    | `number` | `0.4`   | `baseFrequency` for `feTurbulence`          |
+| `octaves`      | `number` | `6`     | `numOctaves` for `feTurbulence`             |
+| `slope`        | `number` | `0.15`  | Linear slope per channel after desaturation |
+| `noiseOpacity` | `number` | `0.6`   | Opacity of the noise `rect`                 |
+
+## Credits
+
+- Credit to [@chishiyac](https://github.com/chishiyac)
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/noise-texture" target="_blank">
+    magicui.design/docs/components/noise-texture
+  </a>
+</p>
