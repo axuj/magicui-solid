@@ -515,6 +515,21 @@ const data = {
       description: 'A text effect that flips each letter in 3D with a staggered animation on hover.',
       dependencies: ['motion'],
     }),
+    uiItem({
+      name: 'safari',
+      title: 'Safari',
+      description: 'A safari browser mockup to showcase your website.',
+    }),
+    uiItem({
+      name: 'iphone',
+      title: 'iPhone',
+      description: 'A mockup of the iPhone',
+    }),
+    uiItem({
+      name: 'android',
+      title: 'Android',
+      description: 'A mockup of an Android device.',
+    }),
   ],
 }
 

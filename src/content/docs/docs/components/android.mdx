@@ -1,0 +1,80 @@
+---
+title: Android
+description: A mockup of an Android device.
+---
+
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+import DemoRenderer from '@/demos/__generated__/DemoRenderer.astro'
+
+<div class="not-content">
+  <DemoRenderer demo="AndroidDemo" />
+</div>
+
+## Examples
+
+### With Image
+
+<div class="not-content">
+  <DemoRenderer demo="AndroidDemo2" />
+</div>
+
+### With Video
+
+<div class="not-content">
+  <DemoRenderer demo="AndroidDemo3" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/android
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/android
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/android
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/android
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Import
+
+```tsx
+import { Android } from '@/components/magicui/android'
+```
+
+## Usage
+
+```tsx
+<Android />
+```
+
+## Props
+
+| Prop       | Type     | Default | Description                        |
+| ---------- | -------- | ------- | ---------------------------------- |
+| `width`    | `number` | `433`   | The width of the Android window    |
+| `height`   | `number` | `882`   | The height of the Android window   |
+| `src`      | `string` | `-`     | The source of the image to display |
+| `videoSrc` | `string` | `-`     | The source of the video to display |
+
+The `Android` component also accepts all properties of the `SVGElement` type.
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/android" target="_blank">
+    magicui.design/docs/components/android
+  </a>
+</p>

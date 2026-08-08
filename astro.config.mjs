@@ -91,6 +91,14 @@ export default defineConfig({
             { slug: 'docs/components/text-3d-flip' },
           ],
         },
+        {
+          label: 'Device Mocks',
+          items: [
+            { slug: 'docs/components/safari' },
+            { slug: 'docs/components/iphone' },
+            { slug: 'docs/components/android' },
+          ],
+        },
       ],
     }),
   ],
