@@ -1,0 +1,84 @@
+---
+title: Striped Pattern
+description: A background striped pattern made with SVGs, fully customizable using Tailwind CSS.
+---
+
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+import DemoRenderer from '@/demos/__generated__/DemoRenderer.astro'
+
+<div class="not-content">
+  <DemoRenderer demo="StripedPatternDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/striped-pattern
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/striped-pattern
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/striped-pattern
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/striped-pattern
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Examples
+
+### Striped Pattern with a dashed stroke
+
+<div class="not-content">
+  <DemoRenderer demo="StripedPatternDashed" />
+</div>
+
+### Striped Pattern To Right
+
+<div class="not-content">
+  <DemoRenderer demo="StripedPatternRight" />
+</div>
+
+### Usage
+
+```tsx
+import { StripedPattern } from '@/components/magicui/striped-pattern'
+```
+
+```tsx
+<div className="relative h-[500px] w-full overflow-hidden">
+  <StripedPattern />
+</div>
+```
+
+## Props
+
+### StripedPattern
+
+| Prop        | Type               | Default  | Description                        |
+| ----------- | ------------------ | -------- | ---------------------------------- |
+| `width`     | `number`           | `10`     | Width of the pattern               |
+| `height`    | `number`           | `10`     | Height of the pattern              |
+| `direction` | `"left"` `"right"` | `"left"` | Line direction                     |
+| `class`     | `string`           | `-`      | Additional classes on the root SVG |
+
+## Credits
+
+- Credit to [@chishiyac](https://github.com/chishiyac)
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/striped-pattern" target="_blank">
+    magicui.design/docs/components/striped-pattern
+  </a>
+</p>

@@ -1,0 +1,85 @@
+---
+title: Dot Pattern
+description: A background dot pattern made with SVGs, fully customizable using Tailwind CSS.
+---
+
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+import DemoRenderer from '@/demos/__generated__/DemoRenderer.astro'
+
+<div class="not-content">
+  <DemoRenderer demo="DotPatternDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/dot-pattern
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/dot-pattern
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/dot-pattern
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/dot-pattern
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Examples
+
+### Linear Gradient
+
+<div class="not-content">
+  <DemoRenderer demo="DotPatternLinearGradient" />
+</div>
+
+### With Glow Effect
+
+<div class="not-content">
+  <DemoRenderer demo="DotPatternWithGlowEffectDemo" />
+</div>
+
+### Usage
+
+```tsx showLineNumbers
+import { DotPattern } from '@/components/magicui/dot-pattern'
+```
+
+```tsx showLineNumbers
+<div className="relative h-[500px] w-full overflow-hidden">
+  <DotPattern />
+</div>
+```
+
+## Props
+
+### Dot Pattern
+
+| Prop     | Type      | Default | Description                                  |
+| -------- | --------- | ------- | -------------------------------------------- |
+| `width`  | `number`  | `16`    | Width of the dot pattern                     |
+| `height` | `number`  | `16`    | Height of the dot pattern                    |
+| `x`      | `number`  | `0`     | X position of the dot                        |
+| `y`      | `number`  | `0`     | Y position of the dot                        |
+| `cx`     | `number`  | `1`     | X position of the circle                     |
+| `cy`     | `number`  | `1`     | Y position of the circle                     |
+| `cr`     | `number`  | `1`     | Radius of the circle                         |
+| `class`  | `string`  | `-`     | Class name of the dot pattern                |
+| `glow`   | `boolean` | `false` | Activates the glow effect in the dot pattern |
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/dot-pattern" target="_blank">
+    magicui.design/docs/components/dot-pattern
+  </a>
+</p>

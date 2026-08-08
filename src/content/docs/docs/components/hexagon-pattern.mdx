@@ -1,0 +1,96 @@
+---
+title: Hexagon Pattern
+description: A background hexagon pattern made with SVGs, fully customizable using Tailwind CSS.
+---
+
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+import DemoRenderer from '@/demos/__generated__/DemoRenderer.astro'
+
+<div class="not-content">
+  <DemoRenderer demo="HexagonPatternDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/hexagon-pattern
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/hexagon-pattern
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/hexagon-pattern
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/hexagon-pattern
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Examples
+
+### Linear Gradient
+
+<div class="not-content">
+  <DemoRenderer demo="HexagonPatternLinearGradient" />
+</div>
+
+### Dashed Stroke
+
+<div class="not-content">
+  <DemoRenderer demo="HexagonPatternDashed" />
+</div>
+
+### Spacing
+
+<div class="not-content">
+  <DemoRenderer demo="HexagonPatternSpacing" />
+</div>
+
+## Usage
+
+```tsx showLineNumbers
+import { HexagonPattern } from '@/components/magicui/hexagon-pattern'
+```
+
+```tsx showLineNumbers
+<div className="relative h-[500px] w-full overflow-hidden">
+  <HexagonPattern />
+</div>
+```
+
+## Props
+
+### HexagonPattern
+
+| Prop              | Type                        | Default        | Description                                                               |
+| ----------------- | --------------------------- | -------------- | ------------------------------------------------------------------------- |
+| `radius`          | `number`                    | `40`           | Radius from center to vertex for each hexagon                             |
+| `gap`             | `number`                    | `0`            | Extra spacing between adjacent hexagons (pixels)                          |
+| `x`               | `number`                    | `-1`           | X offset of the pattern origin                                            |
+| `y`               | `number`                    | `-1`           | Y offset of the pattern origin                                            |
+| `direction`       | `"horizontal"` `"vertical"` | `"horizontal"` | `horizontal` — flat-top honeycomb; `vertical` — pointy-top honeycomb      |
+| `hexagons`        | `Array<[col, row]>`         | —              | Grid coordinates of highlighted (filled) hexagons                         |
+| `strokeDasharray` | `string`                    | `"0"`          | SVG `stroke-dasharray` for outline hexagons in the repeating pattern      |
+| `class`           | `string`                    | —              | Additional classes on the root SVG (for example Tailwind color utilities) |
+
+Also accepts standard SVG attributes on the root `<svg>` (for example `aria-hidden`, `role`) where applicable.
+
+## Credits
+
+- Credit to [@chishiyac](https://github.com/chishiyac)
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/hexagon-pattern" target="_blank">
+    magicui.design/docs/components/hexagon-pattern
+  </a>
+</p>

@@ -607,6 +607,27 @@ const data = {
       description: 'An animated button with ripple useful for user engagement.',
       tailwind: { config: { theme: { extend: ripplingAnimation } } },
     }),
+    uiItem({
+      name: 'dot-pattern',
+      title: 'Dot Pattern',
+      description: 'A background dot pattern made with SVGs, fully customizable using Tailwind CSS.',
+      dependencies: ['motion'],
+    }),
+    uiItem({
+      name: 'grid-pattern',
+      title: 'Grid Pattern',
+      description: 'A background grid pattern made with SVGs, fully customizable using Tailwind CSS.',
+    }),
+    uiItem({
+      name: 'hexagon-pattern',
+      title: 'Hexagon Pattern',
+      description: 'A background hexagon pattern made with SVGs, fully customizable using Tailwind CSS.',
+    }),
+    uiItem({
+      name: 'striped-pattern',
+      title: 'Striped Pattern',
+      description: 'A background striped pattern made with SVGs, fully customizable using Tailwind CSS.',
+    }),
   ],
 }
 

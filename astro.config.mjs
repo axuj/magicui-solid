@@ -107,6 +107,15 @@ export default defineConfig({
             { slug: 'docs/components/ripple-button' },
           ],
         },
+        {
+          label: 'Backgrounds',
+          items: [
+            { slug: 'docs/components/dot-pattern' },
+            { slug: 'docs/components/grid-pattern' },
+            { slug: 'docs/components/hexagon-pattern' },
+            { slug: 'docs/components/striped-pattern' },
+          ],
+        },
       ],
     }),
   ],
