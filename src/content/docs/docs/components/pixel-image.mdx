@@ -1,0 +1,84 @@
+---
+title: Pixel Image
+description: A component that displays your image with a pixelated effect, enhancing the visual appeal of any image in your website.
+---
+
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+import DemoRenderer from '@/demos/__generated__/DemoRenderer.astro'
+
+<div class="not-content">
+  <DemoRenderer demo="PixelImageDemo" />
+</div>
+
+## Features
+
+- Pixelated image reveal animation
+- Customizable grid size and layout
+- Supports grayscale-to-color animation
+- Adjustable animation duration and delay
+- Lightweight and easy to use
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/pixel-image
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/pixel-image
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/pixel-image
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/pixel-image
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Usage
+
+```tsx
+import { PixelImage } from '@/components/magicui/pixel-image'
+```
+
+```tsx
+<PixelImage src="/pixel-image-demo.jpg" grid="8x8" />
+```
+
+## Props
+
+| Prop                  | Type                                    | Default | Description                                    |
+| --------------------- | --------------------------------------- | ------- | ---------------------------------------------- |
+| `src`                 | `string`                                | `-`     | The image source URL                           |
+| `grid`                | `"6x4"`/`"8x8"`/`"8x3"`/`"4x6"`/`"3x8"` | `"8x8"` | Predefined grid layout                         |
+| `customGrid`          | `{ rows: number, cols: number }`        | `-`     | Custom grid layout (overrides `grid`)          |
+| `grayscaleAnimation`  | `boolean`                               | `true`  | Whether to animate from grayscale to color     |
+| `pixelFadeInDuration` | `number`                                | `1000`  | Duration (ms) for each pixel fade-in animation |
+| `maxAnimationDelay`   | `number`                                | `1200`  | Maximum random delay (ms) for pixel animation  |
+| `colorRevealDelay`    | `number`                                | `1500`  | Delay (ms) before revealing color              |
+
+### Grid Type
+
+```typescript
+// Predefined grid options
+"6x4" | "8x8" | "8x3" | "4x6" | "3x8"
+
+// Custom grid example
+customGrid={{ rows: 5, cols: 10 }}
+```
+
+## Note
+
+- Since the pixelation effect is purely decorative, make sure to provide text alternatives (like descriptions or labels) for any important content shown in the image. This ensures the content is accessible to screen reader users.
+
+## Credits
+
+- Credit to [@dharminnagar for implementation

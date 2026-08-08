@@ -138,6 +138,30 @@ const meteorsAnimation = {
   },
 }
 
+const neonGradientCardAnimation = {
+  animation: {
+    'background-position-spin': 'background-position-spin 3000ms infinite alternate',
+  },
+  keyframes: {
+    'background-position-spin': {
+      '0%': { 'background-position': 'top center' },
+      '100%': { 'background-position': 'bottom center' },
+    },
+  },
+}
+
+const warpBeamAnimation = {
+  animation: {
+    'warp-beam': 'warp-beam var(--beam-duration) linear infinite',
+  },
+  keyframes: {
+    'warp-beam': {
+      from: { transform: 'translateX(-50%) translateY(100cqmax)' },
+      to: { transform: 'translateX(-50%) translateY(-100%)' },
+    },
+  },
+}
+
 const lineShadowAnimation = {
   animation: {
     'line-shadow': 'line-shadow 15s linear infinite',
@@ -693,6 +717,23 @@ const data = {
       name: 'cool-mode',
       title: 'Cool Mode',
       description: 'Cool mode effect for buttons, links, and other DOMs',
+    }),
+    uiItem({
+      name: 'neon-gradient-card',
+      title: 'Neon Gradient Card',
+      description: 'A beautiful neon card effect.',
+      tailwind: { config: { theme: { extend: neonGradientCardAnimation } } },
+    }),
+    uiItem({
+      name: 'pixel-image',
+      title: 'Pixel Image',
+      description: 'A component that displays your image with a pixelated effect, enhancing the visual appeal of any image in your website.',
+    }),
+    uiItem({
+      name: 'warp-background',
+      title: 'Warp Background',
+      description: 'A card with a time warping background effect.',
+      tailwind: { config: { theme: { extend: warpBeamAnimation } } },
     }),
     uiItem({
       name: 'glyph-matrix',
