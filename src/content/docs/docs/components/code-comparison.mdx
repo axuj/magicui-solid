@@ -1,0 +1,67 @@
+---
+title: Code Comparison
+description: A component which compares two code snippets.
+---
+
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+import DemoRenderer from '@/demos/__generated__/DemoRenderer.astro'
+
+<div class="not-content">
+  <DemoRenderer demo="CodeComparisonDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/code-comparison
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/code-comparison
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/code-comparison
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/code-comparison
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Import
+
+```tsx
+import { CodeComparison } from '@/components/magicui/code-comparison'
+```
+
+## Usage
+
+```tsx
+<CodeComparison beforeCode={beforeCode} afterCode={afterCode} />
+```
+
+## Props
+
+| Prop             | Type     | Default                     | Description                                            |
+| ---------------- | -------- | --------------------------- | ------------------------------------------------------ |
+| `beforeCode`     | `string` | `-`                         | The code snippet to display in the "before" section    |
+| `afterCode`      | `string` | `-`                         | The code snippet to display in the "after" section     |
+| `language`       | `string` | `-`                         | The language of the code snippets (e.g., "typescript") |
+| `filename`       | `string` | `-`                         | The filename to display for the code snippets          |
+| `lightTheme`     | `string` | `github-light`              | The theme to use for light mode                        |
+| `darkTheme`      | `string` | `github-dark`               | The theme to use for dark mode                         |
+| `highlightColor` | `string` | `rgba(101, 117, 133, 0.16)` | The color to use for highlighting the code snippets    |
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/code-comparison" target="_blank">
+    magicui.design/docs/components/code-comparison
+  </a>
+</p>

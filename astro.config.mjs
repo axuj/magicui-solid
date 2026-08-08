@@ -128,6 +128,8 @@ export default defineConfig({
           label: 'Community',
           items: [
             { slug: 'docs/components/shiny-button' },
+            { slug: 'docs/components/file-tree' },
+            { slug: 'docs/components/code-comparison' },
             { slug: 'docs/components/neon-gradient-card' },
             { slug: 'docs/components/comic-text' },
             { slug: 'docs/components/kinetic-text', label: 'New' },

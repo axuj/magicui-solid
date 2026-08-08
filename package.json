@@ -24,6 +24,7 @@
     "@iconify-json/ri": "^1.2.5",
     "@kobalte/core": "^0.13.12",
     "@pagefind/default-ui": "^1.5.2",
+    "@shikijs/transformers": "^4.4.2",
     "@solid-primitives/spring": "^0.1.2",
     "@tailwindcss/vite": "^4.3.3",
     "astro": "^7.2.0",

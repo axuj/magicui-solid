@@ -325,6 +325,23 @@ const rippleAnimation = {
   },
 }
 
+const accordionAnimation = {
+  animation: {
+    'accordion-down': 'accordion-down 0.2s ease-out',
+    'accordion-up': 'accordion-up 0.2s ease-out',
+  },
+  keyframes: {
+    'accordion-down': {
+      from: { height: '0' },
+      to: { height: 'var(--kb-accordion-content-height)' },
+    },
+    'accordion-up': {
+      from: { height: 'var(--kb-accordion-content-height)' },
+      to: { height: '0' },
+    },
+  },
+}
+
 const data = {
   $schema: 'https://ui.shadcn.com/schema/registry.json',
   name: 'magicui-solid',
@@ -734,6 +751,20 @@ const data = {
       title: 'Shiny Button',
       description: 'A shiny button component with dynamic styles in the dark mode or light mode.',
       dependencies: ['motion'],
+    }),
+    uiItem({
+      name: 'file-tree',
+      title: 'File Tree',
+      description: 'A component used to showcase the folder and file structure of a directory.',
+      dependencies: ['@kobalte/core', 'lucide-solid'],
+      registryDependencies: ['https://www.solid-ui.com/r/button.json'],
+      tailwind: { config: { theme: { extend: accordionAnimation } } },
+    }),
+    uiItem({
+      name: 'code-comparison',
+      title: 'Code Comparison',
+      description: 'A component which compares two code snippets.',
+      dependencies: ['shiki', '@shikijs/transformers', 'lucide-solid'],
     }),
     uiItem({
       name: 'neon-gradient-card',

@@ -1,0 +1,122 @@
+---
+title: File Tree
+description: A component used to showcase the folder and file structure of a directory.
+---
+
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+import DemoRenderer from '@/demos/__generated__/DemoRenderer.astro'
+
+<div class="not-content">
+  <DemoRenderer demo="FileTreeDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/file-tree
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/file-tree
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/file-tree
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/file-tree
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Import
+
+```tsx
+import { Tree } from '@/components/magicui/file-tree'
+import type { TreeViewElement } from '@/components/magicui/file-tree'
+```
+
+## Usage
+
+```tsx
+const elements: TreeViewElement[] = [
+  {
+    id: 'src',
+    type: 'folder',
+    name: 'src',
+    children: [
+      { id: 'components', type: 'folder', name: 'components' },
+      { id: 'app', type: 'folder', name: 'app' },
+      { id: 'page', name: 'page.tsx' },
+      { id: 'layout', name: 'layout.tsx' },
+    ],
+  },
+]
+
+<Tree elements={elements} />
+```
+
+When you pass `elements` and omit `children`, the tree is rendered from data and siblings are sorted automatically using a folders-first alphabetical order. Use `sort="none"` to preserve the input order, or pass a custom comparator.
+
+## Props
+
+### Tree
+
+| Prop                   | Type                                        | Default     | Description                                                           |
+| ---------------------- | ------------------------------------------- | ----------- | --------------------------------------------------------------------- |
+| `initialSelectedId`    | `string`                                    | `-`         | The ID of the initially selected item.                                |
+| `indicator`            | `boolean`                                   | `true`      | Whether to show the tree indicator line.                              |
+| `elements`             | `TreeViewElement[]`                         | `-`         | An array of tree view elements to render when `children` are omitted. |
+| `initialExpandedItems` | `string[]`                                  | `-`         | An array of IDs for items that should be initially expanded.          |
+| `openIcon`             | `JSX.Element`                               | `-`         | Custom icon for open folders.                                         |
+| `closeIcon`            | `JSX.Element`                               | `-`         | Custom icon for closed folders.                                       |
+| `sort`                 | `"default"` / `"none"` / `(a, b) => number` | `"default"` | Sorting mode used for data-driven trees rendered from `elements`.     |
+| `dir`                  | `"rtl"` / `"ltr"`                           | `"ltr"`     | The text direction of the tree.                                       |
+
+### TreeViewElement
+
+| Prop           | Type                  | Default | Description                                           |
+| -------------- | --------------------- | ------- | ----------------------------------------------------- |
+| `id`           | `string`              | `-`     | A unique identifier for the node.                     |
+| `name`         | `string`              | `-`     | The label rendered for the node in data-driven mode.  |
+| `type`         | `"file"` / `"folder"` | `-`     | Explicit node type. Use `"folder"` for empty folders. |
+| `isSelectable` | `boolean`             | `true`  | Whether the node can be selected.                     |
+| `children`     | `TreeViewElement[]`   | `-`     | Child nodes for folders.                              |
+
+### Folder
+
+| Prop           | Type      | Default | Description                               |
+| -------------- | --------- | ------- | ----------------------------------------- |
+| `element`      | `string`  | `-`     | The name of the folder.                   |
+| `value`        | `string`  | `-`     | The unique identifier for the folder.     |
+| `isSelectable` | `boolean` | `true`  | Whether the folder can be selected.       |
+| `isSelect`     | `boolean` | `-`     | Whether the folder is currently selected. |
+
+### File
+
+| Prop           | Type          | Default | Description                             |
+| -------------- | ------------- | ------- | --------------------------------------- |
+| `value`        | `string`      | `-`     | The unique identifier for the file.     |
+| `isSelectable` | `boolean`     | `true`  | Whether the file can be selected.       |
+| `isSelect`     | `boolean`     | `-`     | Whether the file is currently selected. |
+| `fileIcon`     | `JSX.Element` | `-`     | Custom icon for the file.               |
+
+### CollapseButton
+
+| Prop        | Type                | Default | Description                                |
+| ----------- | ------------------- | ------- | ------------------------------------------ |
+| `elements`  | `TreeViewElement[]` | `-`     | An array of tree view elements to control. |
+| `expandAll` | `boolean`           | `false` | Whether to expand all elements initially.  |
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/file-tree" target="_blank">
+    magicui.design/docs/components/file-tree
+  </a>
+</p>

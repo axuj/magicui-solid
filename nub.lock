@@ -32,6 +32,9 @@ importers:
       '@pagefind/default-ui':
         specifier: ^1.5.2
         version: 1.5.2
+      '@shikijs/transformers':
+        specifier: ^4.4.2
+        version: 4.4.2
       '@solid-primitives/spring':
         specifier: ^0.1.2
         version: 0.1.2(solid-js@1.9.14)
@@ -1390,6 +1393,10 @@ packages:
 
   '@shikijs/themes@4.4.2':
     resolution: {integrity: sha512-H0CFoL07ddDC2Dd6EdrPYNkRhUR6YCkJlnuYFceYYUJJA5TIm2b5B33qqiDYryBExgbKMndFJPb2u1gTuqO37g==}
+    engines: {node: '>=20'}
+
+  '@shikijs/transformers@4.4.2':
+    resolution: {integrity: sha512-d81PJ9KkR1tVP95FH/9296HTtDo0mh76wv10u9T1YmsZq/UcXgt0OLdBszfUQ1i+umkRMCjDnFbFZU7/tCODTQ==}
     engines: {node: '>=20'}
 
   '@shikijs/types@4.4.2':
@@ -6317,6 +6324,11 @@ snapshots:
 
   '@shikijs/themes@4.4.2':
     dependencies:
+      '@shikijs/types': 4.4.2
+
+  '@shikijs/transformers@4.4.2':
+    dependencies:
+      '@shikijs/core': 4.4.2
       '@shikijs/types': 4.4.2
 
   '@shikijs/types@4.4.2':
