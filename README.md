@@ -35,7 +35,7 @@ npx shadcn@latest add @magicui-solid
 
 ## Documentation
 
-Visit [https://magicui-solid.vercel.app](https://magicui-solid.vercel.app) to browse the components and view usage examples for each one.
+Visit [https://axuj.github.io/magicui-solid](https://axuj.github.io/magicui-solid) to browse the components and view usage examples for each one.
 
 ## Local Development
 

@@ -345,7 +345,7 @@ const accordionAnimation = {
 const data = {
   $schema: 'https://ui.shadcn.com/schema/registry.json',
   name: 'magicui-solid',
-  homepage: 'https://magicui-solid.vercel.app',
+  homepage: 'https://axuj.github.io/magicui-solid',
   items: [
     {
       name: 'utils',
