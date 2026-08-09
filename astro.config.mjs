@@ -1,4 +1,5 @@
 import { resolve } from 'node:path'
+import { env } from 'node:process'
 import solid from '@astrojs/solid-js'
 import starlight from '@astrojs/starlight'
 import tailwindcss from '@tailwindcss/vite'
@@ -7,6 +8,8 @@ import starlightThemeBlack from 'starlight-theme-black'
 import demoTypesPlugin from './plugins/vite-plugin-demo'
 
 export default defineConfig({
+  site: env.SITE_URL ?? 'http://localhost:4321',
+  base: env.BASE_PATH ?? '/',
   integrations: [
     solid(),
     starlight({
