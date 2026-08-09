@@ -133,7 +133,7 @@ export default defineConfig({
             { slug: 'docs/components/scroll-progress' },
             { slug: 'docs/components/neon-gradient-card' },
             { slug: 'docs/components/comic-text' },
-            { slug: 'docs/components/kinetic-text', label: 'New' },
+            { slug: 'docs/components/kinetic-text' },
             { slug: 'docs/components/cool-mode' },
             { slug: 'docs/components/pixel-image' },
             { slug: 'docs/components/pulsating-button' },
