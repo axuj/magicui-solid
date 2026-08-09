@@ -39,25 +39,34 @@ import DemoRenderer from '@/demos/__generated__/DemoRenderer.astro'
 
 ```tsx
 import { CodeComparison } from '@/components/magicui/code-comparison'
+import githubDark from '@shikijs/themes/github-dark'
+import githubLight from '@shikijs/themes/github-light'
 ```
 
 ## Usage
 
 ```tsx
-<CodeComparison beforeCode={beforeCode} afterCode={afterCode} />
+<CodeComparison
+  beforeCode={beforeCode}
+  afterCode={afterCode}
+  language="typescript"
+  filename="middleware.ts"
+  lightTheme={githubLight}
+  darkTheme={githubDark}
+/>
 ```
 
 ## Props
 
-| Prop             | Type     | Default                     | Description                                            |
-| ---------------- | -------- | --------------------------- | ------------------------------------------------------ |
-| `beforeCode`     | `string` | `-`                         | The code snippet to display in the "before" section    |
-| `afterCode`      | `string` | `-`                         | The code snippet to display in the "after" section     |
-| `language`       | `string` | `-`                         | The language of the code snippets (e.g., "typescript") |
-| `filename`       | `string` | `-`                         | The filename to display for the code snippets          |
-| `lightTheme`     | `string` | `github-light`              | The theme to use for light mode                        |
-| `darkTheme`      | `string` | `github-dark`               | The theme to use for dark mode                         |
-| `highlightColor` | `string` | `rgba(101, 117, 133, 0.16)` | The color to use for highlighting the code snippets    |
+| Prop             | Type                | Default                     | Description                                                     |
+| ---------------- | ------------------- | --------------------------- | --------------------------------------------------------------- |
+| `beforeCode`     | `string`            | `-`                         | The code snippet to display in the "before" section             |
+| `afterCode`      | `string`            | `-`                         | The code snippet to display in the "after" section              |
+| `language`       | `string`            | `-`                         | The language of the code snippets (e.g., "typescript")          |
+| `filename`       | `string`            | `-`                         | The filename to display for the code snippets                   |
+| `lightTheme`     | `ThemeRegistration` | `-`                         | The theme object for light mode (import from `@shikijs/themes`) |
+| `darkTheme`      | `ThemeRegistration` | `-`                         | The theme object for dark mode (import from `@shikijs/themes`)  |
+| `highlightColor` | `string`            | `rgba(101, 117, 133, 0.16)` | The color to use for highlighting the code snippets             |
 
 <p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
   Original:{' '}

@@ -770,7 +770,7 @@ const data = {
       name: 'code-comparison',
       title: 'Code Comparison',
       description: 'A component which compares two code snippets.',
-      dependencies: ['shiki', '@shikijs/transformers', 'lucide-solid'],
+      dependencies: ['shiki', '@shikijs/transformers', '@shikijs/themes', '@shikijs/types', 'lucide-solid'],
     }),
     uiItem({
       name: 'scroll-progress',

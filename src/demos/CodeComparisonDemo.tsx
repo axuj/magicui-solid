@@ -1,3 +1,6 @@
+import githubDark from '@shikijs/themes/github-dark'
+import githubLight from '@shikijs/themes/github-light'
+
 import { CodeComparison } from '@/registry/magicui/code-comparison'
 
 const beforeCode = `import { NextRequest } from 'next/server';
@@ -60,8 +63,8 @@ export function CodeComparisonDemo() {
       afterCode={afterCode}
       language="typescript"
       filename="middleware.ts"
-      lightTheme="github-light"
-      darkTheme="github-dark"
+      lightTheme={githubLight}
+      darkTheme={githubDark}
       highlightColor="rgba(101, 117, 133, 0.16)"
     />
   )

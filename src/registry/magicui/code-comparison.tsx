@@ -1,3 +1,4 @@
+import type { ThemeRegistration } from '@shikijs/types'
 import type { JSX } from 'solid-js'
 import { FileIcon } from 'lucide-solid'
 import { createEffect, createMemo, createSignal, mergeProps, on, onCleanup, splitProps } from 'solid-js'
@@ -9,8 +10,8 @@ interface CodeComparisonProps {
   afterCode: string
   language: string
   filename: string
-  lightTheme: string
-  darkTheme: string
+  lightTheme: ThemeRegistration
+  darkTheme: ThemeRegistration
   highlightColor?: string
 }
 
