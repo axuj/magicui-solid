@@ -50,7 +50,7 @@ import { PixelImage } from '@/components/magicui/pixel-image'
 ```
 
 ```tsx
-<PixelImage src="/pixel-image-demo.jpg" grid="8x8" />
+<PixelImage src={`${import.meta.env.BASE_URL}pixel-image-demo.jpg`} grid="8x8" />
 ```
 
 ## Props
@@ -81,7 +81,7 @@ customGrid={{ rows: 5, cols: 10 }}
 
 ## Credits
 
-- Credit to [@dharminnagar for implementation
+- Credit to [@dharminnagar](https://x.com/dharminnagar) for implementation
 
 <p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
   Original:{' '}
