@@ -32,7 +32,13 @@ importers:
       '@pagefind/default-ui':
         specifier: ^1.5.2
         version: 1.5.2
+      '@shikijs/themes':
+        specifier: ^4.4.2
+        version: 4.4.2
       '@shikijs/transformers':
+        specifier: ^4.4.2
+        version: 4.4.2
+      '@shikijs/types':
         specifier: ^4.4.2
         version: 4.4.2
       '@solid-primitives/spring':
