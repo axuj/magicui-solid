@@ -1,46 +1,85 @@
-# Astro Starter Kit: Basics
+# Magic UI Solid
+
+<p align="center">
+  UI Library for Design Engineers — a <a href="https://solidjs.com">SolidJS</a> port of <a href="https://magicui.design">Magic UI</a>, distributed as a <a href="https://ui.shadcn.com/docs/registry">shadcn registry</a>.
+</p>
+
+<div align="center">
+  <a href="https://github.com/axuj/magicui-solid/stargazers"><img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/axuj/magicui-solid"></a>
+  <a href="https://github.com/axuj/magicui-solid/forks"><img alt="GitHub Forks" src="https://img.shields.io/github/forks/axuj/magicui-solid"></a>
+  <a href="https://github.com/axuj/magicui-solid/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/badge/License-MIT-yellow.svg"></a>
+</div>
+
+## Features
+
+- **SolidJS-native** — built with [SolidJS](https://solidjs.com) and [Kobalte](https://kobalte.dev) instead of React
+- **76+ components** — ported from [magicui.design](https://magicui.design), including animations, text effects, buttons, and backgrounds
+- **Copy-paste friendly** — install any component in seconds with the shadcn CLI
+- **Tailwind CSS v4** — components ship with their own animations and keyframes
+
+## Installation
+
+Install a single component:
 
 ```sh
-pnpm create astro@latest -- --template basics
+npx shadcn@latest add @magicui-solid/marquee
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Install the whole library:
 
-## 🚀 Project Structure
+```sh
+npx shadcn@latest add @magicui-solid
+```
 
-Inside of your Astro project, you'll see the following folders and files:
+> Requires a project with the shadcn CLI set up (e.g. `npx shadcn@latest init`). Components are copied into your `<components>/magicui/` directory — no locked dependencies, full ownership of the code.
+
+## Documentation
+
+Visit [https://magicui-solid.vercel.app](https://magicui-solid.vercel.app) to browse the components and view usage examples for each one.
+
+## Local Development
+
+```sh
+nub install        # install dependencies (nub is the package manager, not pnpm)
+nub run dev        # start dev server at localhost:4321
+nub run build      # build registry + production site to ./dist/
+nub run registry   # rebuild registry.json + public/r/*.json and validate the registry
+nub run smoke      # smoke-test all component pages in the browser
+```
+
+Before submitting changes, run:
+
+```sh
+nub run lint:fix && nub run ts-check
+```
+
+## Tech Stack
+
+- [Astro](https://astro.build) + [Starlight](https://starlight.astro.build) — docs site
+- [SolidJS](https://solidjs.com) + [Kobalte](https://kobalte.dev) — components
+- [Tailwind CSS v4](https://tailwindcss.com) — styling
+- [shadcn registry](https://ui.shadcn.com/docs/registry) — distribution
+
+## Project Structure
 
 ```text
 /
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
+├── src/
+│   ├── components/        # Site-only UI helpers
+│   ├── content/docs/      # Starlight docs (one page per component)
+│   ├── demos/             # Live demos rendered on component pages
+│   ├── registry/magicui/  # The actual registry components (source of truth)
+│   └── styles/            # Global CSS
+├── registry.ts            # Single source of truth for the registry
+├── scripts/               # Registry build, check and smoke test scripts
+└── public/r/              # Generated registry JSON consumed by the shadcn CLI
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+## Related
 
-## 🧞 Commands
+- [magicui](https://github.com/magicuidesign/magicui) — the original React library
+- [magicui.design](https://magicui.design) — official Magic UI docs
 
-All commands are run from the root of the project, from a terminal:
+## License
 
-| Command                | Action                                           |
-| :--------------------- | :----------------------------------------------- |
-| `pnpm install`         | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Licensed under the [MIT License](https://github.com/axuj/magicui-solid/blob/main/LICENSE).
