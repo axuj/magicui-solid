@@ -465,6 +465,12 @@ const data = {
       dependencies: ['@solid-primitives/spring'],
     }),
     uiItem({
+      name: 'progressive-blur',
+      title: 'Progressive Blur',
+      description:
+        'The Progressive Blur component adds a smooth blur gradient effect to scrollable content, indicating more content below or above.',
+    }),
+    uiItem({
       name: 'dotted-map',
       title: 'Dotted Map',
       description: 'A component with a dotted map.',

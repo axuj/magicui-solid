@@ -1,0 +1,63 @@
+---
+title: Progressive Blur
+description: Add a progressive blur effect to scrollable content
+---
+
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+import DemoRenderer from '@/demos/__generated__/DemoRenderer.astro'
+
+<div class="not-content">
+  <DemoRenderer demo="ProgressiveBlurDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/progressive-blur
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/progressive-blur
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/progressive-blur
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/progressive-blur
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Usage
+
+```tsx showLineNumbers
+import { ProgressiveBlur } from '@/components/magicui/progressive-blur'
+```
+
+```tsx showLineNumbers
+<div className="relative h-[400px] w-full overflow-auto">
+  {/* Your scrollable content */}
+  <div className="space-y-4 p-4">{/* Content items */}</div>
+
+  <ProgressiveBlur height="50%" position="bottom" />
+</div>
+```
+
+## Props
+
+### ProgressiveBlur
+
+| Prop         | Type                            | Default                         | Description                                           |
+| ------------ | ------------------------------- | ------------------------------- | ----------------------------------------------------- |
+| `class`      | `string`                        | `-`                             | Additional classes to apply to the blur container.    |
+| `height`     | `string`                        | `"30%"`                         | Height of the blur effect container.                  |
+| `position`   | `"top"` / `"bottom"` / `"both"` | `"bottom"`                      | Position of the blur effect.                          |
+| `blurLevels` | `number[]`                      | `[0.5, 1, 2, 4, 8, 16, 32, 64]` | Array of blur values (in px) for progressive effect.  |
+| `children`   |                                 |                                 | Optional content to render within the blur container. |
