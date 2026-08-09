@@ -16,10 +16,6 @@
   --sl-content-width: var(--content-width);
   --sl-sidebar-width: 21rem;
 
-  /* Starlight 默认 dark 下 bg-accent = accent-high，被 starlight-black 重映射为前景色（白），
-     改用 gray-6（light oklch(87%) / dark oklch(26.9%)）恢复 shadcn accent 语义 */
-  --sl-color-bg-accent: var(--sl-color-gray-6);
-
   --muted: oklch(0.97 0 0);
 
   --color-1: oklch(66.2% 0.225 25.9);
@@ -33,8 +29,15 @@
   --muted: oklch(0.269 0 0);
 }
 
+/* 首页（splash、无 sidebar）：内容 70rem 宽并始终居中。
+   starlight 的 .sl-container 居中（margin-inline: auto）只在 ≥72rem 视口生效，
+   窄视口下会贴左，这里无条件居中；宽度不用 --content-width（50rem）改从
+   官方页面的 67.5rem 略放宽 */
 html:root:not([data-has-sidebar]) {
-  --sl-content-width: var(--content-width);
+  --sl-content-width: 70rem;
+}
+html:root:not([data-has-sidebar]) .sl-container {
+  margin-inline: auto;
 }
 
 [data-has-sidebar][data-has-toc] .main-pane {
@@ -53,25 +56,25 @@ html:root:not([data-has-sidebar]) {
 }
 
 @theme inline {
-  --color-background: var(--sl-color-bg);
-  --color-foreground: var(--sl-color-text);
-  --color-border: var(--sl-color-hairline);
-  --color-card: var(--sl-color-bg);
-  --color-card-foreground: var(--sl-color-text);
-  --color-popover: var(--sl-color-bg);
-  --color-popover-foreground: var(--sl-color-text);
-  --color-primary: var(--sl-color-text-accent);
-  --color-primary-foreground: var(--sl-color-text-invert);
-  --color-secondary: var(--sl-color-gray-6);
-  --color-secondary-foreground: var(--sl-color-text);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-border: var(--border);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover-background);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
-  --color-muted-foreground: var(--sl-color-gray-3);
-  --color-accent: var(--sl-color-bg-accent);
-  --color-accent-foreground: var(--sl-color-text-accent);
-  --color-destructive: var(--sl-color-red);
-  --color-destructive-foreground: var(--sl-color-text-invert);
-  --color-input: var(--sl-color-hairline);
-  --color-ring: var(--sl-color-text-accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--red);
+  --color-destructive-foreground: var(--primary-foreground);
+  --color-input: var(--border);
+  --color-ring: var(--ring);
 
   --animate-aurora: aurora 8s ease-in-out infinite alternate;
   --animate-blink-cursor: blink-cursor 1.2s step-end infinite;
