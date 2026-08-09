@@ -9,7 +9,7 @@ const components = (await getCollection('docs'))
 <CardGrid>
   {components.map(component => (
     <LinkCard
-      href={`/${component.id}`}
+      href={`${import.meta.env.BASE_URL}${component.id}`}
       title={component.data.title}
       description={component.data.description}
     />

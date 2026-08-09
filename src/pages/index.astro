@@ -22,7 +22,7 @@ import '@/styles/global.css'
       name="description"
       content="Animated UI components for SolidJS, ported from Magic UI."
     />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
     <script is:inline>
     ;(() => {
       const stored = localStorage.getItem('starlight-theme')
@@ -53,7 +53,10 @@ import '@/styles/global.css'
           md:px-6
         "
       >
-        <a href="/" class="flex items-center gap-2 text-sm font-semibold">
+        <a
+          href={import.meta.env.BASE_URL}
+          class="flex items-center gap-2 text-sm font-semibold"
+        >
           <svg viewBox="0 0 24 24" class="size-5" fill="none" aria-hidden="true">
             <path
               d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z"
@@ -64,7 +67,7 @@ import '@/styles/global.css'
         </a>
         <nav class="flex items-center gap-1 text-sm">
           <a
-            href="/docs/"
+            href={`${import.meta.env.BASE_URL}docs/`}
             class={cn(
               buttonVariants({ variant: 'ghost', size: 'sm' }),
               `
@@ -76,7 +79,7 @@ import '@/styles/global.css'
             Introduction
           </a>
           <a
-            href="/docs/components/"
+            href={`${import.meta.env.BASE_URL}docs/components/`}
             class={cn(
               buttonVariants({ variant: 'ghost', size: 'sm' }),
               `

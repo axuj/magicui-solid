@@ -178,7 +178,7 @@ const features: Feature[] = [
     Icon: FileText,
     name: 'Save your files',
     description: 'We automatically save your files as you type.',
-    href: '/',
+    href: import.meta.env.BASE_URL,
     cta: 'Learn more',
     class: 'col-span-3 lg:col-span-1',
     background: () => (
@@ -224,7 +224,7 @@ const features: Feature[] = [
     Icon: Bell,
     name: 'Notifications',
     description: 'Get notified when something happens.',
-    href: '/',
+    href: import.meta.env.BASE_URL,
     cta: 'Learn more',
     class: 'col-span-3 lg:col-span-2',
     background: () => (
@@ -241,7 +241,7 @@ const features: Feature[] = [
     Icon: Share2,
     name: 'Integrations',
     description: 'Supports 100+ integrations and counting.',
-    href: '/',
+    href: import.meta.env.BASE_URL,
     cta: 'Learn more',
     class: 'col-span-3 lg:col-span-2',
     background: () => (
@@ -258,7 +258,7 @@ const features: Feature[] = [
     Icon: CalendarDays,
     name: 'Calendar',
     description: 'Use the calendar to filter your files by date.',
-    href: '/',
+    href: import.meta.env.BASE_URL,
     cta: 'Learn more',
     class: 'col-span-3 lg:col-span-1',
     background: () => (

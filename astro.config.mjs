@@ -9,7 +9,7 @@ import demoTypesPlugin from './plugins/vite-plugin-demo'
 
 export default defineConfig({
   site: env.SITE_URL ?? 'http://localhost:4321',
-  base: env.BASE_PATH ?? '/',
+  base: (env.BASE_PATH ?? '/').replace(/\/?$/, '/'),
   integrations: [
     solid(),
     starlight({

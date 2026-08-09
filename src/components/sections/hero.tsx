@@ -12,7 +12,7 @@ interface HeroProps {
 }
 
 export function Hero(props: HeroProps) {
-  const announcementHref = () => props.announcementHref ?? '/docs/'
+  const announcementHref = () => props.announcementHref ?? `${import.meta.env.BASE_URL}docs/`
   const announcementTitle = () => props.announcementTitle ?? 'MagicUI Solid'
 
   return (
@@ -146,7 +146,7 @@ export function Hero(props: HeroProps) {
               >
                 <RainbowButton
                   as="a"
-                  href="/docs/components/"
+                  href={`${import.meta.env.BASE_URL}docs/components/`}
                   variant="default"
                   size="lg"
                   class="w-full gap-2"
@@ -160,7 +160,7 @@ export function Hero(props: HeroProps) {
                 </RainbowButton>
                 <RainbowButton
                   as="a"
-                  href="/docs/"
+                  href={`${import.meta.env.BASE_URL}docs/`}
                   variant="outline"
                   size="lg"
                   class="w-full gap-2"
