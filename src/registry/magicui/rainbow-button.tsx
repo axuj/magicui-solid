@@ -1,27 +1,23 @@
+import type { PolymorphicProps } from '@kobalte/core/polymorphic'
 import type { VariantProps } from 'class-variance-authority'
-import type { JSX, ValidComponent } from 'solid-js'
+import type { ValidComponent } from 'solid-js'
+import * as ButtonPrimitive from '@kobalte/core/button'
 import { cva } from 'class-variance-authority'
 import { splitProps } from 'solid-js'
-import { Dynamic } from 'solid-js/web'
 
 import { cn } from '@/lib/utils'
 
 const rainbowButtonVariants = cva(
-  cn(
-    'group relative animate-rainbow cursor-pointer transition-all',
-    'inline-flex shrink-0 items-center justify-center gap-2',
-    `
-      rounded-sm outline-none
-      focus-visible:ring-[3px]
-      aria-invalid:border-destructive
-    `,
-    'text-sm font-medium whitespace-nowrap',
-    'disabled:pointer-events-none disabled:opacity-50',
-    `
-      [&_svg]:pointer-events-none [&_svg]:shrink-0
-      [&_svg:not([class*='size-'])]:size-4
-    `,
-  ),
+  `
+    group relative inline-flex shrink-0 animate-rainbow cursor-pointer
+    items-center justify-center gap-2 rounded-sm text-sm font-medium
+    whitespace-nowrap transition-all outline-none
+    focus-visible:ring-[3px]
+    disabled:pointer-events-none disabled:opacity-50
+    aria-invalid:border-destructive
+    [&_svg]:pointer-events-none [&_svg]:shrink-0
+    [&_svg:not([class*='size-'])]:size-4
+  `,
   {
     variants: {
       variant: {
@@ -65,28 +61,24 @@ const rainbowButtonVariants = cva(
   },
 )
 
-export interface RainbowButtonProps
-  extends JSX.ButtonHTMLAttributes<HTMLButtonElement>,
-  VariantProps<typeof rainbowButtonVariants> {
-  /**
-   * The element or component to render as
-   */
-  as?: ValidComponent
-}
+type RainbowButtonProps<T extends ValidComponent = 'button'> = ButtonPrimitive.ButtonRootProps<T>
+  & VariantProps<typeof rainbowButtonVariants> & { class?: string | undefined }
 
-export function RainbowButton(props: RainbowButtonProps) {
-  const [local, rest] = splitProps(props, ['class', 'variant', 'size', 'as', 'children'])
-
+function RainbowButton<T extends ValidComponent = 'button'>(
+  props: PolymorphicProps<T, RainbowButtonProps<T>>,
+) {
+  const [local, others] = splitProps(props as RainbowButtonProps, ['variant', 'size', 'class'])
   return (
-    <Dynamic
-      component={local.as ?? 'button'}
+    <ButtonPrimitive.Root
       data-slot="button"
-      class={cn(rainbowButtonVariants({ variant: local.variant, size: local.size, class: local.class }))}
-      {...rest}
-    >
-      {local.children}
-    </Dynamic>
+      class={cn(
+        rainbowButtonVariants({ variant: local.variant, size: local.size }),
+        local.class,
+      )}
+      {...others}
+    />
   )
 }
 
-export { rainbowButtonVariants }
+export { RainbowButton, rainbowButtonVariants }
+export type { RainbowButtonProps }

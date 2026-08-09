@@ -656,7 +656,7 @@ const data = {
       name: 'rainbow-button',
       title: 'Rainbow Button',
       description: 'An animated button with a rainbow effect.',
-      dependencies: ['class-variance-authority'],
+      dependencies: ['class-variance-authority', '@kobalte/core'],
       cssVars: {
         light: {
           'color-1': 'oklch(66.2% 0.225 25.9)',
