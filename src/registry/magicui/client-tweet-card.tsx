@@ -1,5 +1,5 @@
 import type { JSX } from 'solid-js'
-import { createResource, For, mergeProps, Show, splitProps, untrack } from 'solid-js'
+import { createMemo, createResource, For, mergeProps, Show, splitProps } from 'solid-js'
 import { isServer } from 'solid-js/web'
 import { cn } from '@/lib/utils'
 
@@ -675,12 +675,12 @@ export function TweetBody(props: { tweet: EnrichedTweet }) {
 }
 
 export function TweetMedia(props: { tweet: EnrichedTweet }) {
-  const thumbnailUrl = untrack(() =>
+  const thumbnailUrl = createMemo(() =>
     props.tweet.card?.binding_values?.thumbnail_image_large?.image_value?.url,
   )
   return (
     <Show
-      when={props.tweet.video || props.tweet.photos || thumbnailUrl}
+      when={props.tweet.video || props.tweet.photos || thumbnailUrl()}
     >
       <div class="flex flex-1 items-center justify-center">
         <Show when={props.tweet.video}>
@@ -730,10 +730,10 @@ export function TweetMedia(props: { tweet: EnrichedTweet }) {
           </div>
         </Show>
         <Show
-          when={!props.tweet.video && !props.tweet.photos && thumbnailUrl}
+          when={!props.tweet.video && !props.tweet.photos && thumbnailUrl()}
         >
           <img
-            src={thumbnailUrl}
+            src={thumbnailUrl()}
             class="h-64 rounded-xl border object-cover shadow-sm"
             alt={props.tweet.text}
           />
@@ -751,13 +751,13 @@ export interface MagicTweetProps extends JSX.HTMLAttributes<HTMLDivElement> {
 
 export function MagicTweet(props: MagicTweetProps) {
   const [local, rest] = splitProps(props, ['tweet', 'class'])
-  const safeTweet = untrack((): Tweet => ({
+  const safeTweet = createMemo((): Tweet => ({
     ...withSafeEntities(local.tweet),
     quoted_tweet: local.tweet.quoted_tweet
       ? withSafeEntities(local.tweet.quoted_tweet)
       : undefined,
   }))
-  const enrichedTweet = untrack(() => enrichTweet(safeTweet))
+  const enrichedTweet = createMemo(() => enrichTweet(safeTweet()))
   return (
     <div
       class={cn(
@@ -769,9 +769,9 @@ export function MagicTweet(props: MagicTweetProps) {
       )}
       {...rest}
     >
-      <TweetHeader tweet={enrichedTweet} />
-      <TweetBody tweet={enrichedTweet} />
-      <TweetMedia tweet={enrichedTweet} />
+      <TweetHeader tweet={enrichedTweet()} />
+      <TweetBody tweet={enrichedTweet()} />
+      <TweetMedia tweet={enrichedTweet()} />
     </div>
   )
 }
@@ -801,13 +801,10 @@ export function ClientTweetCard(props: TweetProps & { class?: string }) {
   const [local, rest] = splitProps(merged, ['id', 'apiUrl', 'fallback', 'components', 'fetchOptions', 'onError'])
 
   const [tweet] = createResource(
-    () => (isServer || !local.id ? undefined : `${local.id}::${local.apiUrl ?? ''}`),
-    async (key) => {
-      const sep = key.indexOf('::')
-      const id = key.slice(0, sep)
-      const apiUrl = key.slice(sep + 2) || undefined
+    () => (isServer || !local.id ? undefined : { id: local.id, apiUrl: local.apiUrl, fetchOptions: local.fetchOptions }),
+    async ({ id, apiUrl, fetchOptions }) => {
       const url = apiUrl || `https://react-tweet.vercel.app/api/tweet/${id}`
-      const res = await fetch(url, untrack(() => local.fetchOptions))
+      const res = await fetch(url, fetchOptions)
       const json = await res.json() as { data?: Tweet }
 
       // We return null in case `json.data` is undefined, that way we can check for "loading" by

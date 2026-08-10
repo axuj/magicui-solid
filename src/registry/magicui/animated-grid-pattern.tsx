@@ -120,16 +120,16 @@ export function AnimatedGridPattern(props: AnimatedGridPatternProps) {
   const [squares, setSquares] = createSignal<Array<Square>>([])
 
   const getPos = (): [number, number] => {
-    return untrack(() => [
+    return [
       Math.floor((Math.random() * dimensions().width) / local.width),
       Math.floor((Math.random() * dimensions().height) / local.height),
-    ])
+    ]
   }
 
   const generateSquares = (count: number) => {
     return Array.from({ length: count }, (_, i) => ({
       id: i,
-      pos: getPos(),
+      pos: untrack(getPos),
       iteration: 0,
     }))
   }

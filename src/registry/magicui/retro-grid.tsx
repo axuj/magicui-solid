@@ -812,26 +812,9 @@ export function RetroGrid(props: RetroGridProps) {
     })
   })
 
-  const gridStyles = {
-    ...(untrack(() => local.style) as JSX.CSSProperties),
-    opacity: untrack(() => local.opacity),
-  }
-  const normalizedAngle = clamp(untrack(() => local.angle), MIN_ANGLE, MAX_ANGLE)
-  const normalizedCellSize = Math.max(untrack(() => local.cellSize), 1)
   const fallbackProjectionStyles: JSX.CSSProperties = {
     perspective: `${PERSPECTIVE_PX}px`,
   }
-  const fallbackRotationStyles: JSX.CSSProperties = {
-    transform: `rotateX(${normalizedAngle}deg)`,
-  }
-  const lightFallbackGridStyles = createFallbackGridStyle(
-    normalizedCellSize,
-    untrack(() => local.lightLineColor),
-  )
-  const darkFallbackGridStyles = createFallbackGridStyle(
-    normalizedCellSize,
-    untrack(() => local.darkLineColor),
-  )
 
   return (
     <div
@@ -840,14 +823,20 @@ export function RetroGrid(props: RetroGridProps) {
         'pointer-events-none absolute size-full overflow-hidden',
         local.class,
       )}
-      style={gridStyles}
+      style={{
+        ...(local.style as JSX.CSSProperties),
+        opacity: local.opacity,
+      }}
       {...rest}
     >
       <style>{FALLBACK_STYLES}</style>
       {!isWebGlReady()
         ? (
             <div class="absolute inset-0" style={fallbackProjectionStyles}>
-              <div class="absolute inset-0" style={fallbackRotationStyles}>
+              <div
+                class="absolute inset-0"
+                style={{ transform: `rotateX(${clamp(local.angle, MIN_ANGLE, MAX_ANGLE)}deg)` }}
+              >
                 <div
                   data-retro-grid-scroll="true"
                   class="
@@ -855,7 +844,7 @@ export function RetroGrid(props: RetroGridProps) {
                     origin-[100%_0_0]
                     dark:hidden
                   "
-                  style={lightFallbackGridStyles}
+                  style={createFallbackGridStyle(Math.max(local.cellSize, 1), local.lightLineColor)}
                 />
                 <div
                   data-retro-grid-scroll="true"
@@ -864,7 +853,7 @@ export function RetroGrid(props: RetroGridProps) {
                     w-[600vw] origin-[100%_0_0]
                     dark:block
                   "
-                  style={darkFallbackGridStyles}
+                  style={createFallbackGridStyle(Math.max(local.cellSize, 1), local.darkLineColor)}
                 />
               </div>
             </div>

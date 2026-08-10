@@ -1,6 +1,6 @@
 import type { JSX } from 'solid-js'
 import { animate } from 'motion'
-import { createEffect, mergeProps, onCleanup, untrack } from 'solid-js'
+import { createEffect, mergeProps, onCleanup } from 'solid-js'
 import { cn } from '@/lib/utils'
 
 interface ComicTextProps {
@@ -13,10 +13,11 @@ interface ComicTextProps {
 export function ComicText(props: ComicTextProps) {
   const merged = mergeProps({ fontSize: 5 }, props)
 
-  // type check only uses the initial value; children is consumed as-is below
-  if (untrack(() => typeof merged.children) !== 'string') {
-    throw new Error('children must be a string')
-  }
+  createEffect(() => {
+    if (typeof merged.children !== 'string') {
+      throw new TypeError('children must be a string')
+    }
+  })
 
   const dotColor = '#EF4444'
   const backgroundColor = '#FACC15'

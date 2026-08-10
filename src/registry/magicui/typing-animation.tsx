@@ -133,18 +133,18 @@ export function TypingAnimation(props: TypingAnimationProps) {
   })
 
   const currentWordGraphemes = createMemo(() => Array.from(wordsToAnimate()[currentWordIndex()] || ''))
-  const isComplete = createMemo(() => (
+  const isComplete = () => (
     !local.loop
     && currentWordIndex() === wordsToAnimate().length - 1
     && currentCharIndex() >= currentWordGraphemes().length
     && phase() !== 'deleting'
-  ))
+  )
 
-  const shouldShowCursor = createMemo(() => (
+  const shouldShowCursor = () => (
     local.showCursor
     && !isComplete()
     && (hasMultipleWords() || local.loop || currentCharIndex() < currentWordGraphemes().length)
-  ))
+  )
 
   const getCursorChar = () => {
     switch (local.cursorStyle) {

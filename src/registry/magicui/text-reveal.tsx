@@ -1,6 +1,6 @@
-import type { Accessor, JSX } from 'solid-js'
+import type { JSX } from 'solid-js'
 import { scroll, transform } from 'motion'
-import { createEffect, createMemo, createSignal, For, onCleanup, untrack } from 'solid-js'
+import { createEffect, createMemo, createSignal, For, onCleanup } from 'solid-js'
 import { cn } from '@/lib/utils'
 
 export interface TextRevealProps extends Omit<JSX.HTMLAttributes<HTMLDivElement>, 'children'> {
@@ -42,9 +42,9 @@ export function TextReveal(props: TextRevealProps) {
         >
           <For each={words()}>
             {(word, i) => {
-              const start = untrack(i) / words().length
-              const end = start + 1 / words().length
-              return <Word progress={scrollYProgress} range={[start, end]}>{word}</Word>
+              const start = () => i() / words().length
+              const end = () => start() + 1 / words().length
+              return <Word progress={scrollYProgress()} range={[start(), end()]}>{word}</Word>
             }}
           </For>
         </span>
@@ -55,15 +55,15 @@ export function TextReveal(props: TextRevealProps) {
 
 interface WordProps {
   children: string
-  progress: Accessor<number>
+  progress: number
   range: [number, number]
 }
 
 function Word(props: WordProps) {
-  const opacity = createMemo(() => {
+  const opacity = () => {
     const [start, end] = props.range
-    return transform(props.progress(), [start, end], [0, 1])
-  })
+    return transform(props.progress, [start, end], [0, 1])
+  }
 
   return (
     <span class="

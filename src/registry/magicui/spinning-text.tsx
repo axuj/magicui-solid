@@ -1,7 +1,7 @@
 import type { TargetAndTransition, Transition, Variant, Variants } from 'motion'
 import type { JSX } from 'solid-js'
 import { animate } from 'motion'
-import { For, mergeProps, onCleanup, onMount, untrack } from 'solid-js'
+import { createMemo, For, mergeProps, onCleanup, onMount } from 'solid-js'
 import { cn } from '@/lib/utils'
 
 interface SpinningTextProps {
@@ -50,25 +50,23 @@ export function SpinningText(props: SpinningTextProps) {
     props,
   )
 
-  const childrenValue = untrack(() => merged.children)
-
-  if (typeof childrenValue !== 'string' && !Array.isArray(childrenValue)) {
-    throw new TypeError('children must be a string or an array of strings')
-  }
-
-  let targetText: string
-  if (Array.isArray(childrenValue)) {
-    if (!childrenValue.every(child => typeof child === 'string')) {
-      throw new Error('all elements in children array must be strings')
+  // Derived from children so a change re-renders letters and the sr-only text
+  const targetText = createMemo(() => {
+    const childrenValue = merged.children
+    if (typeof childrenValue !== 'string' && !Array.isArray(childrenValue)) {
+      throw new TypeError('children must be a string or an array of strings')
     }
-    targetText = childrenValue.join('')
-  }
-  else {
-    targetText = childrenValue
-  }
+    if (Array.isArray(childrenValue)) {
+      if (!childrenValue.every(child => typeof child === 'string')) {
+        throw new Error('all elements in children array must be strings')
+      }
+      return childrenValue.join('')
+    }
+    return childrenValue
+  })
 
   const letters = () => {
-    const chars = targetText.split('')
+    const chars = targetText().split('')
     chars.push(' ')
     return chars
   }
@@ -160,7 +158,7 @@ export function SpinningText(props: SpinningTextProps) {
           </span>
         )}
       </For>
-      <span class="sr-only">{targetText}</span>
+      <span class="sr-only">{targetText()}</span>
     </div>
   )
 }

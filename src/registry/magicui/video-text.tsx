@@ -87,11 +87,11 @@ export function VideoText(props: VideoTextProps) {
     return typeof resolved === 'string' ? resolved : ''
   })
 
-  const svgMask = createMemo(() => {
+  const dataUrlMask = createMemo(() => {
     const responsiveFontSize = typeof merged.fontSize === 'number' ? `${merged.fontSize}vw` : merged.fontSize
-    return `<svg xmlns='http://www.w3.org/2000/svg' width='100%' height='100%'><text x='50%' y='50%' font-size='${responsiveFontSize}' font-weight='${merged.fontWeight}' text-anchor='${merged.textAnchor}' dominant-baseline='${merged.dominantBaseline}' font-family='${merged.fontFamily}'>${content()}</text></svg>`
+    const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='100%' height='100%'><text x='50%' y='50%' font-size='${responsiveFontSize}' font-weight='${merged.fontWeight}' text-anchor='${merged.textAnchor}' dominant-baseline='${merged.dominantBaseline}' font-family='${merged.fontFamily}'>${content()}</text></svg>`
+    return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`
   })
-  const dataUrlMask = createMemo(() => `url("data:image/svg+xml,${encodeURIComponent(svgMask())}")`)
 
   const maskStyle = (): JSX.CSSProperties => ({
     'mask-image': dataUrlMask(),

@@ -44,7 +44,7 @@ export function PixelImage(props: PixelImageProps) {
   const MIN_GRID = 1
   const MAX_GRID = 16
 
-  const grid = createMemo(() => {
+  const grid = () => {
     const isValidGrid = (grid?: Grid) => {
       if (!grid)
         return false
@@ -60,7 +60,7 @@ export function PixelImage(props: PixelImageProps) {
     }
 
     return isValidGrid(merged.customGrid) ? merged.customGrid! : DEFAULT_GRIDS[merged.grid]
-  })
+  }
 
   const pieces = createMemo(() => {
     const { rows, cols } = grid()

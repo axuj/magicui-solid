@@ -1,5 +1,5 @@
 import type { JSX } from 'solid-js'
-import { createMemo, splitProps } from 'solid-js'
+import { splitProps } from 'solid-js'
 import { cn } from '@/lib/utils'
 
 export interface ShineBorderProps extends JSX.HTMLAttributes<HTMLDivElement> {
@@ -34,10 +34,10 @@ export function ShineBorder(props: ShineBorderProps) {
     'style',
   ])
 
-  const backgroundImage = createMemo(() => {
+  const backgroundImage = () => {
     const shineColor = local.shineColor ?? '#000000'
     return `radial-gradient(transparent,transparent, ${Array.isArray(shineColor) ? shineColor.join(',') : shineColor},transparent,transparent)`
-  })
+  }
 
   return (
     <div

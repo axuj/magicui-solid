@@ -1,4 +1,4 @@
-import type { Accessor, JSX } from 'solid-js'
+import type { JSX } from 'solid-js'
 import { animate } from 'motion'
 import {
   createEffect,
@@ -52,12 +52,14 @@ export function Lens(props: LensProps) {
     props,
   )
 
-  if (untrack(() => merged.zoomFactor) < 1) {
-    throw new Error('zoomFactor must be greater than 1')
-  }
-  if (untrack(() => merged.lensSize) < 0) {
-    throw new Error('lensSize must be greater than 0')
-  }
+  createEffect(() => {
+    if (merged.zoomFactor < 1) {
+      throw new Error('zoomFactor must be greater than 1')
+    }
+    if (merged.lensSize < 0) {
+      throw new Error('lensSize must be greater than 0')
+    }
+  })
 
   const [isHovering, setIsHovering] = createSignal(false)
   const [mousePosition, setMousePosition] = createSignal<Position>(untrack(() => merged.position))
@@ -111,12 +113,12 @@ export function Lens(props: LensProps) {
       {merged.children}
       <Show when={isMounted()}>
         <LensContent
-          maskImage={maskImage}
-          x={() => currentPosition().x}
-          y={() => currentPosition().y}
-          zoomFactor={() => merged.zoomFactor}
-          duration={() => merged.duration}
-          isExiting={isExiting}
+          maskImage={maskImage()}
+          x={currentPosition().x}
+          y={currentPosition().y}
+          zoomFactor={merged.zoomFactor}
+          duration={merged.duration}
+          isExiting={isExiting()}
           onExitComplete={() => setIsMounted(false)}
         >
           {merged.children}
@@ -128,12 +130,12 @@ export function Lens(props: LensProps) {
 
 function LensContent(props: {
   children: JSX.Element
-  maskImage: Accessor<string>
-  x: Accessor<number>
-  y: Accessor<number>
-  zoomFactor: Accessor<number>
-  duration: Accessor<number>
-  isExiting: Accessor<boolean>
+  maskImage: string
+  x: number
+  y: number
+  zoomFactor: number
+  duration: number
+  isExiting: boolean
   onExitComplete: () => void
 }) {
   let el: HTMLDivElement | undefined
@@ -141,10 +143,10 @@ function LensContent(props: {
   createEffect(() => {
     if (!el)
       return
-    const exiting = props.isExiting()
+    const exiting = props.isExiting
     const anim = exiting
-      ? animate(el, { opacity: 0, scale: 0.8 }, { duration: props.duration(), onComplete: () => props.onExitComplete() })
-      : animate(el, { opacity: [0, 1], scale: [0.58, 1] }, { duration: props.duration() })
+      ? animate(el, { opacity: 0, scale: 0.8 }, { duration: props.duration, onComplete: () => props.onExitComplete() })
+      : animate(el, { opacity: [0, 1], scale: [0.58, 1] }, { duration: props.duration })
     onCleanup(() => anim.stop())
   })
 
@@ -153,17 +155,17 @@ function LensContent(props: {
       ref={el}
       class="absolute inset-0 overflow-hidden"
       style={{
-        'mask-image': props.maskImage(),
-        '-webkit-mask-image': props.maskImage(),
-        'transform-origin': `${props.x()}px ${props.y()}px`,
+        'mask-image': props.maskImage,
+        '-webkit-mask-image': props.maskImage,
+        'transform-origin': `${props.x}px ${props.y}px`,
         'z-index': 50,
       }}
     >
       <div
         class="absolute inset-0"
         style={{
-          'transform': `scale(${props.zoomFactor()})`,
-          'transform-origin': `${props.x()}px ${props.y()}px`,
+          'transform': `scale(${props.zoomFactor})`,
+          'transform-origin': `${props.x}px ${props.y}px`,
         }}
       >
         {props.children}

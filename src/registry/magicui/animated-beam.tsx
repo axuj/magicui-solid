@@ -1,6 +1,6 @@
 import type { Accessor } from 'solid-js'
 import { animate } from 'motion'
-import { createEffect, createSignal, createUniqueId, mergeProps, onCleanup, splitProps, untrack } from 'solid-js'
+import { createEffect, createSignal, createUniqueId, mergeProps, onCleanup, splitProps } from 'solid-js'
 import { cn } from '@/lib/utils'
 
 export interface AnimatedBeamProps {
@@ -74,19 +74,20 @@ export function AnimatedBeam(props: AnimatedBeamProps) {
   const [svgHeight, setSvgHeight] = createSignal(0)
   let gradientRef: SVGLinearGradientElement | undefined
 
-  const gradientCoordinates = untrack(() => local.reverse)
-    ? {
-        x1: ['90%', '-10%'],
-        x2: ['100%', '0%'],
-        y1: ['0%', '0%'],
-        y2: ['0%', '0%'],
-      }
-    : {
-        x1: ['10%', '110%'],
-        x2: ['0%', '100%'],
-        y1: ['0%', '0%'],
-        y2: ['0%', '0%'],
-      }
+  const gradientCoordinates = () =>
+    local.reverse
+      ? {
+          x1: ['90%', '-10%'],
+          x2: ['100%', '0%'],
+          y1: ['0%', '0%'],
+          y2: ['0%', '0%'],
+        }
+      : {
+          x1: ['10%', '110%'],
+          x2: ['0%', '100%'],
+          y1: ['0%', '0%'],
+          y2: ['0%', '0%'],
+        }
 
   createEffect(() => {
     const containerEl = local.containerRef()
@@ -124,12 +125,7 @@ export function AnimatedBeam(props: AnimatedBeamProps) {
       return
     const animation = animate(
       gradientRef,
-      {
-        x1: gradientCoordinates.x1,
-        x2: gradientCoordinates.x2,
-        y1: gradientCoordinates.y1,
-        y2: gradientCoordinates.y2,
-      },
+      gradientCoordinates(),
       {
         delay: local.delay,
         duration: local.duration,

@@ -1,6 +1,6 @@
 import type { JSX } from 'solid-js'
 import { animate } from 'motion'
-import { createEffect, createMemo, For, mergeProps, onCleanup, splitProps, untrack } from 'solid-js'
+import { createEffect, createMemo, For, mergeProps, onCleanup, splitProps } from 'solid-js'
 
 import { cn } from '@/lib/utils'
 
@@ -126,7 +126,7 @@ export function LightRays(props: LightRaysProps) {
         '--light-rays-color': local.color,
         '--light-rays-blur': `${local.blur}px`,
         '--light-rays-length': local.length,
-        ...untrack(() => (local.style ?? {}) as JSX.CSSProperties),
+        ...(local.style ?? {}) as JSX.CSSProperties,
       }}
       {...rest}
     >

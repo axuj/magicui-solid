@@ -7,7 +7,6 @@ import {
   onCleanup,
   onMount,
   splitProps,
-  untrack,
 } from 'solid-js'
 import { cn } from '@/lib/utils'
 
@@ -78,11 +77,10 @@ export function Pointer(props: JSX.HTMLAttributes<HTMLDivElement>) {
     }
   })
 
-  const pointerStyle = untrack(() => (typeof local.style === 'object' ? local.style : {}))
   const pointerPositionStyle = createMemo<JSX.CSSProperties>(() => ({
     top: `${y()}px`,
     left: `${x()}px`,
-    ...pointerStyle,
+    ...(typeof local.style === 'object' ? local.style : {}),
   }))
 
   return (

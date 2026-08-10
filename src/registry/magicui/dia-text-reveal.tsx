@@ -228,15 +228,11 @@ export function DiaTextReveal(props: DiaTextRevealProps) {
     return isMulti() && local.fixedWidth && widths.length > 0 ? Math.max(...widths) : undefined
   })
 
-  const animatedW = createMemo(() => {
+  createEffect(() => {
     const widths = measuredWidths()
-    return isMulti() && !local.fixedWidth && widths[activeIndex()] != null
+    const width = isMulti() && !local.fixedWidth && widths[activeIndex()] != null
       ? widths[activeIndex()]
       : undefined
-  })
-
-  createEffect(() => {
-    const width = animatedW()
     if (width == null || !spanEl)
       return
     const controls = animate(spanEl, { width }, { duration: 0.4, ease: [0.4, 0, 0.2, 1] })

@@ -1,5 +1,5 @@
 import type { JSX, ValidComponent } from 'solid-js'
-import { createEffect, createSignal, For, mergeProps, onCleanup, splitProps, untrack } from 'solid-js'
+import { createEffect, createMemo, createSignal, For, mergeProps, onCleanup, splitProps } from 'solid-js'
 import { Dynamic } from 'solid-js/web'
 import { cn } from '@/lib/utils'
 
@@ -69,24 +69,47 @@ export function HyperText(props: HyperTextProps) {
     'characterSet',
   ])
 
-  const [displayText, setDisplayText] = createSignal<string[]>(untrack(() => local.children.split('')))
-  const [isAnimating, setIsAnimating] = createSignal(false)
-  let iterationCount = 0
+  // Animation progress 0→1; 1 means idle/completed. Everything else is derived.
+  const [progress, setProgress] = createSignal(1)
+  let animationFrameId: number | null = null
   let elementRef: HTMLElement | undefined
 
-  const handleAnimationTrigger = () => {
-    if (local.animateOnHover && !isAnimating()) {
-      iterationCount = 0
-      setIsAnimating(true)
+  // Derived display text: reacts to children changes automatically and
+  // re-randomizes scramble chars on every progress tick (same as the previous
+  // per-frame map over the signal).
+  const displayText = createMemo(() => {
+    const chars = local.children.split('')
+    const currentIter = progress() * chars.length
+    return chars.map((char, index) =>
+      char === ' '
+        ? char
+        : index <= currentIter
+          ? char
+          : local.characterSet[getRandomInt(local.characterSet.length)],
+    )
+  })
+
+  const startAnimation = () => {
+    if (animationFrameId !== null)
+      return
+    const startTime = performance.now()
+    const tick = (currentTime: number) => {
+      const next = Math.min((currentTime - startTime) / local.duration, 1)
+      setProgress(next)
+      animationFrameId = next < 1 ? requestAnimationFrame(tick) : null
     }
+    animationFrameId = requestAnimationFrame(tick)
+  }
+
+  const handleAnimationTrigger = () => {
+    if (local.animateOnHover && progress() === 1)
+      startAnimation()
   }
 
   // Handle animation start based on view or delay
   createEffect(() => {
     if (!local.startOnView) {
-      const startTimeout = setTimeout(() => {
-        setIsAnimating(true)
-      }, local.delay)
+      const startTimeout = setTimeout(startAnimation, local.delay)
       onCleanup(() => clearTimeout(startTimeout))
       return
     }
@@ -95,7 +118,7 @@ export function HyperText(props: HyperTextProps) {
       ([entry]) => {
         if (entry.isIntersecting) {
           setTimeout(() => {
-            setIsAnimating(true)
+            startAnimation()
           }, local.delay)
           observer.disconnect()
         }
@@ -109,46 +132,9 @@ export function HyperText(props: HyperTextProps) {
     onCleanup(() => observer.disconnect())
   })
 
-  // Handle scramble animation
-  createEffect(() => {
-    if (!isAnimating())
-      return
-
-    const maxIterations = local.children.length
-    const startTime = performance.now()
-    const charset = local.characterSet
-    let animationFrameId: number | null = null
-
-    const animateScramble = (currentTime: number) => {
-      const elapsed = currentTime - startTime
-      const progress = Math.min(elapsed / local.duration, 1)
-
-      iterationCount = progress * maxIterations
-
-      setDisplayText(currentText =>
-        currentText.map((letter, index) =>
-          letter === ' '
-            ? letter
-            : (index <= iterationCount)
-                ? local.children[index]
-                : charset[getRandomInt(charset.length)],
-        ),
-      )
-
-      if (progress < 1) {
-        animationFrameId = requestAnimationFrame(animateScramble)
-      }
-      else {
-        setIsAnimating(false)
-      }
-    }
-
-    animationFrameId = requestAnimationFrame(animateScramble)
-
-    onCleanup(() => {
-      if (animationFrameId !== null)
-        cancelAnimationFrame(animationFrameId)
-    })
+  onCleanup(() => {
+    if (animationFrameId !== null)
+      cancelAnimationFrame(animationFrameId)
   })
 
   return (
