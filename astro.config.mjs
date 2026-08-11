@@ -6,6 +6,7 @@ import tailwindcss from '@tailwindcss/vite'
 import { defineConfig } from 'astro/config'
 import starlightThemeBlack from 'starlight-theme-black'
 import demoTypesPlugin from './plugins/vite-plugin-demo'
+import favicon from './src/assets/favicon.svg'
 
 export default defineConfig({
   site: env.SITE_URL ?? 'http://localhost:4321',
@@ -14,6 +15,10 @@ export default defineConfig({
     solid(),
     starlight({
       title: 'MagicUI Solid',
+      logo: {
+        src: favicon,
+        alt: 'Magic UI Solid',
+      },
       social: [
         { icon: 'github', label: 'GitHub', href: 'https://github.com/axuj/magicui-solid' },
       ],

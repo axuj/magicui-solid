@@ -1,6 +1,10 @@
 # Magic UI Solid
 
 <p align="center">
+  <img src="public/favicon.svg" width="96" height="96" alt="Magic UI Solid" />
+</p>
+
+<p align="center">
   UI Library for Design Engineers — a <a href="https://solidjs.com">SolidJS</a> port of <a href="https://magicui.design">Magic UI</a>, distributed as a <a href="https://ui.shadcn.com/docs/registry">shadcn registry</a>.
 </p>
 
@@ -19,19 +23,13 @@
 
 ## Installation
 
-Install a single component:
+First add the `@magicui-solid` registry to your `components.json` (see the [Installation guide](https://axuj.github.io/magicui-solid/docs/installation) for prerequisites, registry setup and theme injection). Then install any component:
 
 ```sh
 npx shadcn@latest add @magicui-solid/marquee
 ```
 
-Install the whole library:
-
-```sh
-npx shadcn@latest add @magicui-solid
-```
-
-> Requires a project with the shadcn CLI set up (e.g. `npx shadcn@latest init`). Components are copied into your `<components>/magicui/` directory — no locked dependencies, full ownership of the code.
+Each component installs its dependencies and injects the theme into your `app.css` automatically.
 
 ## Documentation
 
