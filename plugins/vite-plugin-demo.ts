@@ -1,12 +1,11 @@
 import type { Plugin, ResolvedConfig } from 'vite'
-import { existsSync, mkdirSync, readdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { cwd } from 'node:process'
 
 export default function demoTypesPlugin(): Plugin {
   const demosDir = join(cwd(), 'src/demos')
   const generatedDir = join(demosDir, '__generated__')
-  const renderersDir = join(generatedDir, 'renderers')
   const rendererFile = join(generatedDir, 'DemoRenderer.astro')
   const demosDirNormalized = demosDir.replace(/\\/g, '/')
 
@@ -20,7 +19,7 @@ export default function demoTypesPlugin(): Plugin {
 import { PreviewPanel, type PreviewPanelProps } from '@/components/PreviewPanel'
 import { ${name} } from '@/demos/${name}'
 
-export function ${name}Renderer(props: Omit<PreviewPanelProps, 'children'>) {
+export default function ${name}Renderer(props: Omit<PreviewPanelProps, 'children'>) {
   return (
     <PreviewPanel align={props.align}>
       <${name} />
@@ -30,27 +29,9 @@ export function ${name}Renderer(props: Omit<PreviewPanelProps, 'children'>) {
 `
   }
 
-  function writeRenderers(names: string[]) {
-    if (!existsSync(renderersDir))
-      mkdirSync(renderersDir, { recursive: true })
-
-    const wanted = new Set(names.map(n => `${n}Renderer.tsx`))
-    for (const f of readdirSync(renderersDir).filter(f => f.endsWith('.tsx'))) {
-      if (!wanted.has(f))
-        unlinkSync(join(renderersDir, f))
-    }
-
-    for (const name of names) {
-      const p = join(renderersDir, `${name}Renderer.tsx`)
-      const content = generateRendererModule(name)
-      if (!existsSync(p) || readFileSync(p, 'utf-8') !== content)
-        writeFileSync(p, content, 'utf-8')
-    }
-  }
-
   function generateRenderer(names: string[]): string {
     const rawImportLines = names.map(n => `import _${n} from '@/demos/${n}.tsx?raw'`).join('\n')
-    const imports = names.map(n => `import { ${n}Renderer } from '@/demos/__generated__/renderers/${n}Renderer'`).join('\n')
+    const imports = names.map(n => `import ${n}Renderer from 'virtual:demo-renderer/${n}Renderer.tsx'`).join('\n')
     const branches = names
       .map(n => `  {demo === '${n}' && (
     <${n}Renderer align={align} client:load />
@@ -97,10 +78,9 @@ ${branches}
 
     const names = files.map(f => f.replace(/\.tsx$/, '')).filter(isSafeIdentifier)
 
-    writeRenderers(names)
-
     const renderer = generateRenderer(names)
     if (renderer !== lastRenderer) {
+      mkdirSync(generatedDir, { recursive: true })
       writeFileSync(rendererFile, renderer, 'utf-8')
       lastRenderer = renderer
     }
@@ -114,7 +94,17 @@ ${branches}
 
       scanAndGenerate()
     },
-    watchChange(id: string) {
+    resolveId(id) {
+      const m = id.match(/^virtual:demo-renderer\/([A-Za-z_$][\w$]*)Renderer\.tsx$/)
+      if (m)
+        return id
+    },
+    load(id) {
+      const m = id.match(/^virtual:demo-renderer\/([A-Za-z_$][\w$]*)Renderer\.tsx$/)
+      if (m)
+        return generateRendererModule(m[1])
+    },
+    watchChange(id) {
       if (id.replace(/\\/g, '/').startsWith(demosDirNormalized)) {
         scanAndGenerate()
       }
