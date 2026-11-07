@@ -16,6 +16,36 @@ interface RippleButtonRipple {
   key: number
 }
 
+function ButtonRipple(props: {
+  ripple: RippleButtonRipple
+  rippleColor: string
+  duration: string
+  onDone: (key: number) => void
+}) {
+  createEffect(() => {
+    const key = props.ripple.key
+    const ms = Number.parseInt(props.duration)
+    const done = props.onDone
+    const timeout = setTimeout(done, ms, key)
+    onCleanup(() => clearTimeout(timeout))
+  })
+
+  return (
+    <span
+      class="absolute animate-rippling rounded-full bg-background opacity-30"
+      style={{
+        'width': `${props.ripple.size}px`,
+        'height': `${props.ripple.size}px`,
+        'top': `${props.ripple.y}px`,
+        'left': `${props.ripple.x}px`,
+        'background-color': props.rippleColor,
+        'transform': 'scale(0)',
+        '--duration': props.duration,
+      } as JSX.CSSProperties}
+    />
+  )
+}
+
 export function RippleButton(props: RippleButtonProps) {
   const merged = mergeProps(
     {
@@ -26,6 +56,11 @@ export function RippleButton(props: RippleButtonProps) {
   )
   const [local, rest] = splitProps(merged, ['class', 'children', 'rippleColor', 'duration', 'onClick'])
   const [buttonRipples, setButtonRipples] = createSignal<RippleButtonRipple[]>([])
+  let nextKey = 0
+
+  const removeRipple = (key: number) => {
+    setButtonRipples(prevRipples => prevRipples.filter(ripple => ripple.key !== key))
+  }
 
   const createRipple = (event: MouseEvent) => {
     const button = event.currentTarget as HTMLButtonElement
@@ -34,7 +69,8 @@ export function RippleButton(props: RippleButtonProps) {
     const x = event.clientX - rect.left - size / 2
     const y = event.clientY - rect.top - size / 2
 
-    const newRipple = { x, y, size, key: Date.now() }
+    nextKey += 1
+    const newRipple = { x, y, size, key: nextKey }
     setButtonRipples(prevRipples => [...prevRipples, newRipple])
   }
 
@@ -42,25 +78,6 @@ export function RippleButton(props: RippleButtonProps) {
     createRipple(event)
     local.onClick?.(event)
   }
-
-  createEffect(() => {
-    let timeout: ReturnType<typeof setTimeout> | null = null
-
-    if (buttonRipples().length > 0) {
-      const lastRipple = buttonRipples()[buttonRipples().length - 1]
-      timeout = setTimeout(() => {
-        setButtonRipples(prevRipples =>
-          prevRipples.filter(ripple => ripple.key !== lastRipple.key),
-        )
-      }, Number.parseInt(local.duration))
-    }
-
-    onCleanup(() => {
-      if (timeout !== null) {
-        clearTimeout(timeout)
-      }
-    })
-  })
 
   return (
     <button
@@ -79,19 +96,11 @@ export function RippleButton(props: RippleButtonProps) {
       <span class="pointer-events-none absolute inset-0">
         <For each={buttonRipples()}>
           {ripple => (
-            <span
-              class="
-                absolute animate-rippling rounded-full bg-background opacity-30
-              "
-              style={{
-                'width': `${ripple.size}px`,
-                'height': `${ripple.size}px`,
-                'top': `${ripple.y}px`,
-                'left': `${ripple.x}px`,
-                'background-color': local.rippleColor,
-                'transform': 'scale(0)',
-                '--duration': local.duration,
-              } as JSX.CSSProperties}
+            <ButtonRipple
+              ripple={ripple}
+              rippleColor={local.rippleColor}
+              duration={local.duration}
+              onDone={removeRipple}
             />
           )}
         </For>

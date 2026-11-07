@@ -158,6 +158,24 @@ export function AnimatedThemeToggler(props: AnimatedThemeTogglerProps) {
 
   let buttonRef: HTMLButtonElement | undefined
   let isTransitioning = false
+  let activeAnim: Animation | null = null
+
+  const cancelAnim = () => {
+    activeAnim?.cancel()
+    activeAnim = null
+  }
+
+  onCleanup(() => {
+    if (typeof document === 'undefined')
+      return
+    cancelAnim()
+    const root = document.documentElement
+    if (root.dataset.magicuiThemeVt !== 'active')
+      return
+    delete root.dataset.magicuiThemeVt
+    root.style.removeProperty('--magicui-theme-toggle-vt-duration')
+    root.style.removeProperty('--magicui-theme-vt-clip-from')
+  })
 
   createEffect(() => {
     if (typeof document === 'undefined' || isControlled())
@@ -259,6 +277,7 @@ export function AnimatedThemeToggler(props: AnimatedThemeTogglerProps) {
       delete root.dataset.magicuiThemeVt
       root.style.removeProperty('--magicui-theme-toggle-vt-duration')
       root.style.removeProperty('--magicui-theme-vt-clip-from')
+      cancelAnim()
     }
 
     isTransitioning = true
@@ -276,7 +295,7 @@ export function AnimatedThemeToggler(props: AnimatedThemeTogglerProps) {
     if (ready && typeof ready.then === 'function') {
       ready
         .then(() => {
-          document.documentElement.animate(
+          activeAnim = document.documentElement.animate(
             {
               clipPath,
             },

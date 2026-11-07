@@ -246,6 +246,8 @@ function applyParticleEffect(element: HTMLElement, options?: CoolParticleOptions
   })
 
   return () => {
+    // Stop generating new particles so the cleanup poll below can release the loop and container.
+    disableAutoAddParticle()
     element.removeEventListener(move, updateMousePosition)
     element.removeEventListener(tap, tapHandler)
     element.removeEventListener(tapEnd, disableAutoAddParticle)
