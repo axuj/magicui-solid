@@ -131,6 +131,7 @@ export default defineConfig({
             { slug: 'docs/components/interactive-grid-pattern' },
             { slug: 'docs/components/light-rays' },
             { slug: 'docs/components/noise-texture' },
+            { slug: 'docs/components/floating-3d-particles' },
           ],
         },
         {

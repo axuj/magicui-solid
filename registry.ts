@@ -838,6 +838,11 @@ const data = {
       title: 'Glyph Matrix',
       description: 'An animated grid of subtly shifting glyphs with fade effect and theme support.',
     }),
+    uiItem({
+      name: 'floating-3d-particles',
+      title: 'Floating 3D Particles',
+      description: 'A canvas-based pseudo-3D particle field with perspective projection, continuous rotation and buoyant drift.',
+    }),
   ],
 }
 

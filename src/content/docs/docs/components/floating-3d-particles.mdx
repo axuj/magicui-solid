@@ -1,0 +1,80 @@
+---
+title: Floating 3D Particles
+description: A canvas-based pseudo-3D particle field with perspective projection, continuous rotation, buoyant drift and depth-aware rendering.
+---
+
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+import DemoRenderer from '@/demos/__generated__/DemoRenderer.astro'
+
+<div class="not-content">
+  <DemoRenderer demo="Floating3DParticlesDemo" />
+</div>
+
+## Examples
+
+### Plain Background
+
+<div class="not-content">
+  <DemoRenderer demo="Floating3DParticlesDemo2" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/floating-3d-particles
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/floating-3d-particles
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/floating-3d-particles
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/floating-3d-particles
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Usage
+
+```tsx showLineNumbers
+import { Floating3DParticles } from '@/components/magicui/floating-3d-particles'
+```
+
+`Floating3DParticles` renders an absolutely positioned `canvas` (`inset-0`, `pointer-events-none`). Place it inside a `relative` container and layer any foreground content above it with `z-10`.
+
+```tsx showLineNumbers
+<div class="relative flex h-[500px] w-full items-center justify-center overflow-hidden rounded-lg border">
+  <Floating3DParticles color="#8B5CF6" quantity={400} />
+  <div class="relative z-10 text-center">
+    <h2 class="text-3xl font-bold">Build Something Magical</h2>
+  </div>
+</div>
+```
+
+## Props
+
+| Prop       | Type     | Default     | Description                                                                                               |
+| ---------- | -------- | ----------- | --------------------------------------------------------------------------------------------------------- |
+| `class`    | `string` | `-`         | Additional CSS classes for the canvas element.                                                            |
+| `quantity` | `number` | `400`       | Number of particles on desktop viewports. Automatically scales down to 20% on mobile screens (< 768px).   |
+| `color`    | `string` | `"#8B5CF6"` | Particle color (supports 3-digit or 6-digit hex).                                                         |
+| `size`     | `number` | `5`         | Mean particle radius in px. Each particle varies within ±40% of this value.                               |
+| `opacity`  | `number` | `0.3`       | Mean particle opacity (0–1). Each particle varies within ±0.2, clamped to [0, 1].                         |
+| `drift`    | `number` | `0.8`       | Vertical floating speed in px per frame. Positive drifts upward, negative downward.                       |
+| `depth`    | `number` | `0.5`       | 3D depth intensity (0–1). `0` = flat 2D plane; `1` = strong perspective with pronounced near/far scaling. |
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/floating-3d-particles" target="_blank">
+    magicui.design/docs/components/floating-3d-particles
+  </a>
+</p>
