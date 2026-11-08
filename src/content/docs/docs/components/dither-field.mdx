@@ -1,0 +1,119 @@
+---
+title: Dither Field
+description: An animated WebGL2 background of Bayer-dithered square dots. The dots follow a light pattern, an image or a video, take one color or a three-stop ramp, and brighten under the pointer.
+---
+
+import PackageManagerTabs from '@/components/PackageManagerTabs.astro'
+import DemoRenderer from '@/demos/__generated__/DemoRenderer.astro'
+
+<div class="not-content">
+  <DemoRenderer demo="DitherFieldDemo" />
+</div>
+
+## Examples
+
+### Patterns
+
+<div class="not-content">
+  <DemoRenderer demo="DitherFieldPatternsDemo" />
+</div>
+
+### Card Background
+
+<div class="not-content">
+  <DemoRenderer demo="DitherFieldCardDemo" />
+</div>
+
+### Text Mask
+
+<div class="not-content">
+  <DemoRenderer demo="DitherFieldTextDemo" />
+</div>
+
+### Image
+
+<div class="not-content">
+  <DemoRenderer demo="DitherFieldImageDemo" />
+</div>
+
+### Colors
+
+<div class="not-content">
+  <DemoRenderer demo="DitherFieldColorsDemo" />
+</div>
+
+### Brand
+
+<div class="not-content">
+  <DemoRenderer demo="DitherFieldBrandDemo" />
+</div>
+
+### Monochrome
+
+<div class="not-content">
+  <DemoRenderer demo="DitherFieldMonochromeDemo" />
+</div>
+
+### Pointer
+
+<div class="not-content">
+  <DemoRenderer demo="DitherFieldPointerDemo" />
+</div>
+
+## Installation
+
+<PackageManagerTabs>
+  <Fragment slot="npm">
+    ```bash
+    npx shadcn@latest add @magicui-solid/dither-field
+    ```
+  </Fragment>
+  <Fragment slot="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add @magicui-solid/dither-field
+    ```
+  </Fragment>
+  <Fragment slot="yarn">
+    ```bash
+    yarn dlx shadcn@latest add @magicui-solid/dither-field
+    ```
+  </Fragment>
+  <Fragment slot="bun">
+    ```bash
+    bunx shadcn@latest add @magicui-solid/dither-field
+    ```
+  </Fragment>
+</PackageManagerTabs>
+
+## Usage
+
+```tsx showLineNumbers
+import { DitherField } from '@/components/magicui/dither-field'
+```
+
+```tsx showLineNumbers
+<DitherField class="h-96">
+  <h1>Your content</h1>
+</DitherField>
+```
+
+## Props
+
+| Prop          | Type                                                         | Default          | Description                                                         |
+| ------------- | ------------------------------------------------------------ | ---------------- | ------------------------------------------------------------------- |
+| `class`       | `string`                                                     | `-`              | Additional CSS classes for the root element.                        |
+| `pattern`     | `"horizon"` / `"glow"` / `"aurora"` / `"waves"` / `"clouds"` | `"horizon"`      | The procedural light field that the dots follow.                    |
+| `src`         | `string`                                                     | `-`              | Image or video URL to dither instead. Remote files must allow CORS. |
+| `color`       | `string` / `string[]`                                        | `"currentColor"` | A CSS color, or a `[low, mid, high]` ramp from dim to bright dots.  |
+| `dotSize`     | `number`                                                     | `1`              | Size of one dot in CSS pixels.                                      |
+| `intensity`   | `number`                                                     | `0.75`           | Brightness of the field.                                            |
+| `speed`       | `number`                                                     | `1`              | Animation speed. `0` holds a still frame.                           |
+| `fps`         | `number`                                                     | `30`             | Maximum frames per second.                                          |
+| `interactive` | `boolean`                                                    | `true`           | Brighten the dots under the pointer.                                |
+
+<p class="not-content" style="margin: 1rem 0; font-size: 0.875rem;">
+  Original:{' '}
+  <a href="https://magicui.design/docs/components/dither-field" target="_blank">
+    magicui.design/docs/components/dither-field
+  </a>
+</p>

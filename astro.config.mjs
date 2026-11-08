@@ -132,6 +132,7 @@ export default defineConfig({
             { slug: 'docs/components/light-rays' },
             { slug: 'docs/components/noise-texture' },
             { slug: 'docs/components/floating-3d-particles' },
+            { slug: 'docs/components/dither-field' },
           ],
         },
         {

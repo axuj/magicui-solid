@@ -843,6 +843,11 @@ const data = {
       title: 'Floating 3D Particles',
       description: 'A canvas-based pseudo-3D particle field with perspective projection, continuous rotation and buoyant drift.',
     }),
+    uiItem({
+      name: 'dither-field',
+      title: 'Dither Field',
+      description: 'An animated WebGL2 background of Bayer-dithered square dots. The dots follow a light pattern, an image or a video, take one color or a three-stop ramp, and brighten under the pointer.',
+    }),
   ],
 }
 
