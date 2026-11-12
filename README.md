@@ -11,7 +11,7 @@
 <div align="center">
   <a href="https://github.com/axuj/magicui-solid/stargazers"><img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/axuj/magicui-solid"></a>
   <a href="https://github.com/axuj/magicui-solid/forks"><img alt="GitHub Forks" src="https://img.shields.io/github/forks/axuj/magicui-solid"></a>
-  <a href="https://github.com/axuj/magicui-solid/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/badge/License-MIT-yellow.svg"></a>
+  <a href="https://github.com/axuj/magicui-solid/blob/master/LICENSE.md"><img alt="License" src="https://img.shields.io/badge/License-MIT-yellow.svg"></a>
 </div>
 
 ## Features
@@ -34,6 +34,8 @@ Each component installs its dependencies and injects the theme into your `app.cs
 ## Documentation
 
 Visit [https://axuj.github.io/magicui-solid](https://axuj.github.io/magicui-solid) to browse the components and view usage examples for each one.
+
+A [Solid 2 preview](https://axuj.github.io/magicui-solid/v2/) is built from the `v2` branch. It targets a release candidate and is not the default install target.
 
 ## Local Development
 
@@ -80,4 +82,4 @@ nub run lint:fix && nub run ts-check
 
 ## License
 
-Licensed under the [MIT License](https://github.com/axuj/magicui-solid/blob/main/LICENSE).
+magicui-solid is a SolidJS port of [Magic UI](https://github.com/magicuidesign/magicui). The upstream MIT license and its copyright notice are preserved verbatim in [LICENSE.md](https://github.com/axuj/magicui-solid/blob/master/LICENSE.md); this port is distributed under the same terms.
