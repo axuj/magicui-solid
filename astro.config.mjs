@@ -30,6 +30,11 @@ export default defineConfig({
       plugins: [starlightThemeBlack({})],
       sidebar: [
         {
+          label: 'Solid 2 preview (RC)',
+          link: 'https://axuj.github.io/magicui-solid/v2/',
+          attrs: { target: '_blank' },
+        },
+        {
           label: 'Getting Started',
           items: [
             { slug: 'docs', label: 'Introduction' },

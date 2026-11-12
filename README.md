@@ -8,9 +8,15 @@
   UI Library for Design Engineers — a <a href="https://solidjs.com">SolidJS</a> port of <a href="https://magicui.design">Magic UI</a>, distributed as a <a href="https://ui.shadcn.com/docs/registry">shadcn registry</a>.
 </p>
 
+<p align="center">
+  <strong><a href="https://axuj.github.io/magicui-solid/v2/">Explore the Solid 2 preview →</a></strong><br />
+  Rebuilt on Solid 2 with the official v2 reactivity model, lint preset and a self-hosted registry. Release candidate.
+</p>
+
 <div align="center">
   <a href="https://github.com/axuj/magicui-solid/stargazers"><img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/axuj/magicui-solid"></a>
   <a href="https://github.com/axuj/magicui-solid/forks"><img alt="GitHub Forks" src="https://img.shields.io/github/forks/axuj/magicui-solid"></a>
+  <a href="https://axuj.github.io/magicui-solid/v2/"><img alt="Solid 2 preview" src="https://img.shields.io/badge/Solid_2-preview-blueviolet"></a>
   <a href="https://github.com/axuj/magicui-solid/blob/master/LICENSE.md"><img alt="License" src="https://img.shields.io/badge/License-MIT-yellow.svg"></a>
 </div>
 
@@ -23,6 +29,8 @@
 
 ## Installation
 
+> The registry and commands below target the stable Solid 1 build. For Solid 2, follow the [v2 installation guide](https://axuj.github.io/magicui-solid/v2/docs/installation/).
+
 First add the `@magicui-solid` registry to your `components.json` (see the [Installation guide](https://axuj.github.io/magicui-solid/docs/installation) for prerequisites, registry setup and theme injection). Then install any component:
 
 ```sh
@@ -33,9 +41,10 @@ Each component installs its dependencies and injects the theme into your `app.cs
 
 ## Documentation
 
-Visit [https://axuj.github.io/magicui-solid](https://axuj.github.io/magicui-solid) to browse the components and view usage examples for each one.
+- **Stable (Solid 1)** — [https://axuj.github.io/magicui-solid](https://axuj.github.io/magicui-solid)
+- **Solid 2 preview** — [https://axuj.github.io/magicui-solid/v2/](https://axuj.github.io/magicui-solid/v2/), built from the [`v2` branch](https://github.com/axuj/magicui-solid/tree/v2). See the [migration notes](https://github.com/axuj/magicui-solid/blob/v2/docs/solid-2-migration.md) for what changed.
 
-A [Solid 2 preview](https://axuj.github.io/magicui-solid/v2/) is built from the `v2` branch. It targets a release candidate and is not the default install target.
+The Solid 2 build targets a release candidate and is not the default install target.
 
 ## Local Development
 
