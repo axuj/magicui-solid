@@ -24,6 +24,7 @@ jobs:
       - uses: nubjs/setup-nub@v0
         with:
           working-directory: main
+          cache: false
 
       - name: Build master
         working-directory: main
