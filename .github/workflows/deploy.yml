@@ -6,19 +6,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    concurrency:
-      group: pages
-      cancel-in-progress: false
-
     steps:
       - name: Checkout master
         uses: actions/checkout@v7
@@ -57,12 +46,41 @@ jobs:
           mkdir -p main/dist/v2
           cp -R v2/dist/. main/dist/v2/
 
+      - name: Upload combined build
+        uses: actions/upload-artifact@v4
+        with:
+          name: pages-site
+          path: main/dist
+          include-hidden-files: true
+
+  deploy:
+    needs: build
+    if: github.ref != 'refs/heads/ci'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+
+    steps:
+      - name: Download combined build
+        uses: actions/download-artifact@v4
+        with:
+          name: pages-site
+          path: dist
+
       - uses: actions/configure-pages@v6
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v5
         with:
-          path: main/dist
+          path: dist
 
       - name: Deploy to GitHub Pages
         id: deployment
