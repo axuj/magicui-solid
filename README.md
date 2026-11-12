@@ -11,7 +11,7 @@
 <div align="center">
   <a href="https://github.com/axuj/magicui-solid/stargazers"><img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/axuj/magicui-solid"></a>
   <a href="https://github.com/axuj/magicui-solid/forks"><img alt="GitHub Forks" src="https://img.shields.io/github/forks/axuj/magicui-solid"></a>
-  <a href="https://github.com/axuj/magicui-solid/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/badge/License-MIT-yellow.svg"></a>
+  <a href="https://github.com/axuj/magicui-solid/blob/master/LICENSE.md"><img alt="License" src="https://img.shields.io/badge/License-MIT-yellow.svg"></a>
 </div>
 
 ## Features
@@ -23,7 +23,7 @@
 
 ## Installation
 
-First add the `@magicui-solid` registry to your `components.json` (see the [Installation guide](https://axuj.github.io/magicui-solid/docs/installation) for prerequisites, registry setup and theme injection). Then install any component:
+First add the `@magicui-solid` registry to your `components.json` (see the [Installation guide](https://axuj.github.io/magicui-solid/v2/docs/installation) for prerequisites, registry setup and theme injection). Then install any component:
 
 ```sh
 npx shadcn@latest add @magicui-solid/marquee
@@ -33,7 +33,7 @@ Each component installs its dependencies and injects the theme into your `app.cs
 
 ## Documentation
 
-Visit [https://axuj.github.io/magicui-solid](https://axuj.github.io/magicui-solid) to browse the components and view usage examples for each one.
+Visit [https://axuj.github.io/magicui-solid/v2](https://axuj.github.io/magicui-solid/v2) (Solid 2 preview) to browse the components and view usage examples for each one.
 
 ## Local Development
 
@@ -80,4 +80,4 @@ nub run lint:fix && nub run ts-check
 
 ## License
 
-Licensed under the [MIT License](https://github.com/axuj/magicui-solid/blob/main/LICENSE).
+magicui-solid is a SolidJS port of [Magic UI](https://github.com/magicuidesign/magicui). The upstream MIT license and its copyright notice are preserved verbatim in [LICENSE.md](https://github.com/axuj/magicui-solid/blob/master/LICENSE.md); this port is distributed under the same terms.
