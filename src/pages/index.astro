@@ -90,6 +90,20 @@ import '@/styles/global.css'
             Components
           </a>
           <a
+            href="https://axuj.github.io/magicui-solid/v2/"
+            target="_blank"
+            rel="noreferrer"
+            class={cn(
+              buttonVariants({ variant: 'ghost', size: 'sm' }),
+              `
+                font-semibold text-primary
+                hover:text-primary
+              `,
+            )}
+          >
+            Solid 2 preview
+          </a>
+          <a
             href="https://github.com/axuj/magicui-solid"
             target="_blank"
             rel="noreferrer"
@@ -114,7 +128,11 @@ import '@/styles/global.css'
         md:px-6
       "
       >
-        <Hero client:load />
+        <Hero
+          client:load
+          announcementHref="https://axuj.github.io/magicui-solid/v2/"
+          announcementTitle="MagicUI Solid 2 preview"
+        />
         <ComponentsMarquee />
       </div>
     </main>
@@ -143,7 +161,7 @@ import '@/styles/global.css'
           .
         </span>
         <a
-          href="https://github.com/axmol/magicui-solid"
+          href="https://github.com/axuj/magicui-solid"
           target="_blank"
           rel="noreferrer"
           class="
