@@ -1,5 +1,6 @@
-import type { ComponentProps, JSX } from 'solid-js'
-import { mergeProps, splitProps } from 'solid-js'
+import type { ComponentProps, JSX } from '@solidjs/web'
+
+import { omit } from 'solid-js'
 
 import { cn } from '@/lib/utils'
 
@@ -14,35 +15,21 @@ export interface ShimmerButtonProps extends ComponentProps<'button'> {
 }
 
 export function ShimmerButton(props: ShimmerButtonProps) {
-  const merged = mergeProps(
-    {
-      shimmerColor: '#ffffff',
-      shimmerSize: '0.05em',
-      shimmerDuration: '3s',
-      borderRadius: '100px',
-      background: 'rgba(0, 0, 0, 1)',
-    },
-    props,
-  )
-  const [local, rest] = splitProps(merged, [
-    'shimmerColor',
-    'shimmerSize',
-    'borderRadius',
-    'shimmerDuration',
-    'background',
-    'class',
-    'children',
-  ])
+  const rest = omit(props, 'shimmerColor', 'shimmerSize', 'borderRadius', 'shimmerDuration', 'background', 'class', 'children')
+  const borderRadius = () => props.borderRadius ?? '100px'
+  const shimmerColor = () => props.shimmerColor ?? '#ffffff'
+  const shimmerDuration = () => props.shimmerDuration ?? '3s'
+  const shimmerSize = () => props.shimmerSize ?? '0.05em'
 
   return (
     <button
       style={{
         '--spread': '90deg',
-        '--shimmer-color': local.shimmerColor,
-        '--radius': local.borderRadius,
-        '--speed': local.shimmerDuration,
-        '--cut': local.shimmerSize,
-        '--bg': local.background,
+        '--shimmer-color': shimmerColor(),
+        '--radius': borderRadius(),
+        '--speed': shimmerDuration(),
+        '--cut': shimmerSize(),
+        '--bg': (props.background ?? 'rgba(0, 0, 0, 1)'),
       } as JSX.CSSProperties}
       class={cn(
         `
@@ -54,7 +41,7 @@ export function ShimmerButton(props: ShimmerButtonProps) {
           transform-gpu transition-transform duration-300 ease-in-out
           active:translate-y-px
         `,
-        local.class,
+        props.class,
       )}
       {...rest}
     >
@@ -75,7 +62,7 @@ export function ShimmerButton(props: ShimmerButtonProps) {
           />
         </div>
       </div>
-      {local.children}
+      {props.children}
       <div
         class={cn(
           'absolute inset-0 size-full',

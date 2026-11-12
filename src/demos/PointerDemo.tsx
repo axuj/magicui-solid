@@ -1,12 +1,13 @@
 import { animate } from 'motion'
-import { onCleanup, onMount } from 'solid-js'
+import { onSettled } from 'solid-js'
+
 import { Pointer } from '@/registry/magicui/pointer'
 
 function AnimatedHeart() {
   let wrapperEl: HTMLDivElement | undefined
   let pathEl: SVGPathElement | undefined
 
-  onMount(() => {
+  onSettled(() => {
     if (!wrapperEl || !pathEl)
       return
 
@@ -21,10 +22,10 @@ function AnimatedHeart() {
       { duration: 0.8, repeat: Infinity, ease: 'easeInOut' },
     )
 
-    onCleanup(() => {
+    return () => {
       wrapperAnim.stop()
       pathAnim.stop()
-    })
+    }
   })
 
   return (

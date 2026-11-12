@@ -1,16 +1,11 @@
+import type { JSX, ValidComponent } from '@solidjs/web'
 import type { AnimationOptions, AnimationPlaybackControls, ValueAnimationTransition } from 'motion'
-import type { JSX, ValidComponent } from 'solid-js'
+
+import { Dynamic } from '@solidjs/web'
 import { createScopedAnimate } from 'motion'
-import {
-  createMemo,
-  createSignal,
-  For,
-  mergeProps,
-  onCleanup,
-  onMount,
-  splitProps,
-} from 'solid-js'
-import { Dynamic } from 'solid-js/web'
+
+import { createMemo, createSignal, For, omit, onSettled } from 'solid-js'
+
 import { cn } from '@/lib/utils'
 
 const HAS_SEGMENTER = typeof Intl !== 'undefined' && 'Segmenter' in Intl
@@ -73,27 +68,10 @@ interface Text3DFlipProps {
 }
 
 export default function Text3DFlip(props: Text3DFlipProps) {
-  const merged = mergeProps(
-    {
-      as: 'p',
-      staggerDuration: 0.05,
-      staggerFrom: 'first',
-      transition: DEFAULT_TRANSITION,
-      rotateDirection: 'right',
-    } as const,
-    props,
-  )
-  const [local, rest] = splitProps(merged, [
-    'children',
-    'as',
-    'class',
-    'textClassName',
-    'flipTextClassName',
-    'staggerDuration',
-    'staggerFrom',
-    'transition',
-    'rotateDirection',
-  ])
+  const rest = omit(props, 'children', 'as', 'class', 'textClassName', 'flipTextClassName', 'staggerDuration', 'staggerFrom', 'transition', 'rotateDirection')
+  const staggerDuration = () => props.staggerDuration ?? 0.05
+  const staggerFrom = () => props.staggerFrom ?? 'first'
+  const transition = () => props.transition ?? DEFAULT_TRANSITION
 
   const scope = {
     current: undefined as HTMLElement | undefined,
@@ -103,17 +81,19 @@ export default function Text3DFlip(props: Text3DFlipProps) {
 
   let isAnimating = false
   let isMounted = true
-  onCleanup(() => {
-    isMounted = false
-    isAnimating = false
-    for (const animation of scope.animations)
-      animation.stop()
-    scope.animations.length = 0
+  onSettled(() => {
+    return () => {
+      isMounted = false
+      isAnimating = false
+      for (const animation of scope.animations)
+        animation.stop()
+      scope.animations.length = 0
+    }
   })
 
   const [text, setText] = createSignal('')
 
-  const rotationTransform = () => ROTATION_MAP[local.rotateDirection]
+  const rotationTransform = () => ROTATION_MAP[(props.rotateDirection ?? 'right')]
 
   const characters = createMemo(
     () => {
@@ -126,19 +106,21 @@ export default function Text3DFlip(props: Text3DFlipProps) {
   )
 
   const getStaggerDelay = (index: number, totalChars: number) => {
-    if (local.staggerFrom === 'first')
-      return index * local.staggerDuration
-    if (local.staggerFrom === 'last')
-      return (totalChars - 1 - index) * local.staggerDuration
-    if (local.staggerFrom === 'center') {
+    // Read once so TypeScript can narrow the value across branches.
+    const from = staggerFrom()
+    if (from === 'first')
+      return index * staggerDuration()
+    if (from === 'last')
+      return (totalChars - 1 - index) * staggerDuration()
+    if (from === 'center') {
       const center = Math.floor(totalChars / 2)
-      return Math.abs(center - index) * local.staggerDuration
+      return Math.abs(center - index) * staggerDuration()
     }
-    if (local.staggerFrom === 'random') {
+    if (from === 'random') {
       const randomIndex = Math.floor(Math.random() * totalChars)
-      return Math.abs(randomIndex - index) * local.staggerDuration
+      return Math.abs(randomIndex - index) * staggerDuration()
     }
-    return Math.abs(local.staggerFrom - index) * local.staggerDuration
+    return Math.abs(from - index) * staggerDuration()
   }
 
   const handleHoverStart = async () => {
@@ -160,7 +142,7 @@ export default function Text3DFlip(props: Text3DFlipProps) {
       await scopedAnimate(
         '.text-3d-flip-char',
         { transform: rotationTransform() },
-        { ...local.transition, delay: (i: number) => delays[i] },
+        { ...transition(), delay: (i: number) => delays[i] },
       )
 
       if (!isMounted)
@@ -181,8 +163,8 @@ export default function Text3DFlip(props: Text3DFlipProps) {
 
   return (
     <Dynamic
-      component={local.as}
-      class={cn('relative flex flex-wrap', local.class)}
+      component={(props.as ?? 'p')}
+      class={cn('relative flex flex-wrap', props.class)}
       onMouseEnter={handleHoverStart}
       ref={(el: HTMLElement) => {
         scope.current = el
@@ -191,13 +173,13 @@ export default function Text3DFlip(props: Text3DFlipProps) {
     >
       <span
         ref={(el) => {
-          onMount(() => {
+          onSettled(() => {
             setText(el.textContent ?? '')
           })
         }}
         class="sr-only"
       >
-        {local.children}
+        {props.children}
       </span>
 
       <For each={characters()}>
@@ -207,9 +189,9 @@ export default function Text3DFlip(props: Text3DFlipProps) {
               {char => (
                 <CharBox
                   char={char}
-                  textClassName={local.textClassName}
-                  flipTextClassName={local.flipTextClassName}
-                  rotateDirection={local.rotateDirection}
+                  textClassName={props.textClassName}
+                  flipTextClassName={props.flipTextClassName}
+                  rotateDirection={(props.rotateDirection ?? 'right')}
                 />
               )}
             </For>

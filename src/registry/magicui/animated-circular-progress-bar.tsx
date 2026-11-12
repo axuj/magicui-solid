@@ -1,4 +1,4 @@
-import { mergeProps, Show } from 'solid-js'
+import { Show } from 'solid-js'
 
 import { cn } from '@/lib/utils'
 
@@ -12,14 +12,15 @@ interface AnimatedCircularProgressBarProps {
 }
 
 export function AnimatedCircularProgressBar(props: AnimatedCircularProgressBarProps) {
-  const merged = mergeProps({ max: 100, min: 0, value: 0 }, props)
+  const max = () => props.max ?? 100
+  const min = () => props.min ?? 0
   const circumference = 2 * Math.PI * 45
   const percentPx = circumference / 100
-  const currentPercent = () => Math.round(((merged.value - merged.min) / (merged.max - merged.min)) * 100)
+  const currentPercent = () => Math.round((((props.value ?? 0) - min()) / (max() - min())) * 100)
 
   return (
     <div
-      class={cn('relative size-40 text-2xl font-semibold', merged.class)}
+      class={cn('relative size-40 text-2xl font-semibold', props.class)}
       style={{
         '--circle-size': '100px',
         '--circumference': circumference,
@@ -50,7 +51,7 @@ export function AnimatedCircularProgressBar(props: AnimatedCircularProgressBarPr
             stroke-linejoin="round"
             class="opacity-100"
             style={{
-              'stroke': merged.gaugeSecondaryColor,
+              'stroke': props.gaugeSecondaryColor,
               '--stroke-percent': 90 - currentPercent(),
               '--offset-factor-secondary': 'calc(1 - var(--offset-factor))',
               'stroke-dasharray':
@@ -73,7 +74,7 @@ export function AnimatedCircularProgressBar(props: AnimatedCircularProgressBarPr
           stroke-linejoin="round"
           class="opacity-100"
           style={{
-            'stroke': merged.gaugePrimaryColor,
+            'stroke': props.gaugePrimaryColor,
             '--stroke-percent': currentPercent(),
             'stroke-dasharray':
               'calc(var(--stroke-percent) * var(--percent-to-px)) var(--circumference)',

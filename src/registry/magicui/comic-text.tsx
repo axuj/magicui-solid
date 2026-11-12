@@ -1,6 +1,7 @@
-import type { JSX } from 'solid-js'
+import type { JSX } from '@solidjs/web'
 import { animate } from 'motion'
-import { createEffect, mergeProps, onCleanup } from 'solid-js'
+import { createEffect, onSettled } from 'solid-js'
+
 import { cn } from '@/lib/utils'
 
 interface ComicTextProps {
@@ -11,10 +12,10 @@ interface ComicTextProps {
 }
 
 export function ComicText(props: ComicTextProps) {
-  const merged = mergeProps({ fontSize: 5 }, props)
+  const fontSize = () => props.fontSize ?? 5
 
-  createEffect(() => {
-    if (typeof merged.children !== 'string') {
+  createEffect(() => [props.children], ([children]) => {
+    if (typeof children !== 'string') {
       throw new TypeError('children must be a string')
     }
   })
@@ -24,7 +25,7 @@ export function ComicText(props: ComicTextProps) {
 
   let ref: HTMLDivElement | undefined
 
-  createEffect(() => {
+  onSettled(() => {
     if (!ref)
       return
     const anim = animate(
@@ -36,18 +37,18 @@ export function ComicText(props: ComicTextProps) {
         type: 'spring',
       },
     )
-    onCleanup(() => anim.stop())
+    return () => anim.stop()
   })
 
   return (
     <div
       ref={ref}
-      class={cn('text-center select-none', merged.class)}
+      class={cn('text-center select-none', props.class)}
       style={{
-        'font-size': `${merged.fontSize}rem`,
+        'font-size': `${fontSize()}rem`,
         'font-family': '\'Bangers\', \'Comic Sans MS\', \'Impact\', sans-serif',
         'font-weight': '900',
-        '-webkit-text-stroke': `${merged.fontSize * 0.35}px #000000`,
+        '-webkit-text-stroke': `${fontSize() * 0.35}px #000000`,
         'transform': 'skewX(-10deg)',
         'text-transform': 'uppercase',
         'filter': `
@@ -60,10 +61,10 @@ export function ComicText(props: ComicTextProps) {
         'background-clip': 'text',
         '-webkit-background-clip': 'text',
         '-webkit-text-fill-color': 'transparent',
-        ...merged.style,
+        ...props.style,
       }}
     >
-      {merged.children}
+      {props.children}
     </div>
   )
 }

@@ -1,5 +1,6 @@
-import type { JSX } from 'solid-js'
-import { For, mergeProps, splitProps } from 'solid-js'
+import type { JSX } from '@solidjs/web'
+import { For, omit } from 'solid-js'
+
 import { cn } from '@/lib/utils'
 
 interface MarqueeProps extends JSX.HTMLAttributes<HTMLDivElement> {
@@ -34,30 +35,33 @@ interface MarqueeProps extends JSX.HTMLAttributes<HTMLDivElement> {
 }
 
 export function Marquee(props: MarqueeProps) {
-  const merged = mergeProps({ reverse: false, pauseOnHover: false, vertical: false, repeat: 4 }, props)
-  const [local, rest] = splitProps(merged, ['reverse', 'pauseOnHover', 'children', 'vertical', 'repeat', 'class'])
+  const vertical = () => props.vertical ?? false
+  const repeat = () => props.repeat ?? 4
+
+  // Forward every prop the component does not consume to the root div.
+  const rest = omit(props, 'class', 'reverse', 'pauseOnHover', 'children', 'vertical', 'repeat')
 
   return (
     <div
       class={cn(`
         group flex gap-(--gap) overflow-hidden p-2 [--duration:40s] [--gap:1rem]
       `, {
-        'flex-row': !local.vertical,
-        'flex-col': local.vertical,
-      }, local.class)}
+        'flex-row': !vertical(),
+        'flex-col': vertical(),
+      }, props.class)}
       {...rest}
     >
-      <For each={Array.from({ length: local.repeat })}>
+      <For each={Array.from({ length: repeat() })}>
         {() => (
           <div
             class={cn('flex shrink-0 justify-around gap-(--gap)', {
-              'animate-marquee flex-row': !local.vertical,
-              'animate-marquee-vertical flex-col': local.vertical,
-              'group-hover:[animation-play-state:paused]': local.pauseOnHover,
-              '[animation-direction:reverse]': local.reverse,
+              'animate-marquee flex-row': !vertical(),
+              'animate-marquee-vertical flex-col': vertical(),
+              'group-hover:[animation-play-state:paused]': props.pauseOnHover ?? false,
+              '[animation-direction:reverse]': props.reverse ?? false,
             })}
           >
-            {local.children}
+            {props.children}
           </div>
         )}
       </For>

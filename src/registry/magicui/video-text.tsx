@@ -1,6 +1,8 @@
-import type { JSX, ValidComponent } from 'solid-js'
-import { children, createMemo, mergeProps } from 'solid-js'
-import { Dynamic } from 'solid-js/web'
+import type { JSX, ValidComponent } from '@solidjs/web'
+import { Dynamic } from '@solidjs/web'
+
+import { children, createMemo } from 'solid-js'
+
 import { cn } from '@/lib/utils'
 
 export interface VideoTextProps {
@@ -65,31 +67,22 @@ export interface VideoTextProps {
 }
 
 export function VideoText(props: VideoTextProps) {
-  const merged = mergeProps(
-    {
-      class: '',
-      autoPlay: true,
-      muted: true,
-      loop: true,
-      preload: 'auto' as const,
-      fontSize: 20,
-      fontWeight: 'bold',
-      textAnchor: 'middle',
-      dominantBaseline: 'middle',
-      fontFamily: 'sans-serif',
-      as: 'div',
-    },
-    props,
-  )
-  const resolvedChildren = children(() => merged.children)
+  const as = () => props.as ?? 'div'
+  const autoPlay = () => props.autoPlay ?? true
+  const dominantBaseline = () => props.dominantBaseline ?? 'middle'
+  const fontFamily = () => props.fontFamily ?? 'sans-serif'
+  const fontSize = () => props.fontSize ?? 20
+  const fontWeight = () => props.fontWeight ?? 'bold'
+  const textAnchor = () => props.textAnchor ?? 'middle'
+  const resolvedChildren = children(() => props.children)
   const content = createMemo(() => {
     const resolved = resolvedChildren()
     return typeof resolved === 'string' ? resolved : ''
   })
 
   const dataUrlMask = createMemo(() => {
-    const responsiveFontSize = typeof merged.fontSize === 'number' ? `${merged.fontSize}vw` : merged.fontSize
-    const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='100%' height='100%'><text x='50%' y='50%' font-size='${responsiveFontSize}' font-weight='${merged.fontWeight}' text-anchor='${merged.textAnchor}' dominant-baseline='${merged.dominantBaseline}' font-family='${merged.fontFamily}'>${content()}</text></svg>`
+    const responsiveFontSize = typeof fontSize() === 'number' ? `${fontSize()}vw` : fontSize()
+    const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='100%' height='100%'><text x='50%' y='50%' font-size='${responsiveFontSize}' font-weight='${fontWeight()}' text-anchor='${textAnchor()}' dominant-baseline='${dominantBaseline()}' font-family='${fontFamily()}'>${content()}</text></svg>`
     return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`
   })
 
@@ -105,7 +98,7 @@ export function VideoText(props: VideoTextProps) {
   })
 
   return (
-    <Dynamic component={merged.as} class={cn('relative size-full', merged.class)}>
+    <Dynamic component={as()} class={cn('relative size-full', (props.class ?? ''))}>
       {/* Create a container that masks the video to only show within text */}
       <div
         class="absolute inset-0 flex items-center justify-center"
@@ -113,13 +106,13 @@ export function VideoText(props: VideoTextProps) {
       >
         <video
           class="size-full object-cover"
-          autoplay={merged.autoPlay}
-          muted={merged.muted}
-          loop={merged.loop}
-          preload={merged.preload}
+          autoplay={autoPlay()}
+          muted={(props.muted ?? true)}
+          loop={(props.loop ?? true)}
+          preload={(props.preload ?? 'auto' as const)}
           playsinline
         >
-          <source src={merged.src} />
+          <source src={props.src} />
           Your browser does not support the video tag.
         </video>
       </div>

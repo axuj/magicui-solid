@@ -1,5 +1,5 @@
-import type { JSX } from 'solid-js'
-import { mergeProps, Show, splitProps } from 'solid-js'
+import type { JSX } from '@solidjs/web'
+import { omit, Show } from 'solid-js'
 
 const SAFARI_WIDTH = 1203
 const SAFARI_HEIGHT = 753
@@ -24,21 +24,18 @@ export interface SafariProps extends JSX.HTMLAttributes<HTMLDivElement> {
 }
 
 export function Safari(props: SafariProps) {
-  const merged = mergeProps({ mode: 'default' }, props)
-  const [local, rest] = splitProps(merged, ['url', 'imageSrc', 'videoSrc', 'mode', 'class', 'style'])
+  const rest = omit(props, 'url', 'imageSrc', 'videoSrc', 'mode', 'class', 'style')
+  const mode = () => props.mode ?? 'default'
 
-  const hasVideo = () => !!local.videoSrc
-  const hasMedia = () => hasVideo() || !!local.imageSrc
+  const hasVideo = () => !!props.videoSrc
+  const hasMedia = () => hasVideo() || !!props.imageSrc
 
   return (
     <div
-      class={`
-        relative inline-block w-full align-middle leading-none
-        ${local.class ?? ''}
-      `}
+      class={['relative inline-block w-full align-middle leading-none', props.class]}
       style={{
         'aspect-ratio': `${SAFARI_WIDTH}/${SAFARI_HEIGHT}`,
-        ...(local.style as JSX.CSSProperties),
+        ...(props.style as JSX.CSSProperties),
       }}
       {...rest}
     >
@@ -54,7 +51,7 @@ export function Safari(props: SafariProps) {
         >
           <video
             class="block size-full object-cover"
-            src={local.videoSrc}
+            src={props.videoSrc}
             autoplay
             loop
             muted
@@ -64,7 +61,7 @@ export function Safari(props: SafariProps) {
         </div>
       </Show>
 
-      <Show when={!hasVideo() && !!local.imageSrc}>
+      <Show when={!hasVideo() && !!props.imageSrc}>
         <div
           class="pointer-events-none absolute z-0 overflow-hidden"
           style={{
@@ -76,7 +73,7 @@ export function Safari(props: SafariProps) {
           }}
         >
           <img
-            src={local.imageSrc}
+            src={props.imageSrc}
             alt=""
             class="block size-full object-cover object-top"
           />
@@ -195,11 +192,11 @@ export function Safari(props: SafariProps) {
               font-size="12"
               font-family="Arial, sans-serif"
             >
-              {local.url}
+              {props.url}
             </text>
           </g>
 
-          <Show when={local.mode === 'default'}>
+          <Show when={mode() === 'default'}>
             <g class="mix-blend-luminosity">
               <path
                 d="M265.5 33.8984C265.641 33.8984 265.852 33.8516 266.047 33.7422C270.547 31.2969 272.109 30.1641 272.109 27.3203V21.4219C272.109 20.4844 271.742 20.1484 270.961 19.8125C270.094 19.4453 267.18 18.4297 266.328 18.1406C266.07 18.0547 265.766 18 265.5 18C265.234 18 264.93 18.0703 264.672 18.1406C263.82 18.3828 260.906 19.4531 260.039 19.8125C259.258 20.1406 258.891 20.4844 258.891 21.4219V27.3203C258.891 30.1641 260.461 31.2812 264.945 33.7422C265.148 33.8516 265.359 33.8984 265.5 33.8984ZM265.922 19.5781C266.945 19.9766 269.172 20.7656 270.344 21.1875C270.562 21.2656 270.617 21.3828 270.617 21.6641V27.0234C270.617 29.3125 269.469 29.9375 265.945 32.0625C265.727 32.1875 265.617 32.2344 265.508 32.2344V19.4844C265.617 19.4844 265.734 19.5156 265.922 19.5781Z"

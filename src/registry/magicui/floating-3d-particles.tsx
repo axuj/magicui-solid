@@ -1,5 +1,5 @@
-import type { ComponentProps } from 'solid-js'
-import { createEffect, mergeProps, onCleanup, splitProps } from 'solid-js'
+import type { ComponentProps } from '@solidjs/web'
+import { createEffect, omit } from 'solid-js'
 
 import { cn } from '@/lib/utils'
 
@@ -120,222 +120,209 @@ function spawnParticle(
 // ---------------------------------------------------------------------------
 
 export function Floating3DParticles(props: Floating3DParticlesProps) {
-  const merged = mergeProps({
-    quantity: 400,
-    color: '#8B5CF6',
-    size: 5,
-    opacity: 0.3,
-    drift: 0.8,
-    depth: 0.5,
-  }, props)
-  const [local, rest] = splitProps(merged, [
-    'class',
-    'style',
-    'quantity',
-    'color',
-    'size',
-    'opacity',
-    'drift',
-    'depth',
-  ])
+  const rest = omit(props, 'class', 'style', 'quantity', 'color', 'size', 'opacity', 'drift', 'depth')
+  const color = () => props.color ?? '#8B5CF6'
 
   let canvasEl: HTMLCanvasElement | undefined
 
-  createEffect(() => {
-    const canvas = canvasEl
-    if (!canvas)
-      return
-    const ctx = canvas.getContext('2d', { alpha: true })
-    if (!ctx)
-      return
-
-    // Read once per effect run so a changed option rebuilds the field, matching
-    // the React source's dependency list. Color stays reactive: it is read in
-    // the frame callback, so recolouring never tears down the field.
-    const quantity = local.quantity
-    const size = local.size
-    const opacity = local.opacity
-    const drift = local.drift
-    const depth = local.depth
-
-    let mounted = true
-    let paused = false
-    let reducedMotion = false
-    let rafId: number | null = null
-
-    let width = 0
-    let height = 0
-    let particles: Particle[] = []
-    let staticDirty = true
-
-    const { fov, perspectiveDistance, depthRange } = deriveProjection(depth)
-
-    // Reduced-motion media query (built-in a11y best practice)
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
-    const syncReducedMotion = () => {
-      reducedMotion = mq.matches
-    }
-    syncReducedMotion()
-
-    // Draw single particle
-    const draw = (p: Particle) => {
-      const r = Math.max(0, p.size * p.projectedScale)
-      if (r <= 0)
+  createEffect(
+    () => ({ quantity: props.quantity, size: props.size, opacity: props.opacity, drift: props.drift, depth: props.depth }),
+    ({ quantity: quantityValue, size: sizeValue, opacity: opacityValue, drift: driftValue, depth: depthValue }) => {
+      const canvas = canvasEl
+      if (!canvas)
+        return
+      const ctx = canvas.getContext('2d', { alpha: true })
+      if (!ctx)
         return
 
-      ctx.beginPath()
-      ctx.fillStyle = hexToRgba(local.color, p.opacity)
-      ctx.arc(p.screenX, p.screenY, r, 0, Math.PI * 2)
-      ctx.fill()
-    }
+      // Read once per effect run so a changed option rebuilds the field, matching
+      // the React source's dependency list. Color stays reactive: it is read in
+      // the frame callback, so recolouring never tears down the field.
+      const quantity = (quantityValue ?? 400)
+      const size = (sizeValue ?? 5)
+      const opacity = (opacityValue ?? 0.3)
+      const drift = (driftValue ?? 0.8)
+      const depth = (depthValue ?? 0.5)
 
-    // Static frame for reduced motion
-    const staticFrame = () => {
-      ctx.clearRect(0, 0, width, height)
-      const cx = width / 2
-      const cy = height / 2
+      let mounted = true
+      let paused = false
+      let reducedMotion = false
+      let rafId: number | null = null
 
-      for (const p of particles) {
-        const denom = Math.max(1, fov + perspectiveDistance)
-        const scale = fov / denom
-        p.screenX = cx + Math.cos(p.angle) * p.radius * scale
-        p.screenY = cy + p.y * scale
-        p.projectedScale = scale
-        draw(p)
+      let width = 0
+      let height = 0
+      let particles: Particle[] = []
+      let staticDirty = true
+
+      const { fov, perspectiveDistance, depthRange } = deriveProjection(depth)
+
+      // Reduced-motion media query (built-in a11y best practice)
+      const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
+      const syncReducedMotion = () => {
+        reducedMotion = mq.matches
       }
-    }
+      syncReducedMotion()
 
-    // Animation loop: continuous 3D field rotation and buoyant drift
-    const tick = () => {
-      if (!mounted)
-        return
+      // Draw single particle
+      const draw = (p: Particle) => {
+        const r = Math.max(0, p.size * p.projectedScale)
+        if (r <= 0)
+          return
 
-      if (paused) {
+        ctx.beginPath()
+        ctx.fillStyle = hexToRgba(color(), p.opacity)
+        ctx.arc(p.screenX, p.screenY, r, 0, Math.PI * 2)
+        ctx.fill()
+      }
+
+      // Static frame for reduced motion
+      const staticFrame = () => {
+        ctx.clearRect(0, 0, width, height)
+        const cx = width / 2
+        const cy = height / 2
+
+        for (const p of particles) {
+          const denom = Math.max(1, fov + perspectiveDistance)
+          const scale = fov / denom
+          p.screenX = cx + Math.cos(p.angle) * p.radius * scale
+          p.screenY = cy + p.y * scale
+          p.projectedScale = scale
+          draw(p)
+        }
+      }
+
+      // Animation loop: continuous 3D field rotation and buoyant drift
+      const tick = () => {
+        if (!mounted)
+          return
+
+        if (paused) {
+          rafId = requestAnimationFrame(tick)
+          return
+        }
+
+        // Reduced motion: paint one static frame, then idle until something
+        // invalidates it (resize, or the motion preference being turned off).
+        if (reducedMotion) {
+          if (staticDirty) {
+            staticDirty = false
+            staticFrame()
+          }
+          rafId = requestAnimationFrame(tick)
+          return
+        }
+
+        staticDirty = true
+
+        ctx.clearRect(0, 0, width, height)
+
+        const cx = width / 2
+        const cy = height / 2
+
+        for (const p of particles) {
+          // Continuous organic rotation around the 3D central axis
+          p.angle += p.angularSpeed
+          p.y -= drift
+
+          // Respawn on the opposite edge, whichever one the particle left
+          // through, so a negative drift falls instead of draining the field
+          if (p.y < -height) {
+            p.y = height
+            p.radius = Math.random() * Math.max(width, height) * SPREAD_FACTOR
+          }
+          else if (p.y > height) {
+            p.y = -height
+            p.radius = Math.random() * Math.max(width, height) * SPREAD_FACTOR
+          }
+
+          // 3D Perspective Projection
+          const denom = Math.max(
+            1,
+            fov + perspectiveDistance + Math.sin(p.angle) * depthRange,
+          )
+          const scale = fov / denom
+
+          p.screenX = cx + Math.cos(p.angle) * p.radius * scale
+          p.screenY = cy + p.y * scale
+          p.projectedScale = scale
+        }
+
+        // Painter's algorithm: draw farthest particles first
+        particles.sort((a, b) => a.projectedScale - b.projectedScale)
+        for (const p of particles)
+          draw(p)
+
         rafId = requestAnimationFrame(tick)
-        return
       }
 
-      // Reduced motion: paint one static frame, then idle until something
-      // invalidates it (resize, or the motion preference being turned off).
-      if (reducedMotion) {
-        if (staticDirty) {
-          staticDirty = false
-          staticFrame()
-        }
-        rafId = requestAnimationFrame(tick)
-        return
+      // Resize handling with automatic mobile count scaling
+      const resize = () => {
+        const rect = canvas.getBoundingClientRect()
+        width = Math.max(1, Math.round(rect.width))
+        height = Math.max(1, Math.round(rect.height))
+
+        const dpr = Math.max(1, Math.min(window.devicePixelRatio || 1, MAX_DPR))
+        canvas.width = Math.round(width * dpr)
+        canvas.height = Math.round(height * dpr)
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+
+        const isMobile = window.innerWidth < MOBILE_BREAKPOINT
+        const count = isMobile ? Math.round(quantity * 0.2) : quantity
+
+        particles = Array.from({ length: Math.max(0, count) }, () =>
+          spawnParticle(width, height, size, opacity))
+
+        // Canvas was cleared by the width/height reassignment above.
+        staticDirty = true
       }
 
-      staticDirty = true
+      const onVisibilityChange = () => {
+        paused = document.hidden
+      }
 
-      ctx.clearRect(0, 0, width, height)
+      // ResizeObserver
+      const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(resize) : null
+      if (ro) {
+        ro.observe(canvas)
+      }
+      else {
+        window.addEventListener('resize', resize)
+      }
 
-      const cx = width / 2
-      const cy = height / 2
-
-      for (const p of particles) {
-        // Continuous organic rotation around the 3D central axis
-        p.angle += p.angularSpeed
-        p.y -= drift
-
-        // Respawn on the opposite edge, whichever one the particle left
-        // through, so a negative drift falls instead of draining the field
-        if (p.y < -height) {
-          p.y = height
-          p.radius = Math.random() * Math.max(width, height) * SPREAD_FACTOR
-        }
-        else if (p.y > height) {
-          p.y = -height
-          p.radius = Math.random() * Math.max(width, height) * SPREAD_FACTOR
-        }
-
-        // 3D Perspective Projection
-        const denom = Math.max(
-          1,
-          fov + perspectiveDistance + Math.sin(p.angle) * depthRange,
+      // IntersectionObserver (built-in performance pause off-screen)
+      let io: IntersectionObserver | null = null
+      if (typeof IntersectionObserver !== 'undefined') {
+        io = new IntersectionObserver(
+          ([entry]) => {
+            if (entry)
+              paused = document.hidden || !entry.isIntersecting
+          },
+          { threshold: 0 },
         )
-        const scale = fov / denom
-
-        p.screenX = cx + Math.cos(p.angle) * p.radius * scale
-        p.screenY = cy + p.y * scale
-        p.projectedScale = scale
+        io.observe(canvas)
       }
 
-      // Painter's algorithm: draw farthest particles first
-      particles.sort((a, b) => a.projectedScale - b.projectedScale)
-      for (const p of particles)
-        draw(p)
+      document.addEventListener('visibilitychange', onVisibilityChange)
+      mq.addEventListener('change', syncReducedMotion)
 
+      resize()
       rafId = requestAnimationFrame(tick)
-    }
 
-    // Resize handling with automatic mobile count scaling
-    const resize = () => {
-      const rect = canvas.getBoundingClientRect()
-      width = Math.max(1, Math.round(rect.width))
-      height = Math.max(1, Math.round(rect.height))
-
-      const dpr = Math.max(1, Math.min(window.devicePixelRatio || 1, MAX_DPR))
-      canvas.width = Math.round(width * dpr)
-      canvas.height = Math.round(height * dpr)
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-
-      const isMobile = window.innerWidth < MOBILE_BREAKPOINT
-      const count = isMobile ? Math.round(quantity * 0.2) : quantity
-
-      particles = Array.from({ length: Math.max(0, count) }, () =>
-        spawnParticle(width, height, size, opacity))
-
-      // Canvas was cleared by the width/height reassignment above.
-      staticDirty = true
-    }
-
-    const onVisibilityChange = () => {
-      paused = document.hidden
-    }
-
-    // ResizeObserver
-    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(resize) : null
-    if (ro) {
-      ro.observe(canvas)
-    }
-    else {
-      window.addEventListener('resize', resize)
-    }
-
-    // IntersectionObserver (built-in performance pause off-screen)
-    let io: IntersectionObserver | null = null
-    if (typeof IntersectionObserver !== 'undefined') {
-      io = new IntersectionObserver(
-        ([entry]) => {
-          if (entry)
-            paused = document.hidden || !entry.isIntersecting
-        },
-        { threshold: 0 },
-      )
-      io.observe(canvas)
-    }
-
-    document.addEventListener('visibilitychange', onVisibilityChange)
-    mq.addEventListener('change', syncReducedMotion)
-
-    resize()
-    rafId = requestAnimationFrame(tick)
-
-    onCleanup(() => {
-      mounted = false
-      if (rafId !== null) {
-        cancelAnimationFrame(rafId)
-        rafId = null
+      return () => {
+        mounted = false
+        if (rafId !== null) {
+          cancelAnimationFrame(rafId)
+          rafId = null
+        }
+        ro?.disconnect()
+        if (!ro)
+          window.removeEventListener('resize', resize)
+        io?.disconnect()
+        document.removeEventListener('visibilitychange', onVisibilityChange)
+        mq.removeEventListener('change', syncReducedMotion)
       }
-      ro?.disconnect()
-      if (!ro)
-        window.removeEventListener('resize', resize)
-      io?.disconnect()
-      document.removeEventListener('visibilitychange', onVisibilityChange)
-      mq.removeEventListener('change', syncReducedMotion)
-    })
-  })
+    },
+  )
 
   return (
     <canvas
@@ -343,9 +330,9 @@ export function Floating3DParticles(props: Floating3DParticlesProps) {
       aria-hidden="true"
       class={cn(
         'pointer-events-none absolute inset-0 size-full',
-        local.class,
+        props.class,
       )}
-      style={local.style}
+      style={props.style}
       {...rest}
     />
   )

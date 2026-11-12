@@ -1,5 +1,7 @@
-import type { JSX } from 'solid-js'
-import { mergeProps, splitProps } from 'solid-js'
+import type { JSX } from '@solidjs/web'
+
+import { omit } from 'solid-js'
+
 import { cn } from '@/lib/utils'
 
 export interface AnimatedGradientTextProps extends JSX.HTMLAttributes<HTMLSpanElement> {
@@ -9,18 +11,17 @@ export interface AnimatedGradientTextProps extends JSX.HTMLAttributes<HTMLSpanEl
 }
 
 export function AnimatedGradientText(props: AnimatedGradientTextProps) {
-  const merged = mergeProps(
-    { speed: 1, colorFrom: '#ffaa40', colorTo: '#9c40ff' },
-    props,
-  )
-  const [local, rest] = splitProps(merged, ['children', 'speed', 'colorFrom', 'colorTo', 'class'])
+  const rest = omit(props, 'children', 'speed', 'colorFrom', 'colorTo', 'class')
+  const colorFrom = () => props.colorFrom ?? '#ffaa40'
+  const colorTo = () => props.colorTo ?? '#9c40ff'
+  const speed = () => props.speed ?? 1
 
   return (
     <span
       style={{
-        '--bg-size': `${local.speed * 300}%`,
-        '--color-from': local.colorFrom,
-        '--color-to': local.colorTo,
+        '--bg-size': `${speed() * 300}%`,
+        '--color-from': colorFrom(),
+        '--color-to': colorTo(),
       }}
       class={cn(
         `
@@ -28,11 +29,11 @@ export function AnimatedGradientText(props: AnimatedGradientTextProps) {
           via-(--color-to) to-(--color-from) bg-size-[var(--bg-size)_100%]
           bg-clip-text text-transparent
         `,
-        local.class,
+        props.class,
       )}
       {...rest}
     >
-      {local.children}
+      {props.children}
     </span>
   )
 }

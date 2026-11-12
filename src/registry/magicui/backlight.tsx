@@ -1,5 +1,5 @@
-import type { JSX } from 'solid-js'
-import { createUniqueId, mergeProps } from 'solid-js'
+import type { JSX } from '@solidjs/web'
+import { createUniqueId } from 'solid-js'
 
 interface BacklightProps {
   children?: JSX.Element
@@ -8,16 +8,16 @@ interface BacklightProps {
 }
 
 export function Backlight(props: BacklightProps) {
-  const merged = mergeProps({ blur: 20 }, props)
+  const blur = () => props.blur ?? 20
   const id = createUniqueId()
 
   return (
-    <div class={merged.class}>
+    <div class={props.class}>
       <svg width="0" height="0" aria-hidden="true">
         <filter id={id} y="-50%" x="-50%" width="200%" height="200%">
           <feGaussianBlur
             in="SourceGraphic"
-            stdDeviation={merged.blur}
+            stdDeviation={blur()}
             result="blurred"
           />
           <feColorMatrix type="saturate" in="blurred" values="4" />
@@ -25,7 +25,7 @@ export function Backlight(props: BacklightProps) {
         </filter>
       </svg>
 
-      <div style={{ filter: `url(#${id})` }}>{merged.children}</div>
+      <div style={{ filter: `url(#${id})` }}>{props.children}</div>
     </div>
   )
 }

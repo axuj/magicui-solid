@@ -1,5 +1,6 @@
 import type { Component } from 'solid-js'
-import { Bell, CalendarDays, ChevronLeft, ChevronRight, FileText, Share2 } from 'lucide-solid'
+
+import { Bell, CalendarDays, ChevronLeft, ChevronRight, FileText, Share2 } from '@lucide/solid'
 import { For } from 'solid-js'
 
 import { AnimatedBeamMultipleOutputsDemo } from '@/demos/AnimatedBeamMultipleOutputsDemo'

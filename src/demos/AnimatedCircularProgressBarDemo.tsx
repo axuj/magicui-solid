@@ -1,4 +1,4 @@
-import { createSignal, onCleanup, onMount } from 'solid-js'
+import { createSignal, onSettled } from 'solid-js'
 
 import { AnimatedCircularProgressBar } from '@/registry/magicui/animated-circular-progress-bar'
 
@@ -13,7 +13,7 @@ const bump = (prev: number) => (prev === 100 ? 0 : prev + 10)
 export function AnimatedCircularProgressBarDemo() {
   const [value, setValue] = createSignal(0)
 
-  onMount(() => {
+  onSettled(() => {
     const ac = new AbortController()
 
     waitForPaint().then(() => {
@@ -24,7 +24,7 @@ export function AnimatedCircularProgressBarDemo() {
       ac.signal.addEventListener('abort', () => clearInterval(timer))
     })
 
-    onCleanup(() => ac.abort())
+    return () => ac.abort()
   })
 
   return (

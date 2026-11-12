@@ -1,5 +1,5 @@
-import type { JSX } from 'solid-js'
-import { mergeProps, Show, splitProps } from 'solid-js'
+import type { JSX } from '@solidjs/web'
+import { omit, Show } from 'solid-js'
 
 export interface AndroidProps extends JSX.SvgSVGAttributes<SVGSVGElement> {
   width?: number
@@ -9,14 +9,13 @@ export interface AndroidProps extends JSX.SvgSVGAttributes<SVGSVGElement> {
 }
 
 export function Android(props: AndroidProps) {
-  const merged = mergeProps({ width: 433, height: 882 }, props)
-  const [local, rest] = splitProps(merged, ['width', 'height', 'src', 'videoSrc'])
+  const rest = omit(props, 'width', 'height', 'src', 'videoSrc')
 
   return (
     <svg
-      width={local.width}
-      height={local.height}
-      viewBox={`0 0 ${local.width} ${local.height}`}
+      width={(props.width ?? 433)}
+      height={(props.height ?? 882)}
+      viewBox={`0 0 ${(props.width ?? 433)} ${(props.height ?? 882)}`}
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       {...rest}
@@ -77,9 +76,9 @@ export function Android(props: AndroidProps) {
           dark:fill-[#404040]
         "
       />
-      <Show when={!!local.src}>
+      <Show when={!!props.src}>
         <image
-          href={local.src}
+          href={props.src}
           width="360"
           height="800"
           class="size-full object-cover"
@@ -87,7 +86,7 @@ export function Android(props: AndroidProps) {
           clip-path="url(#clip0_514_20855)"
         />
       </Show>
-      <Show when={!!local.videoSrc}>
+      <Show when={!!props.videoSrc}>
         <foreignObject
           width="380"
           height="820"
@@ -98,7 +97,7 @@ export function Android(props: AndroidProps) {
         >
           <video
             class="size-full object-cover"
-            src={local.videoSrc}
+            src={props.videoSrc}
             autoplay
             loop
             muted

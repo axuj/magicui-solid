@@ -1,5 +1,6 @@
-import type { JSX } from 'solid-js'
-import { createUniqueId, For, mergeProps, splitProps } from 'solid-js'
+import type { JSX } from '@solidjs/web'
+import { createUniqueId, For, omit } from 'solid-js'
+
 import { cn } from '@/lib/utils'
 
 export interface GridPatternProps extends JSX.SvgSVGAttributes<SVGSVGElement> {
@@ -17,19 +18,8 @@ export interface GridPatternProps extends JSX.SvgSVGAttributes<SVGSVGElement> {
  * A Solid component that creates a grid pattern background using SVG.
  */
 export function GridPattern(props: GridPatternProps) {
-  const merged = mergeProps(
-    { width: 40, height: 40, x: -1, y: -1, strokeDasharray: '0' },
-    props,
-  )
-  const [local, rest] = splitProps(merged, [
-    'width',
-    'height',
-    'x',
-    'y',
-    'squares',
-    'strokeDasharray',
-    'class',
-  ])
+  const rest = omit(props, 'width', 'height', 'x', 'y', 'squares', 'strokeDasharray', 'class')
+  const strokeDasharray = () => props.strokeDasharray ?? '0'
   const id = createUniqueId()
 
   return (
@@ -40,37 +30,37 @@ export function GridPattern(props: GridPatternProps) {
           pointer-events-none absolute inset-0 size-full fill-gray-400/30
           stroke-gray-400/30
         `,
-        local.class,
+        props.class,
       )}
       {...rest}
     >
       <defs>
         <pattern
           id={id}
-          width={local.width}
-          height={local.height}
+          width={(props.width ?? 40)}
+          height={(props.height ?? 40)}
           patternUnits="userSpaceOnUse"
-          x={local.x}
-          y={local.y}
+          x={(props.x ?? -1)}
+          y={(props.y ?? -1)}
         >
           <path
-            d={`M.5 ${local.height}V.5H${local.width}`}
+            d={`M.5 ${(props.height ?? 40)}V.5H${(props.width ?? 40)}`}
             fill="none"
-            stroke-dasharray={local.strokeDasharray}
+            stroke-dasharray={strokeDasharray()}
           />
         </pattern>
       </defs>
       <rect width="100%" height="100%" stroke-width={0} fill={`url(#${id})`} />
-      {local.squares && (
-        <svg x={local.x} y={local.y} class="overflow-visible">
-          <For each={local.squares}>
+      {props.squares && (
+        <svg x={(props.x ?? -1)} y={(props.y ?? -1)} class="overflow-visible">
+          <For each={props.squares}>
             {([x, y]) => (
               <rect
                 stroke-width="0"
-                width={local.width - 1}
-                height={local.height - 1}
-                x={x * local.width + 1}
-                y={y * local.height + 1}
+                width={(props.width ?? 40) - 1}
+                height={(props.height ?? 40) - 1}
+                x={x * (props.width ?? 40) + 1}
+                y={y * (props.height ?? 40) + 1}
               />
             )}
           </For>

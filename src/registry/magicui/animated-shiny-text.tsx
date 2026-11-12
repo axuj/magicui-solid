@@ -1,5 +1,7 @@
-import type { JSX } from 'solid-js'
-import { mergeProps, splitProps } from 'solid-js'
+import type { JSX } from '@solidjs/web'
+
+import { omit } from 'solid-js'
+
 import { cn } from '@/lib/utils'
 
 export interface AnimatedShinyTextProps extends JSX.HTMLAttributes<HTMLSpanElement> {
@@ -7,12 +9,12 @@ export interface AnimatedShinyTextProps extends JSX.HTMLAttributes<HTMLSpanEleme
 }
 
 export function AnimatedShinyText(props: AnimatedShinyTextProps) {
-  const merged = mergeProps({ shimmerWidth: 100 }, props)
-  const [local, rest] = splitProps(merged, ['children', 'shimmerWidth', 'class'])
+  const rest = omit(props, 'children', 'shimmerWidth', 'class')
+  const shimmerWidth = () => props.shimmerWidth ?? 100
 
   return (
     <span
-      style={{ '--shiny-width': `${local.shimmerWidth}px` }}
+      style={{ '--shiny-width': `${shimmerWidth()}px` }}
       class={cn(
         `
           mx-auto max-w-md text-neutral-600/70
@@ -32,11 +34,11 @@ export function AnimatedShinyText(props: AnimatedShinyTextProps) {
           dark:via-white/80
         `,
 
-        local.class,
+        props.class,
       )}
       {...rest}
     >
-      {local.children}
+      {props.children}
     </span>
   )
 }

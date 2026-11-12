@@ -1,8 +1,9 @@
 import type { PolymorphicProps } from '@kobalte/core/polymorphic'
-import type { Component, ValidComponent } from 'solid-js'
+import type { ValidComponent } from '@solidjs/web'
+import type { Component } from 'solid-js'
 
 import * as TooltipPrimitive from '@kobalte/core/tooltip'
-import { splitProps } from 'solid-js'
+import { omit } from 'solid-js'
 
 import { cn } from '~/lib/utils'
 
@@ -16,7 +17,8 @@ type TooltipContentProps<T extends ValidComponent = 'div'>
   = TooltipPrimitive.TooltipContentProps<T> & { class?: string | undefined }
 
 function TooltipContent<T extends ValidComponent = 'div'>(props: PolymorphicProps<T, TooltipContentProps<T>>) {
-  const [local, others] = splitProps(props as TooltipContentProps, ['class'])
+  // Kobalte's polymorphic props narrow the pass-through set to TooltipContentProps.
+  const rest = omit(props as TooltipContentProps, 'class')
   return (
     <TooltipPrimitive.Portal>
       <TooltipPrimitive.Content
@@ -26,9 +28,9 @@ function TooltipContent<T extends ValidComponent = 'div'>(props: PolymorphicProp
             rounded-md border bg-popover px-3 py-1.5 text-sm
             text-popover-foreground shadow-md
           `,
-          local.class,
+          props.class,
         )}
-        {...others}
+        {...rest}
       />
     </TooltipPrimitive.Portal>
   )

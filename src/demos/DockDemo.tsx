@@ -1,4 +1,4 @@
-import { Home, Mail, Pencil } from 'lucide-solid'
+import { House, Mail, Pencil } from '@lucide/solid'
 import { buttonVariants } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { Icons } from '@/demos/shared/icons'
@@ -27,7 +27,7 @@ export function DockDemo() {
                   'size-12 rounded-full',
                 )}
               >
-                <Home class="size-4" />
+                <House class="size-4" />
               </span>
             </TooltipTrigger>
             <TooltipContent>

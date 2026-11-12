@@ -1,4 +1,5 @@
-import { onCleanup, onMount } from 'solid-js'
+import { onSettled } from 'solid-js'
+
 import { cn } from '@/lib/utils'
 
 const morphTime = 1.5
@@ -13,7 +14,7 @@ function Texts(props: { texts: string[] }) {
   let text1: HTMLSpanElement | undefined
   let text2: HTMLSpanElement | undefined
 
-  onMount(() => {
+  onSettled(() => {
     let textIndex = 0
     let morph = 0
     let cooldown = 0
@@ -79,7 +80,7 @@ function Texts(props: { texts: string[] }) {
     }
 
     animate()
-    onCleanup(() => cancelAnimationFrame(animationFrameId))
+    return () => cancelAnimationFrame(animationFrameId)
   })
 
   return (

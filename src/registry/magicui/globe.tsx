@@ -1,6 +1,7 @@
 import type { COBEOptions } from 'cobe'
 import createGlobe from 'cobe'
-import { createEffect, mergeProps, onCleanup } from 'solid-js'
+import { onSettled } from 'solid-js'
+
 import { cn } from '@/lib/utils'
 
 const MOVEMENT_DAMPING = 1400
@@ -56,8 +57,6 @@ interface GlobeProps {
 }
 
 export function Globe(props: GlobeProps) {
-  const merged = mergeProps({ config: GLOBE_CONFIG }, props)
-
   let canvasRef: HTMLCanvasElement | undefined
   let phi = 0
   let width = 0
@@ -80,10 +79,11 @@ export function Globe(props: GlobeProps) {
     }
   }
 
-  createEffect(() => {
-    if (!canvasRef)
-      return
+  // Create the cobe instance once after mount; recompute width on resize.
+  onSettled(() => {
     const canvas = canvasRef
+    if (!canvas)
+      return
 
     const onResize = () => {
       width = canvas.offsetWidth
@@ -93,7 +93,7 @@ export function Globe(props: GlobeProps) {
     onResize()
 
     const globe = createGlobe(canvas, {
-      ...merged.config,
+      ...(props.config ?? GLOBE_CONFIG),
       width: width * 2,
       height: width * 2,
       onRender: (state) => {
@@ -110,18 +110,18 @@ export function Globe(props: GlobeProps) {
       canvas.style.opacity = '1'
     }, 0)
 
-    onCleanup(() => {
+    return () => {
       globe.destroy()
       window.removeEventListener('resize', onResize)
       clearTimeout(timer)
-    })
+    }
   })
 
   return (
     <div
       class={cn(
         'absolute inset-0 mx-auto aspect-square w-full max-w-150',
-        merged.class,
+        props.class,
       )}
     >
       <canvas

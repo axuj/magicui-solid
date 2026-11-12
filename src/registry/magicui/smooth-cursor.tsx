@@ -1,7 +1,8 @@
 import type { SpringOptions } from '@solid-primitives/spring'
-import type { JSX } from 'solid-js'
+import type { JSX } from '@solidjs/web'
+
 import { createSpring } from '@solid-primitives/spring'
-import { createEffect, createSignal, mergeProps, onCleanup, onMount, untrack } from 'solid-js'
+import { createEffect, createSignal, onSettled, untrack } from 'solid-js'
 
 interface Position {
   x: number
@@ -50,7 +51,7 @@ function DefaultCursorSVG() {
 
 type SpringConfig = NonNullable<SmoothCursorProps['springConfig']>
 
-// framer-motion 量纲（stiffness/mass/restDelta，每帧离散积分）→ @solid-primitives/spring 归一化量纲
+// Map framer-motion units (stiffness/mass/restDelta) to @solid-primitives/spring.
 function toSpringOptions(config: SpringConfig): SpringOptions {
   return {
     stiffness: config.stiffness / (config.mass * 60 * 60),
@@ -60,8 +61,6 @@ function toSpringOptions(config: SpringConfig): SpringOptions {
 }
 
 export function SmoothCursor(props: SmoothCursorProps) {
-  const merged = mergeProps({ cursor: <DefaultCursorSVG /> }, props)
-
   const lastMousePos = { x: 0, y: 0 }
   const velocity = { x: 0, y: 0 }
   let lastUpdateTime = Date.now()
@@ -71,12 +70,14 @@ export function SmoothCursor(props: SmoothCursorProps) {
   const [isEnabled, setIsEnabled] = createSignal(false)
   const [isVisible, setIsVisible] = createSignal(false)
 
-  const springConfig = untrack(() => props.springConfig) ?? {
+  // Spring options are baked in when the spring is created; swapping them later
+  // would mean rebuilding it mid-gesture, so this is a one-time read.
+  const springConfig = untrack(() => props.springConfig ?? {
     damping: 45,
     stiffness: 400,
     mass: 1,
     restDelta: 0.001,
-  }
+  })
   const [position, setPosition] = createSpring<Position>(
     { x: 0, y: 0 },
     toSpringOptions(springConfig),
@@ -90,7 +91,7 @@ export function SmoothCursor(props: SmoothCursorProps) {
     toSpringOptions({ ...springConfig, stiffness: 500, damping: 35 }),
   )
 
-  onMount(() => {
+  onSettled(() => {
     const mediaQuery = window.matchMedia(DESKTOP_POINTER_QUERY)
 
     const updateEnabled = () => {
@@ -105,102 +106,105 @@ export function SmoothCursor(props: SmoothCursorProps) {
     updateEnabled()
     mediaQuery.addEventListener('change', updateEnabled)
 
-    onCleanup(() => {
+    return () => {
       mediaQuery.removeEventListener('change', updateEnabled)
-    })
+    }
   })
 
-  createEffect(() => {
-    if (!isEnabled()) {
-      return
-    }
-
-    let timeout: ReturnType<typeof setTimeout> | null = null
-
-    const updateVelocity = (currentPos: Position) => {
-      const currentTime = Date.now()
-      const deltaTime = currentTime - lastUpdateTime
-
-      if (deltaTime > 0) {
-        velocity.x = (currentPos.x - lastMousePos.x) / deltaTime
-        velocity.y = (currentPos.y - lastMousePos.y) / deltaTime
-      }
-
-      lastUpdateTime = currentTime
-      lastMousePos.x = currentPos.x
-      lastMousePos.y = currentPos.y
-    }
-
-    const smoothPointerMove = (e: PointerEvent) => {
-      if (!isTrackablePointer(e.pointerType)) {
+  createEffect(
+    () => ({ isEnabled: isEnabled() }),
+    ({ isEnabled }) => {
+      if (!isEnabled) {
         return
       }
 
-      setIsVisible(true)
+      let timeout: ReturnType<typeof setTimeout> | null = null
 
-      const currentPos = { x: e.clientX, y: e.clientY }
-      updateVelocity(currentPos)
+      const updateVelocity = (currentPos: Position) => {
+        const currentTime = Date.now()
+        const deltaTime = currentTime - lastUpdateTime
 
-      const speed = Math.sqrt(
-        velocity.x ** 2 + velocity.y ** 2,
-      )
+        if (deltaTime > 0) {
+          velocity.x = (currentPos.x - lastMousePos.x) / deltaTime
+          velocity.y = (currentPos.y - lastMousePos.y) / deltaTime
+        }
 
-      setPosition(currentPos)
+        lastUpdateTime = currentTime
+        lastMousePos.x = currentPos.x
+        lastMousePos.y = currentPos.y
+      }
 
-      if (speed > 0.1) {
-        const currentAngle = Math.atan2(velocity.y, velocity.x) * (180 / Math.PI) + 90
+      const smoothPointerMove = (e: PointerEvent) => {
+        if (!isTrackablePointer(e.pointerType)) {
+          return
+        }
 
-        let angleDiff = currentAngle - previousAngle
-        if (angleDiff > 180)
-          angleDiff -= 360
-        if (angleDiff < -180)
-          angleDiff += 360
-        accumulatedRotation += angleDiff
-        setRotation(accumulatedRotation)
-        previousAngle = currentAngle
+        setIsVisible(true)
 
-        setScale(0.95)
+        const currentPos = { x: e.clientX, y: e.clientY }
+        updateVelocity(currentPos)
 
+        const speed = Math.sqrt(
+          velocity.x ** 2 + velocity.y ** 2,
+        )
+
+        setPosition(currentPos)
+
+        if (speed > 0.1) {
+          const currentAngle = Math.atan2(velocity.y, velocity.x) * (180 / Math.PI) + 90
+
+          let angleDiff = currentAngle - previousAngle
+          if (angleDiff > 180)
+            angleDiff -= 360
+          if (angleDiff < -180)
+            angleDiff += 360
+          accumulatedRotation += angleDiff
+          setRotation(accumulatedRotation)
+          previousAngle = currentAngle
+
+          setScale(0.95)
+
+          if (timeout !== null) {
+            clearTimeout(timeout)
+          }
+
+          timeout = setTimeout(() => {
+            setScale(1)
+          }, 150)
+        }
+      }
+
+      let rafId = 0
+      const throttledPointerMove = (e: PointerEvent) => {
+        if (!isTrackablePointer(e.pointerType)) {
+          return
+        }
+
+        if (rafId)
+          return
+
+        rafId = requestAnimationFrame(() => {
+          smoothPointerMove(e)
+          rafId = 0
+        })
+      }
+
+      document.body.style.cursor = 'none'
+      window.addEventListener('pointermove', throttledPointerMove, {
+        passive: true,
+      })
+
+      return () => {
+        window.removeEventListener('pointermove', throttledPointerMove)
+        document.body.style.cursor = 'auto'
+        if (rafId)
+          cancelAnimationFrame(rafId)
         if (timeout !== null) {
           clearTimeout(timeout)
         }
-
-        timeout = setTimeout(() => {
-          setScale(1)
-        }, 150)
       }
-    }
-
-    let rafId = 0
-    const throttledPointerMove = (e: PointerEvent) => {
-      if (!isTrackablePointer(e.pointerType)) {
-        return
-      }
-
-      if (rafId)
-        return
-
-      rafId = requestAnimationFrame(() => {
-        smoothPointerMove(e)
-        rafId = 0
-      })
-    }
-
-    document.body.style.cursor = 'none'
-    window.addEventListener('pointermove', throttledPointerMove, {
-      passive: true,
-    })
-
-    onCleanup(() => {
-      window.removeEventListener('pointermove', throttledPointerMove)
-      document.body.style.cursor = 'auto'
-      if (rafId)
-        cancelAnimationFrame(rafId)
-      if (timeout !== null) {
-        clearTimeout(timeout)
-      }
-    })
-  })
+    },
+  )
 
   return (
     <div
@@ -217,7 +221,7 @@ export function SmoothCursor(props: SmoothCursorProps) {
         'transform': `translate3d(${position().x}px, ${position().y}px, 0) translate(-50%, -50%) rotate(${rotation()}deg) scale(${scale()})`,
       }}
     >
-      {merged.cursor}
+      {(props.cursor ?? <DefaultCursorSVG />)}
     </div>
   )
 }

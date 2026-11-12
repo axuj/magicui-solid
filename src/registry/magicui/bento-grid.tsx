@@ -1,7 +1,12 @@
-import type { Component, JSX } from 'solid-js'
-import { ArrowRight } from 'lucide-solid'
-import { splitProps } from 'solid-js'
-import { Dynamic } from 'solid-js/web'
+import type { JSX } from '@solidjs/web'
+
+import type { Component } from 'solid-js'
+
+import { ArrowRight } from '@lucide/solid'
+import { Dynamic } from '@solidjs/web'
+
+import { omit } from 'solid-js'
+
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
@@ -21,30 +26,22 @@ interface BentoCardProps extends JSX.HTMLAttributes<HTMLDivElement> {
 }
 
 export function BentoGrid(props: BentoGridProps) {
-  const [local, rest] = splitProps(props, ['children', 'class'])
+  const rest = omit(props, 'children', 'class')
   return (
     <div
       class={cn(
         'grid w-full auto-rows-88 grid-cols-3 gap-4',
-        local.class,
+        props.class,
       )}
       {...rest}
     >
-      {local.children}
+      {props.children}
     </div>
   )
 }
 
 export function BentoCard(props: BentoCardProps) {
-  const [local, rest] = splitProps(props, [
-    'name',
-    'class',
-    'background',
-    'Icon',
-    'description',
-    'href',
-    'cta',
-  ])
+  const rest = omit(props, 'name', 'class', 'background', 'Icon', 'description', 'href', 'cta')
   return (
     <div
       class={cn(`
@@ -53,10 +50,10 @@ export function BentoCard(props: BentoCardProps) {
         [box-shadow:0_0_0_1px_rgba(0,0,0,.03),0_2px_4px_rgba(0,0,0,.05),0_12px_24px_rgba(0,0,0,.05)]
         dark:bg-background dark:[box-shadow:0_-20px_80px_-20px_#ffffff1f_inset]
         dark:[border:1px_solid_rgba(255,255,255,.1)]
-      `, local.class)}
+      `, props.class)}
       {...rest}
     >
-      <div><Dynamic component={local.background} /></div>
+      <div><Dynamic component={props.background} /></div>
       <div class="p-4">
         <div class="
           pointer-events-none z-10 flex transform-gpu flex-col gap-1
@@ -65,7 +62,7 @@ export function BentoCard(props: BentoCardProps) {
         "
         >
           <Dynamic
-            component={local.Icon}
+            component={props.Icon}
             class="
               size-12 origin-left transform-gpu text-neutral-700 transition-all
               duration-300 ease-in-out
@@ -77,9 +74,9 @@ export function BentoCard(props: BentoCardProps) {
             dark:text-neutral-300
           "
           >
-            {local.name}
+            {props.name}
           </h3>
-          <p class="max-w-lg text-neutral-400">{local.description}</p>
+          <p class="max-w-lg text-neutral-400">{props.description}</p>
         </div>
 
         <div
@@ -92,12 +89,12 @@ export function BentoCard(props: BentoCardProps) {
         >
           <Button
             as="a"
-            href={local.href}
+            href={props.href}
             variant="link"
             size="sm"
             class="pointer-events-auto p-0"
           >
-            {local.cta}
+            {props.cta}
             <ArrowRight class="
               ms-2 size-4
               rtl:rotate-180
@@ -118,12 +115,12 @@ export function BentoCard(props: BentoCardProps) {
       >
         <Button
           as="a"
-          href={local.href}
+          href={props.href}
           variant="link"
           size="sm"
           class="pointer-events-auto p-0"
         >
-          {local.cta}
+          {props.cta}
           <ArrowRight class="
             ms-2 size-4
             rtl:rotate-180

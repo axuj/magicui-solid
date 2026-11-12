@@ -1,5 +1,5 @@
-import type { JSX } from 'solid-js'
-import { Show, splitProps } from 'solid-js'
+import type { JSX } from '@solidjs/web'
+import { omit, Show } from 'solid-js'
 
 const PHONE_WIDTH = 433
 const PHONE_HEIGHT = 882
@@ -23,20 +23,17 @@ export interface IphoneProps extends JSX.HTMLAttributes<HTMLDivElement> {
 }
 
 export function Iphone(props: IphoneProps) {
-  const [local, rest] = splitProps(props, ['src', 'videoSrc', 'class', 'style'])
+  const rest = omit(props, 'src', 'videoSrc', 'class', 'style')
 
-  const hasVideo = () => !!local.videoSrc
-  const hasMedia = () => hasVideo() || !!local.src
+  const hasVideo = () => !!props.videoSrc
+  const hasMedia = () => hasVideo() || !!props.src
 
   return (
     <div
-      class={`
-        relative inline-block w-full align-middle leading-none
-        ${local.class ?? ''}
-      `}
+      class={['relative inline-block w-full align-middle leading-none', props.class]}
       style={{
         'aspect-ratio': `${PHONE_WIDTH}/${PHONE_HEIGHT}`,
-        ...(local.style as JSX.CSSProperties),
+        ...(props.style as JSX.CSSProperties),
       }}
       {...rest}
     >
@@ -53,7 +50,7 @@ export function Iphone(props: IphoneProps) {
         >
           <video
             class="block size-full object-cover"
-            src={local.videoSrc}
+            src={props.videoSrc}
             autoplay
             loop
             muted
@@ -63,7 +60,7 @@ export function Iphone(props: IphoneProps) {
         </div>
       </Show>
 
-      <Show when={!hasVideo() && !!local.src}>
+      <Show when={!hasVideo() && !!props.src}>
         <div
           class="pointer-events-none absolute z-0 overflow-hidden"
           style={{
@@ -75,7 +72,7 @@ export function Iphone(props: IphoneProps) {
           }}
         >
           <img
-            src={local.src}
+            src={props.src}
             alt=""
             class="block size-full object-cover object-top"
           />

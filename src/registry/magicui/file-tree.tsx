@@ -1,7 +1,9 @@
-import type { Accessor, JSX } from 'solid-js'
+import type { JSX } from '@solidjs/web'
+import type { Accessor } from 'solid-js'
+
 import * as AccordionPrimitive from '@kobalte/core/accordion'
-import { FileIcon, FolderIcon, FolderOpenIcon } from 'lucide-solid'
-import { createContext, createEffect, createSignal, For, mergeProps, splitProps, useContext } from 'solid-js'
+import { File as FileIcon, Folder as FolderIcon, FolderOpen as FolderOpenIcon } from '@lucide/solid'
+import { createContext, createEffect, createSignal, For, omit, useContext } from 'solid-js'
 
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
@@ -145,24 +147,13 @@ type TreeViewProps = {
 } & Omit<JSX.HTMLAttributes<HTMLDivElement>, 'onChange'>
 
 export function Tree(props: TreeViewProps) {
-  const merged = mergeProps({ indicator: true, sort: 'default' as const }, props)
-  const [local, rest] = splitProps(merged, [
-    'class',
-    'elements',
-    'initialSelectedId',
-    'initialExpandedItems',
-    'children',
-    'indicator',
-    'openIcon',
-    'closeIcon',
-    'sort',
-    'dir',
-  ])
+  const rest = omit(props, 'class', 'elements', 'initialSelectedId', 'initialExpandedItems', 'children', 'indicator', 'openIcon', 'closeIcon', 'sort', 'dir') as Record<string, unknown>
+  const sort = () => props.sort ?? 'default' as const
   const [selectedId, setSelectedId] = createSignal<string | undefined>(
-    local.initialSelectedId,
+    props.initialSelectedId,
   )
   const [expandedItems, setExpandedItems] = createSignal<string[] | undefined>(
-    local.initialExpandedItems,
+    props.initialExpandedItems,
   )
 
   const selectItem = (id: string) => {
@@ -216,44 +207,47 @@ export function Tree(props: TreeViewProps) {
     })
   }
 
-  createEffect(() => {
-    if (local.initialSelectedId) {
-      expandSpecificTargetedElements(local.elements, local.initialSelectedId)
-    }
-  })
+  createEffect(
+    () => ({ initialSelectedId: props.initialSelectedId, elements: props.elements }),
+    ({ initialSelectedId, elements }) => {
+      if (initialSelectedId) {
+        expandSpecificTargetedElements(elements, initialSelectedId)
+      }
+    },
+  )
 
-  const direction = () => local.dir === 'rtl' ? 'rtl' : 'ltr'
+  const direction = () => props.dir === 'rtl' ? 'rtl' : 'ltr'
   const treeChildren = () =>
-    local.children ?? (local.elements ? renderTreeElements(local.elements, local.sort) : null)
+    props.children ?? (props.elements ? renderTreeElements(props.elements, sort()) : null)
 
   return (
-    <TreeContext.Provider
+    <TreeContext
       value={{
         selectedId,
         expandedItems,
-        indicator: () => local.indicator,
+        indicator: () => (props.indicator ?? true),
         handleExpand,
         selectItem,
         setExpandedItems,
-        openIcon: () => local.openIcon,
-        closeIcon: () => local.closeIcon,
+        openIcon: () => props.openIcon,
+        closeIcon: () => props.closeIcon,
         direction,
       }}
     >
-      <div class={cn('size-full', local.class)}>
+      <div class={cn('size-full', props.class)}>
         <div class="relative h-full overflow-auto px-2" dir={direction()}>
           <AccordionPrimitive.Root
             {...rest}
             multiple
             value={expandedItems()}
             class="flex flex-col gap-1"
-            dir={direction}
+            dir={direction()}
           >
             {treeChildren()}
           </AccordionPrimitive.Root>
         </div>
       </div>
-    </TreeContext.Provider>
+    </TreeContext>
   )
 }
 
@@ -261,7 +255,7 @@ function TreeIndicator(
   props: JSX.HTMLAttributes<HTMLDivElement>,
 ) {
   const { direction } = useTree()
-  const [local, rest] = splitProps(props, ['class'])
+  const rest = omit(props, 'class') as Record<string, unknown>
 
   return (
     <div
@@ -273,7 +267,7 @@ function TreeIndicator(
           hover:bg-slate-300
           rtl:right-1.5
         `,
-        local.class,
+        props.class,
       )}
       {...rest}
     />
@@ -291,14 +285,7 @@ type FolderProps = {
 } & JSX.HTMLAttributes<HTMLDivElement>
 
 export function Folder(props: FolderProps) {
-  const [local, rest] = splitProps(props, [
-    'class',
-    'element',
-    'value',
-    'isSelectable',
-    'isSelect',
-    'children',
-  ])
+  const rest = omit(props, 'class', 'element', 'value', 'isSelectable', 'isSelect', 'children') as Record<string, unknown>
   const {
     direction,
     handleExpand,
@@ -309,34 +296,34 @@ export function Folder(props: FolderProps) {
     openIcon,
     closeIcon,
   } = useTree()
-  const isSelected = () => local.isSelect ?? selectedId() === local.value
+  const isSelected = () => props.isSelect ?? selectedId() === props.value
 
   return (
     <AccordionPrimitive.Item
       {...rest}
-      value={local.value}
+      value={props.value}
       class="relative h-full overflow-hidden"
     >
       <AccordionPrimitive.Trigger
         class={cn(
           'flex items-center gap-1 rounded-md text-sm',
-          local.class,
+          props.class,
           {
-            'rounded-md bg-muted': isSelected() && local.isSelectable,
-            'cursor-pointer': local.isSelectable,
-            'cursor-not-allowed opacity-50': !local.isSelectable,
+            'rounded-md bg-muted': isSelected() && props.isSelectable,
+            'cursor-pointer': props.isSelectable,
+            'cursor-not-allowed opacity-50': !props.isSelectable,
           },
         )}
-        disabled={!local.isSelectable}
+        disabled={!props.isSelectable}
         onClick={() => {
-          selectItem(local.value)
-          handleExpand(local.value)
+          selectItem(props.value)
+          handleExpand(props.value)
         }}
       >
-        {expandedItems()?.includes(local.value)
+        {expandedItems()?.includes(props.value)
           ? (openIcon?.() ?? <FolderOpenIcon class="size-4" />)
           : (closeIcon?.() ?? <FolderIcon class="size-4" />)}
-        <span>{local.element}</span>
+        <span>{props.element}</span>
       </AccordionPrimitive.Trigger>
       <AccordionPrimitive.Content class="
         relative h-full overflow-hidden text-sm
@@ -344,7 +331,7 @@ export function Folder(props: FolderProps) {
         data-expanded:animate-accordion-down
       "
       >
-        {local.element && indicator() && <TreeIndicator aria-hidden="true" />}
+        {props.element && indicator() && <TreeIndicator aria-hidden="true" />}
         <AccordionPrimitive.Root
           dir={direction()}
           multiple
@@ -354,7 +341,7 @@ export function Folder(props: FolderProps) {
           "
           value={expandedItems()}
         >
-          {local.children}
+          {props.children}
         </AccordionPrimitive.Root>
       </AccordionPrimitive.Content>
     </AccordionPrimitive.Item>
@@ -374,22 +361,13 @@ type FileProps = {
 }
 
 export function File(props: FileProps) {
-  const [local, rest] = splitProps(props, [
-    'value',
-    'class',
-    'handleSelect',
-    'onClick',
-    'isSelectable',
-    'isSelect',
-    'fileIcon',
-    'children',
-  ])
+  const rest = omit(props, 'value', 'class', 'handleSelect', 'onClick', 'isSelectable', 'isSelect', 'fileIcon', 'children') as Record<string, unknown>
   const { direction, selectedId, selectItem } = useTree()
-  const isSelected = () => local.isSelect ?? selectedId() === local.value
+  const isSelected = () => props.isSelect ?? selectedId() === props.value
   return (
     <button
       type="button"
-      disabled={!local.isSelectable}
+      disabled={!props.isSelectable}
       class={cn(
         `
           flex w-fit items-center gap-1 rounded-md pr-1 text-sm duration-200
@@ -397,21 +375,21 @@ export function File(props: FileProps) {
           rtl:pr-0 rtl:pl-1
         `,
         {
-          'bg-muted': isSelected() && local.isSelectable,
+          'bg-muted': isSelected() && props.isSelectable,
         },
-        local.isSelectable ? 'cursor-pointer' : 'cursor-not-allowed opacity-50',
+        props.isSelectable ? 'cursor-pointer' : 'cursor-not-allowed opacity-50',
         direction() === 'rtl' ? 'rtl' : 'ltr',
-        local.class,
+        props.class,
       )}
       onClick={(event) => {
-        selectItem(local.value)
-        local.handleSelect?.(local.value)
-        local.onClick?.(event)
+        selectItem(props.value)
+        props.handleSelect?.(props.value)
+        props.onClick?.(event)
       }}
       {...rest}
     >
-      {local.fileIcon ?? <FileIcon class="size-4" />}
-      {local.children}
+      {props.fileIcon ?? <FileIcon class="size-4" />}
+      {props.children}
     </button>
   )
 }
@@ -424,7 +402,7 @@ type CollapseButtonProps = {
 } & JSX.ButtonHTMLAttributes<HTMLButtonElement>
 
 export function CollapseButton(props: CollapseButtonProps) {
-  const [local, rest] = splitProps(props, ['class', 'elements', 'expandAll', 'children'])
+  const rest = omit(props, 'class', 'elements', 'expandAll', 'children') as Record<string, unknown>
   const { expandedItems, setExpandedItems } = useTree()
 
   const expendAllTree = (elements: TreeViewElement[]): string[] => {
@@ -451,24 +429,27 @@ export function CollapseButton(props: CollapseButtonProps) {
     setExpandedItems([])
   }
 
-  createEffect(() => {
-    if (local.expandAll) {
-      setExpandedItems(expendAllTree(local.elements))
-    }
-  })
+  createEffect(
+    () => ({ expandAll: props.expandAll, elements: props.elements }),
+    ({ expandAll, elements }) => {
+      if (expandAll) {
+        setExpandedItems(expendAllTree(elements))
+      }
+    },
+  )
 
   return (
     <Button
       variant="ghost"
-      class={cn('absolute right-2 bottom-1 h-8 w-fit p-1', local.class)}
+      class={cn('absolute right-2 bottom-1 h-8 w-fit p-1', props.class)}
       onClick={
         (expandedItems()?.length ?? 0) > 0
           ? closeAll
-          : () => setExpandedItems(expendAllTree(local.elements))
+          : () => setExpandedItems(expendAllTree(props.elements))
       }
       {...rest}
     >
-      {local.children}
+      {props.children}
       <span class="sr-only">Toggle</span>
     </Button>
   )

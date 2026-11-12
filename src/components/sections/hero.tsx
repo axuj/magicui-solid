@@ -1,4 +1,4 @@
-import { ChevronRight } from 'lucide-solid'
+import { ChevronRight } from '@lucide/solid'
 
 import { TechStack } from '@/components/tech-stack'
 import { buttonVariants } from '@/components/ui/button'

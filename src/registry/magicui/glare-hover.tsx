@@ -1,5 +1,6 @@
-import type { JSX } from 'solid-js'
-import { createMemo, splitProps } from 'solid-js'
+import type { JSX } from '@solidjs/web'
+import { createMemo, omit } from 'solid-js'
+
 import { cn } from '@/lib/utils'
 
 export interface GlareHoverProps extends JSX.HTMLAttributes<HTMLDivElement> {
@@ -58,23 +59,11 @@ function parseHEX(color: Color, opacity: number): RGBA | Color {
 }
 
 export function GlareHover(props: GlareHoverProps) {
-  const [local, rest] = splitProps(props, [
-    'background',
-    'color',
-    'opacity',
-    'angle',
-    'size',
-    'duration',
-    'playOnce',
-    'width',
-    'height',
-    'class',
-    'style',
-  ])
+  const rest = omit(props, 'background', 'color', 'opacity', 'angle', 'size', 'duration', 'playOnce', 'width', 'height', 'class', 'style')
 
   const rgba = createMemo(() => {
-    const color = local.color ?? '#ffffff'
-    const opacity = local.opacity ?? 0.5
+    const color = props.color ?? '#ffffff'
+    const opacity = props.opacity ?? 0.5
     return parseHEX(color, opacity)
   })
 
@@ -99,12 +88,12 @@ export function GlareHover(props: GlareHoverProps) {
         'before:bg-size-[var(--gh-size)_var(--gh-size),100%_100%]',
         'before:bg-position-[-100%_-100%,0_0]',
         // TRANSITION
-        !local.playOnce
+        !props.playOnce
         && `
           before:transition-[background-position]
           before:duration-(--gh-duration) before:ease-in-out
         `,
-        local.playOnce
+        props.playOnce
         && `
           before:transition-none
           hover:before:transition-[background-position]
@@ -112,17 +101,17 @@ export function GlareHover(props: GlareHoverProps) {
         `,
         // HOVER EFFECT
         'hover:before:bg-position-[100%_100%,0_0]',
-        local.class,
+        props.class,
       )}
       style={{
-        '--gh-angle': `${local.angle ?? -45}deg`,
-        '--gh-duration': `${local.duration ?? 650}ms`,
-        '--gh-size': `${local.size ?? 250}%`,
+        '--gh-angle': `${props.angle ?? -45}deg`,
+        '--gh-duration': `${props.duration ?? 650}ms`,
+        '--gh-size': `${props.size ?? 250}%`,
         '--gh-rgba': rgba(),
-        'background': local.background ?? '#000',
-        ...(local.style as JSX.CSSProperties | undefined),
-        ...(local.width !== undefined ? { width: local.width } : {}),
-        ...(local.height !== undefined ? { height: local.height } : {}),
+        'background': props.background ?? '#000',
+        ...(props.style as JSX.CSSProperties | undefined),
+        ...(props.width !== undefined ? { width: props.width } : {}),
+        ...(props.height !== undefined ? { height: props.height } : {}),
       }}
     >
       {props.children}

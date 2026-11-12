@@ -1,4 +1,4 @@
-import { CircleCheck, Info, TriangleAlert } from 'lucide-solid'
+import { CircleCheck, Info, TriangleExclamationPoint } from '@lucide/solid'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { GlareHover } from '@/registry/magicui/glare-hover'
 
@@ -28,7 +28,7 @@ export function GlareHoverDemoAlert() {
             [&>svg~*]:pl-10
           "
         >
-          <TriangleAlert />
+          <TriangleExclamationPoint />
           <AlertTitle>Payment declined</AlertTitle>
           <AlertDescription>
             Check your card details and try again.

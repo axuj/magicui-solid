@@ -9,8 +9,11 @@ magicui-solid components are distributed via the shadcn registry and can be inst
 
 ## Prerequisites
 
-- A SolidJS project with [Tailwind CSS v4](https://tailwindcss.com) configured
+- A **Solid 2** project. This registry is built against `solid-js@2.0.0-rc.21` / `@solidjs/web@2.0.0-rc.21`; Solid 1 projects are not supported.
+- [Tailwind CSS v4](https://tailwindcss.com) configured
 - [Node.js](https://nodejs.org) 18+
+- Components that use Kobalte pin `@kobalte/core@2.0.0-alpha.4`; the CLI installs it automatically.
+- npm users need `legacy-peer-deps=true` in the project's `.npmrc`: Kobalte 2 alpha still declares `solid-js` / `@solidjs/web` peers at `2.0.0-rc.16`, while this registry targets `rc.21`. Without it, `npm install` fails with `ERESOLVE`.
 
 ## Add the Registry
 

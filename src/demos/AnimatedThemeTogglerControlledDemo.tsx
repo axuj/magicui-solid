@@ -1,11 +1,11 @@
-import { createSignal, onCleanup, onMount } from 'solid-js'
+import { createSignal, onSettled } from 'solid-js'
 
 import { AnimatedThemeToggler } from '@/registry/magicui/animated-theme-toggler'
 
 export function AnimatedThemeTogglerControlledDemo() {
   const [theme, setTheme] = createSignal<'light' | 'dark'>('dark')
 
-  onMount(() => {
+  onSettled(() => {
     const root = document.documentElement
     const update = () => {
       setTheme(root.dataset.theme === 'dark' ? 'dark' : 'light')
@@ -15,7 +15,7 @@ export function AnimatedThemeTogglerControlledDemo() {
     const observer = new MutationObserver(update)
     observer.observe(root, { attributes: true, attributeFilter: ['data-theme'] })
 
-    onCleanup(() => observer.disconnect())
+    return () => observer.disconnect()
   })
 
   return (

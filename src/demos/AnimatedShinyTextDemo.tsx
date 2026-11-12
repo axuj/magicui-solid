@@ -1,4 +1,4 @@
-import { ArrowRight } from 'lucide-solid'
+import { ArrowRight } from '@lucide/solid'
 import { cn } from '@/lib/utils'
 import { AnimatedShinyText } from '@/registry/magicui/animated-shiny-text'
 

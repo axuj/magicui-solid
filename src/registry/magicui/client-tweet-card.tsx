@@ -1,6 +1,8 @@
-import type { JSX } from 'solid-js'
-import { createMemo, createResource, For, mergeProps, Show, splitProps } from 'solid-js'
-import { isServer } from 'solid-js/web'
+import type { JSX } from '@solidjs/web'
+import { isServer } from '@solidjs/web'
+
+import { createEffect, createMemo, createSignal, For, omit, Show } from 'solid-js'
+
 import { cn } from '@/lib/utils'
 
 /* ---------- types (mirrors react-tweet) ---------- */
@@ -483,7 +485,7 @@ interface TwitterIconProps {
 }
 
 function Twitter(props: TwitterIconProps) {
-  const [local, rest] = splitProps(props, ['class'])
+  const rest = omit(props, 'class')
   return (
     <svg
       stroke="currentColor"
@@ -493,7 +495,7 @@ function Twitter(props: TwitterIconProps) {
       height="1em"
       width="1em"
       xmlns="http://www.w3.org/2000/svg"
-      class={local.class}
+      class={props.class}
       {...rest}
     >
       <g>
@@ -505,12 +507,12 @@ function Twitter(props: TwitterIconProps) {
 }
 
 function Verified(props: TwitterIconProps) {
-  const [local, rest] = splitProps(props, ['class'])
+  const rest = omit(props, 'class')
   return (
     <svg
       aria-label="Verified Account"
       viewBox="0 0 24 24"
-      class={local.class}
+      class={props.class}
       {...rest}
     >
       <g fill="currentColor">
@@ -529,17 +531,17 @@ export function truncate(str: string | null, length: number) {
 }
 
 function Skeleton(props: JSX.HTMLAttributes<HTMLDivElement>) {
-  const [local, rest] = splitProps(props, ['class'])
-  return <div class={cn('rounded-md bg-primary/10', local.class)} {...rest} />
+  const rest = omit(props, 'class')
+  return <div class={cn('rounded-md bg-primary/10', props.class)} {...rest} />
 }
 
 export function TweetSkeleton(props: { class?: string, [key: string]: unknown }) {
-  const [local, rest] = splitProps(props, ['class'])
+  const rest = omit(props, 'class')
   return (
     <div
       class={cn(
         'flex size-full max-h-max min-w-72 flex-col gap-2 rounded-xl border p-4',
-        local.class,
+        props.class,
       )}
       {...rest}
     >
@@ -553,7 +555,7 @@ export function TweetSkeleton(props: { class?: string, [key: string]: unknown })
 }
 
 export function TweetNotFound(props: { class?: string, [key: string]: unknown }) {
-  const [local, rest] = splitProps(props, ['class'])
+  const rest = omit(props, 'class')
   return (
     <div
       class={cn(
@@ -561,7 +563,7 @@ export function TweetNotFound(props: { class?: string, [key: string]: unknown })
           flex size-full flex-col items-center justify-center gap-2 rounded-lg
           border p-4
         `,
-        local.class,
+        props.class,
       )}
       {...rest}
     >
@@ -750,11 +752,11 @@ export interface MagicTweetProps extends JSX.HTMLAttributes<HTMLDivElement> {
 }
 
 export function MagicTweet(props: MagicTweetProps) {
-  const [local, rest] = splitProps(props, ['tweet', 'class'])
+  const rest = omit(props, 'tweet', 'class')
   const safeTweet = createMemo((): Tweet => ({
-    ...withSafeEntities(local.tweet),
-    quoted_tweet: local.tweet.quoted_tweet
-      ? withSafeEntities(local.tweet.quoted_tweet)
+    ...withSafeEntities(props.tweet),
+    quoted_tweet: props.tweet.quoted_tweet
+      ? withSafeEntities(props.tweet.quoted_tweet)
       : undefined,
   }))
   const enrichedTweet = createMemo(() => enrichTweet(safeTweet()))
@@ -765,7 +767,7 @@ export function MagicTweet(props: MagicTweetProps) {
           relative flex h-fit w-full max-w-lg flex-col gap-4 overflow-hidden
           rounded-xl border p-5
         `,
-        local.class,
+        props.class,
       )}
       {...rest}
     >
@@ -797,37 +799,57 @@ export type TweetProps = {
 )
 
 export function ClientTweetCard(props: TweetProps & { class?: string }) {
-  const merged = mergeProps({ fallback: <TweetSkeleton /> }, props)
-  const [local, rest] = splitProps(merged, ['id', 'apiUrl', 'fallback', 'components', 'fetchOptions', 'onError'])
+  const rest = omit(props, 'id', 'apiUrl', 'fallback', 'components', 'fetchOptions', 'onError')
 
-  const [tweet] = createResource(
-    () => (isServer || !local.id ? undefined : { id: local.id, apiUrl: local.apiUrl, fetchOptions: local.fetchOptions }),
-    async ({ id, apiUrl, fetchOptions }) => {
-      const url = apiUrl || `https://react-tweet.vercel.app/api/tweet/${id}`
-      const res = await fetch(url, fetchOptions)
-      const json = await res.json() as { data?: Tweet }
+  const [tweet, setTweet] = createSignal<Tweet | null | undefined>(undefined)
+  const [tweetError, setTweetError] = createSignal<unknown>(undefined)
+  const tweetLoading = () => tweet() === undefined && tweetError() === undefined
 
-      // We return null in case `json.data` is undefined, that way we can check for "loading" by
-      // checking if data is `undefined`. `null` means it was fetched.
-      if (res.ok)
-        return json.data ?? null
+  // createResource was removed in 2.0. Refetch on id/apiUrl changes; data
+  // stays undefined while pending and error is set on failure.
+  createEffect(
+    () => (isServer || !props.id ? undefined : { id: props.id, apiUrl: props.apiUrl, fetchOptions: props.fetchOptions }),
+    (params) => {
+      if (!params)
+        return
 
-      throw new TwitterApiError({
-        message: `Failed to fetch tweet at "${url}" with "${res.status}".`,
-        data: json,
-        status: res.status,
-      })
+      let cancelled = false
+      const url = params.apiUrl || `https://react-tweet.vercel.app/api/tweet/${params.id}`
+
+      fetch(url, params.fetchOptions)
+        .then(async (res) => {
+          if (cancelled)
+            return
+          const json = await res.json() as { data?: Tweet }
+          if (res.ok) {
+            setTweet(json.data ?? null)
+            return
+          }
+          throw new TwitterApiError({
+            message: `Failed to fetch tweet at "${url}" with "${res.status}".`,
+            data: json,
+            status: res.status,
+          })
+        })
+        .catch((err) => {
+          if (!cancelled)
+            setTweetError(err)
+        })
+
+      return () => {
+        cancelled = true
+      }
     },
   )
 
   const NotFound = () => {
-    const Component = local.components?.TweetNotFound ?? TweetNotFound
-    return <Component error={local.onError ? local.onError(tweet.error) : tweet.error} />
+    const Component = props.components?.TweetNotFound ?? TweetNotFound
+    return <Component error={props.onError ? props.onError(tweetError()) : tweetError()} />
   }
 
   return (
-    <Show when={!isServer && !tweet.loading} fallback={local.fallback}>
-      <Show when={!tweet.error && tweet()} fallback={<NotFound />}>
+    <Show when={!isServer && !tweetLoading()} fallback={(props.fallback ?? <TweetSkeleton />)}>
+      <Show when={!tweetError() && tweet()} fallback={<NotFound />}>
         <MagicTweet tweet={tweet()!} {...rest} />
       </Show>
     </Show>

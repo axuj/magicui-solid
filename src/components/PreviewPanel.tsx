@@ -1,5 +1,5 @@
-import type { JSX } from 'solid-js'
-import { RefreshCw } from 'lucide-solid'
+import type { JSX } from '@solidjs/web'
+import { RefreshCw } from '@lucide/solid'
 import { createSignal, Show } from 'solid-js'
 
 export interface PreviewPanelProps {
@@ -31,12 +31,14 @@ export function PreviewPanel(props: PreviewPanelProps) {
       </button>
       <Show when={showPreview()}>
         <div
-          class="flex w-full flex-1 justify-center p-10"
-          classList={{
-            'items-center': (props.align ?? 'center') === 'center',
-            'items-start': props.align === 'start',
-            'items-end': props.align === 'end',
-          }}
+          class={[
+            'flex w-full flex-1 justify-center p-10',
+            {
+              'items-center': (props.align ?? 'center') === 'center',
+              'items-start': props.align === 'start',
+              'items-end': props.align === 'end',
+            },
+          ]}
         >
           {props.children}
         </div>

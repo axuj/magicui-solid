@@ -1,4 +1,4 @@
-import { ChevronRight } from 'lucide-solid'
+import { ChevronRight } from '@lucide/solid'
 import { cn } from '@/lib/utils'
 import { AnimatedGradientText } from '@/registry/magicui/animated-gradient-text'
 

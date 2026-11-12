@@ -1,5 +1,5 @@
-import type { JSX } from 'solid-js'
-import { createEffect, createSignal, mergeProps, onCleanup, splitProps } from 'solid-js'
+import type { JSX } from '@solidjs/web'
+import { createSignal, omit, onSettled } from 'solid-js'
 
 import { cn } from '@/lib/utils'
 
@@ -51,26 +51,15 @@ interface NeonGradientCardProps extends JSX.HTMLAttributes<HTMLDivElement> {
 }
 
 export function NeonGradientCard(props: NeonGradientCardProps) {
-  const merged = mergeProps(
-    {
-      borderSize: 2,
-      borderRadius: 20,
-      neonColors: { firstColor: '#ff00aa', secondColor: '#00FFF1' },
-    },
-    props,
-  )
-  const [local, rest] = splitProps(merged, [
-    'className',
-    'children',
-    'borderSize',
-    'borderRadius',
-    'neonColors',
-  ])
+  const rest = omit(props, 'className', 'children', 'borderSize', 'borderRadius', 'neonColors')
+  const borderRadius = () => props.borderRadius ?? 20
+  const borderSize = () => props.borderSize ?? 2
+  const neonColors = () => props.neonColors ?? { firstColor: '#ff00aa', secondColor: '#00FFF1' }
 
   let containerRef: HTMLDivElement | undefined
   const [dimensions, setDimensions] = createSignal({ width: 0, height: 0 })
 
-  createEffect(() => {
+  onSettled(() => {
     const container = containerRef
     if (!container)
       return
@@ -84,31 +73,31 @@ export function NeonGradientCard(props: NeonGradientCardProps) {
     const observer = new ResizeObserver(updateDimensions)
     observer.observe(container)
     window.addEventListener('resize', updateDimensions)
-    onCleanup(() => {
+    return () => {
       observer.disconnect()
       window.removeEventListener('resize', updateDimensions)
-    })
+    }
   })
 
   return (
     <div
       ref={containerRef}
       style={{
-        '--border-size': `${local.borderSize}px`,
-        '--border-radius': `${local.borderRadius}px`,
-        '--neon-first-color': local.neonColors.firstColor,
-        '--neon-second-color': local.neonColors.secondColor,
+        '--border-size': `${borderSize()}px`,
+        '--border-radius': `${borderRadius()}px`,
+        '--neon-first-color': neonColors().firstColor,
+        '--neon-second-color': neonColors().secondColor,
         '--card-width': `${dimensions().width}px`,
         '--card-height': `${dimensions().height}px`,
-        '--card-content-radius': `${local.borderRadius - local.borderSize}px`,
-        '--pseudo-element-background-image': `linear-gradient(0deg, ${local.neonColors.firstColor}, ${local.neonColors.secondColor})`,
-        '--pseudo-element-width': `${dimensions().width + local.borderSize * 2}px`,
-        '--pseudo-element-height': `${dimensions().height + local.borderSize * 2}px`,
+        '--card-content-radius': `${borderRadius() - borderSize()}px`,
+        '--pseudo-element-background-image': `linear-gradient(0deg, ${neonColors().firstColor}, ${neonColors().secondColor})`,
+        '--pseudo-element-width': `${dimensions().width + borderSize() * 2}px`,
+        '--pseudo-element-height': `${dimensions().height + borderSize() * 2}px`,
         '--after-blur': `${dimensions().width / 3}px`,
       }}
       class={cn(
         'relative z-10 size-full rounded-(--border-radius)',
-        local.className,
+        props.className,
       )}
       {...rest}
     >
@@ -149,7 +138,7 @@ export function NeonGradientCard(props: NeonGradientCardProps) {
           'wrap-break-word',
         )}
       >
-        {local.children}
+        {props.children}
       </div>
     </div>
   )

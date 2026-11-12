@@ -1,4 +1,5 @@
 import { For } from 'solid-js'
+
 import { ProgressiveBlur } from '@/registry/magicui/progressive-blur'
 
 export function ProgressiveBlurDemo() {

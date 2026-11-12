@@ -1,8 +1,11 @@
+import type { JSX, ValidComponent } from '@solidjs/web'
 import type { TargetAndTransition, Transition, ValueTransition, Variant, Variants } from 'motion'
-import type { JSX, ValidComponent } from 'solid-js'
+
+import { Dynamic } from '@solidjs/web'
 import { animate } from 'motion'
-import { createEffect, For, mergeProps, onCleanup, Show, splitProps, untrack } from 'solid-js'
-import { Dynamic } from 'solid-js/web'
+
+import { createEffect, createSignal, For, omit, onSettled, Show, untrack } from 'solid-js'
+
 import { createInView } from '@/lib/create-in-view'
 import { cn } from '@/lib/utils'
 
@@ -327,89 +330,67 @@ function resolveVariant(
 }
 
 export function TextAnimate(props: TextAnimateProps) {
-  const merged = mergeProps(
-    {
-      delay: 0,
-      duration: 0.3,
-      as: 'p',
-      startOnView: true,
-      once: false,
-      by: 'word',
-      animation: 'fadeIn',
-      accessible: true,
-    } as const,
-    props,
-  )
-  const [local, rest] = splitProps(merged, [
-    'children',
-    'class',
-    'segmentClassName',
-    'delay',
-    'duration',
-    'variants',
-    'as',
-    'by',
-    'startOnView',
-    'once',
-    'animation',
-    'accessible',
-  ])
+  const rest = omit(props, 'children', 'class', 'segmentClassName', 'delay', 'duration', 'variants', 'as', 'by', 'startOnView', 'once', 'animation', 'accessible')
+  const accessible = () => props.accessible ?? true
+  const animation = () => props.animation ?? 'fadeIn'
+  const by = () => props.by ?? 'word'
+  const startOnView = () => props.startOnView ?? true
 
   const segments = () => {
-    switch (local.by) {
+    switch (by()) {
       case 'word':
-        return local.children.split(/(\s+)/)
+        return props.children.split(/(\s+)/)
       case 'character':
-        return local.children.split('')
+        return props.children.split('')
       case 'line':
-        return local.children.split('\n')
+        return props.children.split('\n')
       case 'text':
       default:
-        return [local.children]
+        return [props.children]
     }
   }
 
   const finalVariants = () => {
     const variantCount = segments().length
-    if (local.variants) {
+    if (props.variants) {
       return {
         container: {
           hidden: { opacity: 0 },
           show: {
             opacity: 1,
             transition: {
-              opacity: { duration: 0.01, delay: local.delay },
-              delayChildren: local.delay,
-              staggerChildren: local.duration / variantCount,
+              opacity: { duration: 0.01, delay: (props.delay ?? 0) },
+              delayChildren: (props.delay ?? 0),
+              staggerChildren: (props.duration ?? 0.3) / variantCount,
             },
           },
           exit: {
             opacity: 0,
             transition: {
-              staggerChildren: local.duration / variantCount,
+              staggerChildren: (props.duration ?? 0.3) / variantCount,
               staggerDirection: -1,
             },
           },
         },
-        item: local.variants,
+        item: props.variants,
       }
     }
-    if (local.animation) {
-      const preset = defaultItemAnimationVariants[local.animation]
+    if (animation()) {
+      const preset = defaultItemAnimationVariants[animation()]
       return {
         container: {
           ...preset.container,
           show: {
             ...preset.container.show,
             transition: {
-              delayChildren: local.delay,
-              staggerChildren: local.duration / variantCount,
+              delayChildren: (props.delay ?? 0),
+              staggerChildren: (props.duration ?? 0.3) / variantCount,
             },
           },
           exit: {
             ...preset.container.exit,
             transition: {
-              staggerChildren: local.duration / variantCount,
+              staggerChildren: (props.duration ?? 0.3) / variantCount,
               staggerDirection: -1,
             },
           },
@@ -420,27 +401,35 @@ export function TextAnimate(props: TextAnimateProps) {
     return { container: defaultContainerVariants, item: defaultItemVariants }
   }
 
-  let containerRef: HTMLElement | undefined
+  const [containerRef, setContainerRef] = createSignal<HTMLElement>()
   const spanRefs: HTMLElement[] = []
-  const isInView = createInView(() => containerRef, { once: untrack(() => local.once) })
+  const isInView = createInView(containerRef, { once: () => props.once ?? false })
 
-  const showAnimation = () => {
-    const fv = finalVariants()
-    const stagger = local.duration / segments().length
+  const showAnimation = (snapshot: {
+    finalVariants: ReturnType<typeof finalVariants>
+    segments: string[]
+    by: AnimationType
+    delay?: number
+    duration?: number
+    containerRef: HTMLElement | undefined
+  }) => {
+    const { finalVariants: fv, segments, by, delay, duration, containerRef } = snapshot
+    const stagger = (duration ?? 0.3) / segments.length
 
-    if (containerRef) {
+    const el = containerRef
+    if (el) {
       const show = resolveVariant(fv.container.show, 0)
       if (show) {
         const { transition, ...target } = show
         const { delay: tDelay, ...opts } = transition ?? {}
-        animate(containerRef, target, { ...opts, delay: local.delay, duration: 0.01 })
+        animate(el, target, { ...opts, delay: (delay ?? 0), duration: 0.01 })
       }
     }
 
     spanRefs.forEach((span, i) => {
       if (!span)
         return
-      const custom = i * staggerTimings[local.by]
+      const custom = i * staggerTimings[by]
       const hidden = resolveVariant(fv.item.hidden, custom)
       const show = resolveVariant(fv.item.show, custom)
       if (!show)
@@ -455,66 +444,87 @@ export function TextAnimate(props: TextAnimateProps) {
         if (to !== undefined)
           keyframes[key] = from !== undefined ? [from, to] : to
       }
-      const totalDelay = local.delay + i * stagger + innerDelay
+      const totalDelay = (delay ?? 0) + i * stagger + innerDelay
       animate(span, keyframes, withDelay(opts, totalDelay))
     })
   }
 
-  const hideAnimation = () => {
-    const fv = finalVariants()
+  const hideAnimation = (snapshot: {
+    finalVariants: ReturnType<typeof finalVariants>
+    by: AnimationType
+  }) => {
+    const { finalVariants: fv, by } = snapshot
     for (let i = 0; i < spanRefs.length; i++) {
       const span = spanRefs[i]
       if (!span)
         continue
-      const custom = i * staggerTimings[local.by]
+      const custom = i * staggerTimings[by]
       const hidden = resolveVariant(fv.item.hidden, custom)
       if (hidden)
         animate(span, hidden, { duration: 0 })
     }
   }
 
-  createEffect(() => {
-    if (local.startOnView) {
-      if (isInView()) {
-        showAnimation()
+  createEffect(
+    () => ({
+      startOnView: startOnView(),
+      isInView: isInView(),
+      finalVariants: finalVariants(),
+      segments: segments(),
+      by: by(),
+      delay: props.delay,
+      duration: props.duration,
+      variants: props.variants,
+      animation: animation(),
+      children: props.children,
+      containerRef: containerRef(),
+    }),
+    ({ startOnView, isInView, finalVariants, segments, by, delay, duration, containerRef }) => {
+      if (startOnView) {
+        if (isInView) {
+          showAnimation({ finalVariants, segments, by, delay, duration, containerRef })
+        }
+        else {
+          hideAnimation({ finalVariants, by })
+        }
       }
       else {
-        hideAnimation()
+        showAnimation({ finalVariants, segments, by, delay, duration, containerRef })
       }
-    }
-    else {
-      showAnimation()
-    }
-  })
+    },
+  )
 
-  onCleanup(() => {
-    if (containerRef)
-      animate(containerRef, { opacity: 1 }, { duration: 0 })
+  onSettled(() => {
+    return () => {
+      const el = containerRef()
+      if (el)
+        animate(el, { opacity: 1 }, { duration: 0 })
+    }
   })
 
   return (
     <Dynamic
-      component={local.as}
-      ref={containerRef}
-      class={cn('whitespace-pre-wrap', local.class)}
-      aria-label={local.accessible ? local.children : undefined}
+      component={(props.as ?? 'p')}
+      ref={setContainerRef}
+      class={cn('whitespace-pre-wrap', props.class)}
+      aria-label={accessible() ? props.children : undefined}
       {...rest}
     >
-      <Show when={local.accessible}>
-        <span class="sr-only">{local.children}</span>
+      <Show when={accessible()}>
+        <span class="sr-only">{props.children}</span>
       </Show>
       <For each={segments()}>
         {(segment, i) => (
           <span
             ref={(el) => {
-              spanRefs[i()] = el
+              spanRefs[untrack(i)] = el
             }}
             class={cn(
-              local.by === 'line' ? 'block' : 'inline-block whitespace-pre',
-              local.by === 'character' && '',
-              local.segmentClassName,
+              by() === 'line' ? 'block' : 'inline-block whitespace-pre',
+              by() === 'character' && '',
+              props.segmentClassName,
             )}
-            aria-hidden={local.accessible ? true : undefined}
+            aria-hidden={accessible() ? 'true' : undefined}
           >
             {segment}
           </span>

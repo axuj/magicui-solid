@@ -1,5 +1,5 @@
-import type { JSX } from 'solid-js'
-import { createEffect, onCleanup } from 'solid-js'
+import type { JSX } from '@solidjs/web'
+import { createEffect } from 'solid-js'
 
 export interface BaseParticle {
   element: HTMLElement | SVGSVGElement
@@ -273,9 +273,9 @@ interface CoolModeProps {
 export function CoolMode(props: CoolModeProps) {
   let ref: HTMLSpanElement | undefined
 
-  createEffect(() => {
+  createEffect(() => [props.options], ([options]) => {
     if (ref)
-      onCleanup(applyParticleEffect(ref, props.options))
+      return (applyParticleEffect(ref, options))
   })
 
   return <span ref={ref}>{props.children}</span>

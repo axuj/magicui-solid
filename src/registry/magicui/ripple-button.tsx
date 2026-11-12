@@ -1,5 +1,5 @@
-import type { ComponentProps, JSX } from 'solid-js'
-import { createEffect, createSignal, For, mergeProps, onCleanup, splitProps } from 'solid-js'
+import type { ComponentProps, JSX } from '@solidjs/web'
+import { createEffect, createSignal, For, omit } from 'solid-js'
 
 import { cn } from '@/lib/utils'
 
@@ -22,13 +22,14 @@ function ButtonRipple(props: {
   duration: string
   onDone: (key: number) => void
 }) {
-  createEffect(() => {
-    const key = props.ripple.key
-    const ms = Number.parseInt(props.duration)
-    const done = props.onDone
-    const timeout = setTimeout(done, ms, key)
-    onCleanup(() => clearTimeout(timeout))
-  })
+  createEffect(
+    () => ({ key: props.ripple.key, duration: props.duration, onDone: props.onDone }),
+    ({ key, duration, onDone }) => {
+      const ms = Number.parseInt(duration)
+      const timeout = setTimeout(onDone, ms, key)
+      return () => clearTimeout(timeout)
+    },
+  )
 
   return (
     <span
@@ -47,14 +48,7 @@ function ButtonRipple(props: {
 }
 
 export function RippleButton(props: RippleButtonProps) {
-  const merged = mergeProps(
-    {
-      rippleColor: '#ffffff',
-      duration: '600ms',
-    },
-    props,
-  )
-  const [local, rest] = splitProps(merged, ['class', 'children', 'rippleColor', 'duration', 'onClick'])
+  const rest = omit(props, 'class', 'children', 'rippleColor', 'duration', 'onClick')
   const [buttonRipples, setButtonRipples] = createSignal<RippleButtonRipple[]>([])
   let nextKey = 0
 
@@ -76,7 +70,7 @@ export function RippleButton(props: RippleButtonProps) {
 
   const handleClick = (event: MouseEvent) => {
     createRipple(event)
-    local.onClick?.(event)
+    props.onClick?.(event)
   }
 
   return (
@@ -87,19 +81,19 @@ export function RippleButton(props: RippleButtonProps) {
           overflow-hidden rounded-lg border-2 bg-background px-4 py-2
           text-center text-primary
         `,
-        local.class,
+        props.class,
       )}
       onClick={handleClick}
       {...rest}
     >
-      <div class="relative z-10">{local.children}</div>
+      <div class="relative z-10">{props.children}</div>
       <span class="pointer-events-none absolute inset-0">
         <For each={buttonRipples()}>
           {ripple => (
             <ButtonRipple
               ripple={ripple}
-              rippleColor={local.rippleColor}
-              duration={local.duration}
+              rippleColor={(props.rippleColor ?? '#ffffff')}
+              duration={(props.duration ?? '600ms')}
               onDone={removeRipple}
             />
           )}

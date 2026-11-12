@@ -1,10 +1,11 @@
 import type { Accessor } from 'solid-js'
-import { createEffect, createSignal, onCleanup } from 'solid-js'
+
+import { createSignal, onSettled } from 'solid-js'
 
 export function createIsDark(): Accessor<boolean> {
   const [isDark, setIsDark] = createSignal(true)
 
-  createEffect(() => {
+  onSettled(() => {
     if (typeof document === 'undefined')
       return
     const root = document.documentElement
@@ -12,7 +13,7 @@ export function createIsDark(): Accessor<boolean> {
     update()
     const observer = new MutationObserver(update)
     observer.observe(root, { attributes: true, attributeFilter: ['data-theme'] })
-    onCleanup(() => observer.disconnect())
+    return () => observer.disconnect()
   })
 
   return isDark

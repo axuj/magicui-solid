@@ -1,5 +1,6 @@
-import type { JSX } from 'solid-js'
-import { For, mergeProps, splitProps } from 'solid-js'
+import type { JSX } from '@solidjs/web'
+import { For, omit } from 'solid-js'
+
 import { cn } from '@/lib/utils'
 
 export interface RippleProps extends JSX.HTMLAttributes<HTMLDivElement> {
@@ -9,8 +10,10 @@ export interface RippleProps extends JSX.HTMLAttributes<HTMLDivElement> {
 }
 
 export function Ripple(props: RippleProps) {
-  const merged = mergeProps({ mainCircleSize: 210, mainCircleOpacity: 0.24, numCircles: 8 }, props)
-  const [local, rest] = splitProps(merged, ['mainCircleSize', 'mainCircleOpacity', 'numCircles', 'class'])
+  const rest = omit(props, 'mainCircleSize', 'mainCircleOpacity', 'numCircles', 'class')
+  const mainCircleOpacity = () => props.mainCircleOpacity ?? 0.24
+  const mainCircleSize = () => props.mainCircleSize ?? 210
+  const numCircles = () => props.numCircles ?? 8
 
   return (
     <div
@@ -19,11 +22,11 @@ export function Ripple(props: RippleProps) {
           pointer-events-none absolute inset-0
           mask-[linear-gradient(to_bottom,white,transparent)] select-none
         `,
-        local.class,
+        props.class,
       )}
       {...rest}
     >
-      <For each={Array.from({ length: local.numCircles })}>
+      <For each={Array.from({ length: numCircles() })}>
         {(_, i) => (
           <div
             class="
@@ -32,9 +35,9 @@ export function Ripple(props: RippleProps) {
             "
             style={{
               '--i': i(),
-              'width': `${local.mainCircleSize + i() * 70}px`,
-              'height': `${local.mainCircleSize + i() * 70}px`,
-              'opacity': `${local.mainCircleOpacity - i() * 0.03}`,
+              'width': `${mainCircleSize() + i() * 70}px`,
+              'height': `${mainCircleSize() + i() * 70}px`,
+              'opacity': `${mainCircleOpacity() - i() * 0.03}`,
               'animation-delay': `${i() * 0.06}s`,
               'border-style': 'solid',
               'border-width': '1px',

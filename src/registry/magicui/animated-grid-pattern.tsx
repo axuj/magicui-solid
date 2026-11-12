@@ -1,17 +1,9 @@
+import type { JSX } from '@solidjs/web'
 import type { AnimationPlaybackControls } from 'motion'
-import type { JSX } from 'solid-js'
+
 import { animate } from 'motion'
-import {
-  createEffect,
-  createSignal,
-  createUniqueId,
-  For,
-  mergeProps,
-  on,
-  onCleanup,
-  splitProps,
-  untrack,
-} from 'solid-js'
+import { createEffect, createSignal, createUniqueId, For, omit, onSettled } from 'solid-js'
+
 import { cn } from '@/lib/utils'
 
 export interface AnimatedGridPatternProps extends JSX.SvgSVGAttributes<SVGSVGElement> {
@@ -45,33 +37,43 @@ function AnimatedSquare(props: {
   let rectRef: SVGRectElement | undefined
   let animation: AnimationPlaybackControls | undefined
 
+  // Read every dependency in compute: apply is untracked, so reading props
+  // there would only see the first snapshot.
   createEffect(
-    on(() => props.square, () => {
+    () => ({
+      square: props.square,
+      maxOpacity: props.maxOpacity,
+      duration: props.duration,
+      delay: props.delay,
+      repeatDelay: props.repeatDelay,
+    }),
+    ({ square, maxOpacity, duration, delay, repeatDelay }) => {
       if (!rectRef)
         return
 
       animation?.stop()
       animation = animate(
         rectRef,
-        { opacity: [0, props.maxOpacity] },
+        { opacity: [0, maxOpacity] },
         {
-          duration: props.duration,
+          duration,
           repeat: 1,
-          delay: props.delay,
+          delay,
           repeatType: 'reverse',
-          repeatDelay: props.repeatDelay,
+          repeatDelay,
         },
       )
-      const squareId = props.square.id
       const onComplete = props.onComplete
       animation.finished.then(
-        () => onComplete(squareId),
+        () => onComplete(square.id),
         () => {},
       )
-    }),
+    },
   )
 
-  onCleanup(() => animation?.stop())
+  onSettled(() => {
+    return () => animation?.stop()
+  })
 
   return (
     <rect
@@ -88,48 +90,25 @@ function AnimatedSquare(props: {
 }
 
 export function AnimatedGridPattern(props: AnimatedGridPatternProps) {
-  const merged = mergeProps(
-    {
-      width: 40,
-      height: 40,
-      x: -1,
-      y: -1,
-      strokeDasharray: 0,
-      numSquares: 50,
-      maxOpacity: 0.5,
-      duration: 4,
-      repeatDelay: 0.5,
-    },
-    props,
-  )
-  const [local, rest] = splitProps(merged, [
-    'width',
-    'height',
-    'x',
-    'y',
-    'strokeDasharray',
-    'numSquares',
-    'maxOpacity',
-    'duration',
-    'repeatDelay',
-    'class',
-  ])
+  const rest = omit(props, 'width', 'height', 'x', 'y', 'strokeDasharray', 'numSquares', 'maxOpacity', 'duration', 'repeatDelay', 'class')
+  const numSquares = () => props.numSquares ?? 50
+  const strokeDasharray = () => props.strokeDasharray ?? 0
   const id = createUniqueId()
   let containerRef: SVGSVGElement | undefined
   const [dimensions, setDimensions] = createSignal({ width: 0, height: 0 })
   const [squares, setSquares] = createSignal<Array<Square>>([])
 
-  const getPos = (): [number, number] => {
+  const getPos = (size: { width: number, height: number }): [number, number] => {
     return [
-      Math.floor((Math.random() * dimensions().width) / local.width),
-      Math.floor((Math.random() * dimensions().height) / local.height),
+      Math.floor((Math.random() * size.width) / (props.width ?? 40)),
+      Math.floor((Math.random() * size.height) / (props.height ?? 40)),
     ]
   }
 
-  const generateSquares = (count: number) => {
+  const generateSquares = (count: number, size: { width: number, height: number }) => {
     return Array.from({ length: count }, (_, i) => ({
       id: i,
-      pos: untrack(getPos),
+      pos: getPos(size),
       iteration: 0,
     }))
   }
@@ -144,7 +123,7 @@ export function AnimatedGridPattern(props: AnimatedGridPatternProps) {
       const nextSquares = currentSquares.slice()
       nextSquares[squareId] = {
         ...current,
-        pos: getPos(),
+        pos: getPos(dimensions()),
         iteration: current.iteration + 1,
       }
 
@@ -152,13 +131,13 @@ export function AnimatedGridPattern(props: AnimatedGridPatternProps) {
     })
   }
 
-  createEffect(() => {
-    if (dimensions().width && dimensions().height) {
-      setSquares(generateSquares(local.numSquares))
+  createEffect(() => [dimensions(), numSquares()], ([dimensions, numSquares]) => {
+    if (dimensions.width && dimensions.height) {
+      setSquares(generateSquares(numSquares, dimensions))
     }
   })
 
-  createEffect(() => {
+  onSettled(() => {
     const element = containerRef
     let resizeObserver: ResizeObserver | null = null
 
@@ -182,9 +161,9 @@ export function AnimatedGridPattern(props: AnimatedGridPatternProps) {
       resizeObserver.observe(element)
     }
 
-    onCleanup(() => {
+    return () => {
       resizeObserver?.disconnect()
-    })
+    }
   })
 
   return (
@@ -196,37 +175,37 @@ export function AnimatedGridPattern(props: AnimatedGridPatternProps) {
           pointer-events-none absolute inset-0 size-full fill-gray-400/30
           stroke-gray-400/30
         `,
-        local.class,
+        props.class,
       )}
       {...rest}
     >
       <defs>
         <pattern
           id={id}
-          width={local.width}
-          height={local.height}
+          width={(props.width ?? 40)}
+          height={(props.height ?? 40)}
           patternUnits="userSpaceOnUse"
-          x={local.x}
-          y={local.y}
+          x={(props.x ?? -1)}
+          y={(props.y ?? -1)}
         >
           <path
-            d={`M.5 ${local.height}V.5H${local.width}`}
+            d={`M.5 ${(props.height ?? 40)}V.5H${(props.width ?? 40)}`}
             fill="none"
-            stroke-dasharray={String(local.strokeDasharray)}
+            stroke-dasharray={String(strokeDasharray())}
           />
         </pattern>
       </defs>
       <rect width="100%" height="100%" fill={`url(#${id})`} />
-      <svg x={local.x} y={local.y} class="overflow-visible">
+      <svg x={(props.x ?? -1)} y={(props.y ?? -1)} class="overflow-visible">
         <For each={squares()}>
           {(square, index) => (
             <AnimatedSquare
               square={square}
-              width={local.width}
-              height={local.height}
-              maxOpacity={local.maxOpacity}
-              duration={local.duration}
-              repeatDelay={local.repeatDelay}
+              width={(props.width ?? 40)}
+              height={(props.height ?? 40)}
+              maxOpacity={(props.maxOpacity ?? 0.5)}
+              duration={(props.duration ?? 4)}
+              repeatDelay={(props.repeatDelay ?? 0.5)}
               delay={index() * 0.1}
               onComplete={updateSquarePosition}
             />

@@ -1,4 +1,4 @@
-import type { JSX } from 'solid-js'
+import type { JSX } from '@solidjs/web'
 import { For } from 'solid-js'
 
 import {
@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils'
 
 interface TechComponentType {
   name: string
-  icon: JSX.Element
+  icon: () => JSX.Element
 }
 
 type TechComponents = Record<string, TechComponentType>
@@ -18,7 +18,7 @@ type TechComponents = Record<string, TechComponentType>
 const techComponents: TechComponents = {
   solidjs: {
     name: 'SolidJS',
-    icon: (
+    icon: () => (
       <svg
         role="img"
         viewBox="0 0 24 24"
@@ -33,7 +33,7 @@ const techComponents: TechComponents = {
   },
   typescript: {
     name: 'TypeScript',
-    icon: (
+    icon: () => (
       <svg
         viewBox="0 0 32 32"
         xmlns="http://www.w3.org/2000/svg"
@@ -47,7 +47,7 @@ const techComponents: TechComponents = {
   },
   tailwindcss: {
     name: 'Tailwind CSS',
-    icon: (
+    icon: () => (
       <svg
         role="img"
         viewBox="0 0 24 24"
@@ -62,7 +62,7 @@ const techComponents: TechComponents = {
   },
   motion: {
     name: 'Motion',
-    icon: (
+    icon: () => (
       <svg
         role="img"
         viewBox="0 0 24 24"
@@ -82,7 +82,7 @@ const techComponents: TechComponents = {
   },
   shadcn: {
     name: 'shadcn',
-    icon: (
+    icon: () => (
       <svg
         xmlns="http://www.w3.org/2000/svg"
         aria-label="shadcn"
@@ -106,7 +106,7 @@ export function TechStack(props: { technologies: string[], class?: string }) {
           const component = techComponents[tech] ?? techComponents.solidjs
           return (
             <Tooltip>
-              <TooltipTrigger>{component.icon}</TooltipTrigger>
+              <TooltipTrigger>{component.icon()}</TooltipTrigger>
               <TooltipContent>
                 <p>{component.name}</p>
               </TooltipContent>

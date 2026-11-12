@@ -1,5 +1,6 @@
-import type { JSX } from 'solid-js'
-import { createMemo, createUniqueId, For, mergeProps, Show, splitProps } from 'solid-js'
+import type { JSX } from '@solidjs/web'
+import { createMemo, createUniqueId, For, omit, Show } from 'solid-js'
+
 import { cn } from '@/lib/utils'
 
 export interface HexagonPatternProps
@@ -211,33 +212,42 @@ function hexCenter(
  * A Solid component that creates a hexagon pattern background using SVG.
  */
 export function HexagonPattern(props: HexagonPatternProps) {
-  const merged = mergeProps(
-    { radius: 40, gap: 0, x: -1, y: -1, strokeDasharray: '0', direction: 'horizontal' as const },
-    props,
-  )
-  const [local, rest] = splitProps(merged, [
-    'radius',
-    'gap',
-    'x',
-    'y',
-    'strokeDasharray',
-    'direction',
-    'hexagons',
-    'class',
-  ])
+  const rest = omit(props, 'radius', 'gap', 'x', 'y', 'strokeDasharray', 'direction', 'hexagons', 'class')
   const id = createUniqueId()
 
   const geometry = createMemo(() => {
-    const radius = local.radius
-    const direction = local.direction
-    const gap = local.gap
-    const strokeDasharray = local.strokeDasharray
+    const radius = (props.radius ?? 40)
+    const direction = (props.direction ?? 'horizontal' as const)
+    const gap = (props.gap ?? 0)
+    const strokeDasharray = (props.strokeDasharray ?? '0')
     const { tileW, tileH, centers } = getTileGeometry(radius, direction, gap)
     const solidStroke = isSolidStrokeDasharray(strokeDasharray)
     const dashedEdges = solidStroke
       ? null
       : collectUniqueHexEdges(centers, radius, direction)
     return { tileW, tileH, centers, solidStroke, dashedEdges, radius, direction, gap, strokeDasharray }
+  })
+
+  // Derive tiles in a memo. A <For> callback is an owner, not a tracking
+  // scope, so geometry() read there freezes the first value.
+  type StrokeTile
+    = | { kind: 'polygon', points: string }
+      | { kind: 'line', x1: number, y1: number, x2: number, y2: number }
+  const strokeTiles = createMemo<StrokeTile[]>(() => {
+    const { centers, dashedEdges, radius, direction } = geometry()
+    if (dashedEdges) {
+      return dashedEdges.map(([a, b]) => ({ kind: 'line', x1: a[0], y1: a[1], x2: b[0], y2: b[1] }))
+    }
+    return centers.map(([cx, cy]) => ({ kind: 'polygon', points: hexPoints(cx, cy, radius, direction) }))
+  })
+  const strokeDasharray = createMemo(() => geometry().strokeDasharray)
+
+  const highlightedHexes = createMemo(() => {
+    const { radius, direction, gap } = geometry()
+    return (props.hexagons ?? []).map(([col, row]) => {
+      const [cx, cy] = hexCenter(col, row, radius, direction, gap)
+      return hexPoints(cx, cy, radius - 1, direction)
+    })
   })
 
   return (
@@ -248,7 +258,7 @@ export function HexagonPattern(props: HexagonPatternProps) {
           pointer-events-none absolute inset-0 size-full fill-gray-400/30
           stroke-gray-400/30
         `,
-        local.class,
+        props.class,
       )}
       {...rest}
     >
@@ -258,58 +268,40 @@ export function HexagonPattern(props: HexagonPatternProps) {
           width={geometry().tileW}
           height={geometry().tileH}
           patternUnits="userSpaceOnUse"
-          x={local.x}
-          y={local.y}
+          x={(props.x ?? -1)}
+          y={(props.y ?? -1)}
         >
-          {geometry().solidStroke
-            ? (
-                <For each={geometry().centers}>
-                  {([cx, cy]) => (
-                    <polygon
-                      class="fill-none"
-                      points={hexPoints(cx, cy, geometry().radius, geometry().direction)}
-                      stroke-dasharray={geometry().strokeDasharray}
-                    />
-                  )}
-                </For>
-              )
-            : (
-                <For each={geometry().dashedEdges}>
-                  {([a, b]) => (
-                    <line
-                      class="fill-none"
-                      x1={a[0]}
-                      x2={b[0]}
-                      y1={a[1]}
-                      y2={b[1]}
-                      stroke-dasharray={geometry().strokeDasharray}
-                    />
-                  )}
-                </For>
-              )}
+          <For each={strokeTiles()}>
+            {tile => tile.kind === 'polygon'
+              ? (
+                  <polygon
+                    class="fill-none"
+                    points={tile.points}
+                    stroke-dasharray={strokeDasharray()}
+                  />
+                )
+              : (
+                  <line
+                    class="fill-none"
+                    x1={tile.x1}
+                    x2={tile.x2}
+                    y1={tile.y1}
+                    y2={tile.y2}
+                    stroke-dasharray={strokeDasharray()}
+                  />
+                )}
+          </For>
         </pattern>
       </defs>
 
       <rect width="100%" height="100%" fill={`url(#${id})`} stroke="none" />
 
-      <Show when={local.hexagons && local.hexagons.length > 0}>
-        <svg aria-hidden="true" class="overflow-visible" x={local.x} y={local.y}>
-          <For each={local.hexagons}>
-            {([col, row]) => {
-              const [cx, cy] = hexCenter(
-                col,
-                row,
-                geometry().radius,
-                geometry().direction,
-                geometry().gap,
-              )
-              return (
-                <polygon
-                  points={hexPoints(cx, cy, geometry().radius - 1, geometry().direction)}
-                  stroke-width="0"
-                />
-              )
-            }}
+      <Show when={props.hexagons && props.hexagons.length > 0}>
+        <svg aria-hidden="true" class="overflow-visible" x={(props.x ?? -1)} y={(props.y ?? -1)}>
+          <For each={highlightedHexes()}>
+            {points => (
+              <polygon points={points} stroke-width="0" />
+            )}
           </For>
         </svg>
       </Show>

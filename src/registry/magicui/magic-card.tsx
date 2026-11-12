@@ -1,7 +1,9 @@
 import type { SpringOptions } from '@solid-primitives/spring'
-import type { JSX } from 'solid-js'
+import type { JSX } from '@solidjs/web'
+
 import { createSpring } from '@solid-primitives/spring'
-import { createEffect, createMemo, createSignal, onCleanup, untrack } from 'solid-js'
+import { createMemo, createSignal, onSettled, untrack } from 'solid-js'
+
 import { cn } from '@/lib/utils'
 
 interface MagicCardBaseProps {
@@ -43,7 +45,7 @@ interface MagicCardOrbProps extends MagicCardBaseProps {
 type MagicCardProps = MagicCardGradientProps | MagicCardOrbProps
 type ResetReason = 'enter' | 'leave' | 'global' | 'init'
 
-// framer-motion 量纲（stiffness/mass/damping）→ @solid-primitives/spring 归一化量纲
+// Map framer-motion units (stiffness/mass/damping) to @solid-primitives/spring.
 function toSpringOptions(stiffness: number, damping: number, mass: number): SpringOptions {
   return {
     stiffness: stiffness / (mass * 60 * 60),
@@ -54,7 +56,9 @@ function toSpringOptions(stiffness: number, damping: number, mass: number): Spri
 export function MagicCard(props: MagicCardProps) {
   const isOrb = () => props.mode === 'orb'
 
-  const initialGradientSize = untrack(() => props.gradientSize) ?? 200
+  // Seed for the first frame only; the pointer handler overwrites both
+  // positions on the first move, so this must not react to a later change.
+  const initialGradientSize = untrack(() => props.gradientSize ?? 200)
 
   const [isDarkTheme, setIsDarkTheme] = createSignal(true)
   const [mouseX, setMouseX] = createSignal(-initialGradientSize)
@@ -64,7 +68,7 @@ export function MagicCard(props: MagicCardProps) {
   const [orbY, setOrbY] = createSpring(0, toSpringOptions(250, 30, 0.6))
   const [orbVisible, setOrbVisible] = createSpring(0, toSpringOptions(300, 35, 1))
 
-  createEffect(() => {
+  onSettled(() => {
     if (typeof document === 'undefined')
       return
     const root = document.documentElement
@@ -72,7 +76,7 @@ export function MagicCard(props: MagicCardProps) {
     update()
     const observer = new MutationObserver(update)
     observer.observe(root, { attributes: true, attributeFilter: ['data-theme'] })
-    onCleanup(() => observer.disconnect())
+    return () => observer.disconnect()
   })
 
   const reset = (reason: ResetReason = 'leave') => {
@@ -96,7 +100,7 @@ export function MagicCard(props: MagicCardProps) {
     }
   }
 
-  createEffect(() => {
+  onSettled(() => {
     const handleGlobalPointerOut = (e: PointerEvent) => {
       if (!e.relatedTarget)
         reset('global')
@@ -111,11 +115,11 @@ export function MagicCard(props: MagicCardProps) {
     window.addEventListener('blur', handleBlur)
     document.addEventListener('visibilitychange', handleVisibility)
 
-    onCleanup(() => {
+    return () => {
       window.removeEventListener('pointerout', handleGlobalPointerOut)
       window.removeEventListener('blur', handleBlur)
       document.removeEventListener('visibilitychange', handleVisibility)
-    })
+    }
   })
 
   const background = createMemo(

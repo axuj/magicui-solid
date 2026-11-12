@@ -1,6 +1,7 @@
-import type { JSX } from 'solid-js'
+import type { JSX } from '@solidjs/web'
 import { animate } from 'motion'
-import { createEffect, mergeProps, onCleanup, splitProps } from 'solid-js'
+import { createEffect, createSignal, omit } from 'solid-js'
+
 import { createInView } from '@/lib/create-in-view'
 import { cn } from '@/lib/utils'
 
@@ -13,58 +14,72 @@ interface NumberTickerProps extends Omit<JSX.HTMLAttributes<HTMLSpanElement>, 'v
 }
 
 export function NumberTicker(props: NumberTickerProps) {
-  const merged = mergeProps({ startValue: 0, direction: 'up', delay: 0, decimalPlaces: 0 }, props)
-  const [local, rest] = splitProps(merged, ['value', 'startValue', 'direction', 'delay', 'decimalPlaces', 'class'])
+  const rest = omit(props, 'value', 'startValue', 'direction', 'delay', 'decimalPlaces', 'class')
+  const delay = () => props.delay ?? 0
+  const direction = () => props.direction ?? 'up'
+  const startValue = () => props.startValue ?? 0
 
-  let elementRef: HTMLSpanElement | undefined
-  const isInView = createInView(() => elementRef, { once: true, margin: '0px' })
+  const [elementRef, setElementRef] = createSignal<HTMLSpanElement>()
+  const isInView = createInView(elementRef, { once: true, margin: '0px' })
 
-  createEffect(() => {
-    if (!elementRef || !isInView())
-      return
+  createEffect(
+    () => ({
+      elementRef: elementRef(),
+      isInView: isInView(),
+      direction: direction(),
+      value: props.value,
+      startValue: startValue(),
+      decimalPlaces: props.decimalPlaces,
+      delay: delay(),
+    }),
+    ({ elementRef, isInView, direction, value, startValue, decimalPlaces: decimalPlacesValue, delay }) => {
+      const el = elementRef
+      if (!el || !isInView)
+        return
 
-    const from = local.direction === 'down' ? local.value : local.startValue
-    const to = local.direction === 'down' ? local.startValue : local.value
-    const decimalPlaces = local.decimalPlaces
+      const from = direction === 'down' ? value : startValue
+      const to = direction === 'down' ? startValue : value
+      const decimalPlaces = (decimalPlacesValue ?? 0)
 
-    let controls: ReturnType<typeof animate> | undefined
-    const timer = setTimeout(() => {
-      controls = animate(from, to, {
-        type: 'spring',
-        damping: 60,
-        stiffness: 100,
-        restDelta: 0.001,
-        restSpeed: 0.01,
-        onUpdate: (latest) => {
-          if (elementRef) {
-            elementRef.textContent = new Intl.NumberFormat('en-US', {
-              minimumFractionDigits: decimalPlaces,
-              maximumFractionDigits: decimalPlaces,
-            }).format(Number(latest.toFixed(decimalPlaces)))
-          }
-        },
-      })
-    }, local.delay * 1000)
+      let controls: ReturnType<typeof animate> | undefined
+      const timer = setTimeout(() => {
+        controls = animate(from, to, {
+          type: 'spring',
+          damping: 60,
+          stiffness: 100,
+          restDelta: 0.001,
+          restSpeed: 0.01,
+          onUpdate: (latest) => {
+            if (el) {
+              el.textContent = new Intl.NumberFormat('en-US', {
+                minimumFractionDigits: decimalPlaces,
+                maximumFractionDigits: decimalPlaces,
+              }).format(Number(latest.toFixed(decimalPlaces)))
+            }
+          },
+        })
+      }, delay * 1000)
 
-    onCleanup(() => {
-      clearTimeout(timer)
-      controls?.stop()
-    })
-  })
+      return () => {
+        clearTimeout(timer)
+        controls?.stop()
+      }
+    },
+  )
 
   return (
     <span
-      ref={elementRef}
+      ref={setElementRef}
       class={cn(
         `
           inline-block tracking-wider text-black tabular-nums
           dark:text-white
         `,
-        local.class,
+        props.class,
       )}
       {...rest}
     >
-      {local.startValue}
+      {startValue()}
     </span>
   )
 }

@@ -1,6 +1,8 @@
-import type { JSX, ValidComponent } from 'solid-js'
-import { For, mergeProps, splitProps } from 'solid-js'
-import { Dynamic } from 'solid-js/web'
+import type { JSX, ValidComponent } from '@solidjs/web'
+import { Dynamic } from '@solidjs/web'
+
+import { For, omit } from 'solid-js'
+
 import { cn } from '@/lib/utils'
 
 type KineticTextProps = JSX.HTMLAttributes<HTMLElement> & {
@@ -9,23 +11,22 @@ type KineticTextProps = JSX.HTMLAttributes<HTMLElement> & {
 }
 
 export function KineticText(props: KineticTextProps) {
-  const merged = mergeProps({ as: 'h1' }, props)
-  const [local, rest] = splitProps(merged, ['text', 'as', 'class', 'style'])
+  const rest = omit(props, 'text', 'as', 'class', 'style')
 
   const mergedStyle = (): JSX.CSSProperties => ({
     '--hover-padding': 'calc(1em / 12)',
     '--text-stroke-width': 'calc(1em * 125 / 6000)',
-    ...(local.style as JSX.CSSProperties | undefined),
+    ...(props.style as JSX.CSSProperties | undefined),
   })
 
   return (
     <Dynamic
-      component={local.as}
+      component={(props.as ?? 'h1')}
       {...rest}
-      class={cn('flex flex-wrap font-light', local.class)}
+      class={cn('flex flex-wrap font-light', props.class)}
       style={mergedStyle()}
     >
-      <For each={local.text.split('')}>
+      <For each={props.text.split('')}>
         {letter => (
           <span
             aria-hidden="true"
@@ -48,7 +49,7 @@ export function KineticText(props: KineticTextProps) {
           </span>
         )}
       </For>
-      <span class="sr-only">{local.text}</span>
+      <span class="sr-only">{props.text}</span>
     </Dynamic>
   )
 }

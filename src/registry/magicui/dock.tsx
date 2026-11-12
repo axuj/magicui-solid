@@ -1,18 +1,11 @@
+import type { JSX } from '@solidjs/web'
 import type { VariantProps } from 'class-variance-authority'
-import type { Accessor, JSX } from 'solid-js'
+import type { Accessor } from 'solid-js'
+
 import { cva } from 'class-variance-authority'
 import { animate, transform } from 'motion'
-import {
-  createContext,
-  createEffect,
-  createMemo,
-  createSignal,
-  mergeProps,
-  onCleanup,
-  splitProps,
-  untrack,
-  useContext,
-} from 'solid-js'
+import { createContext, createEffect, createMemo, createSignal, omit, untrack, useContext } from 'solid-js'
+
 import { cn } from '@/lib/utils'
 
 export interface DockProps extends VariantProps<typeof dockVariants> {
@@ -51,53 +44,35 @@ interface DockContextValue {
 const DockContext = createContext<DockContextValue>()
 
 export function Dock(props: DockProps) {
-  const merged = mergeProps(
-    {
-      iconSize: DEFAULT_SIZE,
-      iconMagnification: DEFAULT_MAGNIFICATION,
-      disableMagnification: DEFAULT_DISABLEMAGNIFICATION,
-      iconDistance: DEFAULT_DISTANCE,
-      direction: 'middle',
-    },
-    props,
-  )
-  const [local, rest] = splitProps(merged, [
-    'class',
-    'children',
-    'iconSize',
-    'iconMagnification',
-    'disableMagnification',
-    'iconDistance',
-    'direction',
-    'ref',
-  ])
+  const rest = omit(props, 'class', 'children', 'iconSize', 'iconMagnification', 'disableMagnification', 'iconDistance', 'direction', 'ref')
+  const direction = () => props.direction ?? 'middle'
   const [mouseX, setMouseX] = createSignal(Infinity)
 
   const contextValue: DockContextValue = {
     mouseX,
-    iconSize: () => local.iconSize,
-    iconMagnification: () => local.iconMagnification,
-    disableMagnification: () => local.disableMagnification,
-    iconDistance: () => local.iconDistance,
+    iconSize: () => (props.iconSize ?? DEFAULT_SIZE),
+    iconMagnification: () => (props.iconMagnification ?? DEFAULT_MAGNIFICATION),
+    disableMagnification: () => (props.disableMagnification ?? DEFAULT_DISABLEMAGNIFICATION),
+    iconDistance: () => (props.iconDistance ?? DEFAULT_DISTANCE),
   }
 
   return (
-    <DockContext.Provider value={contextValue}>
+    <DockContext value={contextValue}>
       <div
-        ref={local.ref}
+        ref={props.ref}
         role="toolbar"
         onMouseMove={e => setMouseX(e.pageX)}
         onMouseLeave={() => setMouseX(Infinity)}
         {...rest}
-        class={cn(dockVariants({ class: local.class }), {
-          'items-start': local.direction === 'top',
-          'items-center': local.direction === 'middle',
-          'items-end': local.direction === 'bottom',
+        class={cn(dockVariants({ class: props.class }), {
+          'items-start': direction() === 'top',
+          'items-center': direction() === 'middle',
+          'items-end': direction() === 'bottom',
         })}
       >
-        {local.children}
+        {props.children}
       </div>
-    </DockContext.Provider>
+    </DockContext>
   )
 }
 
@@ -112,66 +87,56 @@ export interface DockIconProps extends Omit<JSX.HTMLAttributes<HTMLDivElement>, 
 }
 
 export function DockIcon(props: DockIconProps) {
-  const merged = mergeProps(
-    {
-      size: DEFAULT_SIZE,
-      magnification: DEFAULT_MAGNIFICATION,
-      distance: DEFAULT_DISTANCE,
-    },
-    props,
-  )
-  const [local, rest] = splitProps(merged, [
-    'class',
-    'children',
-    'size',
-    'magnification',
-    'disableMagnification',
-    'distance',
-    'mouseX',
-  ])
+  const rest = omit(props, 'class', 'children', 'size', 'magnification', 'disableMagnification', 'distance', 'mouseX')
   const dockContext = useContext(DockContext)
 
   const [iconEl, setIconEl] = createSignal<HTMLDivElement>()
 
-  const mouseX = () => dockContext ? dockContext.mouseX() : (local.mouseX?.() ?? Infinity)
-  const iconSize = () => dockContext ? dockContext.iconSize() : local.size
-  const magnification = () => dockContext ? dockContext.iconMagnification() : local.magnification
-  const disableMagnification = () => dockContext ? dockContext.disableMagnification() : local.disableMagnification
-  const iconDistance = () => dockContext ? dockContext.iconDistance() : local.distance
+  const mouseX = () => dockContext ? dockContext.mouseX() : (props.mouseX?.() ?? Infinity)
+  const iconSize = () => dockContext ? dockContext.iconSize() : (props.size ?? DEFAULT_SIZE)
+  const magnification = () => dockContext ? dockContext.iconMagnification() : (props.magnification ?? DEFAULT_MAGNIFICATION)
+  const disableMagnification = () => dockContext ? dockContext.disableMagnification() : (props.disableMagnification ?? DEFAULT_DISABLEMAGNIFICATION)
+  const iconDistance = () => dockContext ? dockContext.iconDistance() : (props.distance ?? DEFAULT_DISTANCE)
   const targetSize = () => disableMagnification() ? iconSize() : magnification()
+  // The inline style is a one-time seed; the spring animation owns the size
+  // afterwards, so a later `size` change must not fight it over the same style.
+  const initialIconSize = untrack(iconSize)
 
   const sizeTransform = createMemo(() =>
     transform([-iconDistance(), 0, iconDistance()], [iconSize(), targetSize(), iconSize()]),
   )
 
-  createEffect(() => {
-    const el = iconEl()
-    if (!el)
-      return
-    const bounds = el.getBoundingClientRect()
-    const distance = mouseX() - bounds.x - bounds.width / 2
-    const clamped = Math.max(-iconDistance(), Math.min(iconDistance(), distance))
-    const target = sizeTransform()(clamped)
-    const animation = animate(
-      el,
-      { width: target, height: target },
-      {
-        type: 'spring',
-        mass: 0.1,
-        stiffness: 150,
-        damping: 12,
-      },
-    )
-    onCleanup(() => animation.stop())
-  })
+  createEffect(
+    () => ({ iconEl: iconEl(), mouseX: mouseX(), iconDistance: iconDistance(), sizeTransform: sizeTransform() }),
+    ({ iconEl, mouseX, iconDistance, sizeTransform }) => {
+      const el = iconEl
+      if (!el)
+        return
+      const bounds = el.getBoundingClientRect()
+      const distance = mouseX - bounds.x - bounds.width / 2
+      const clamped = Math.max(-iconDistance, Math.min(iconDistance, distance))
+      const target = sizeTransform(clamped)
+      const animation = animate(
+        el,
+        { width: target, height: target },
+        {
+          type: 'spring',
+          mass: 0.1,
+          stiffness: 150,
+          damping: 12,
+        },
+      )
+      return () => animation.stop()
+    },
+  )
 
   return (
     <div
       ref={setIconEl}
       style={{
-        width: `${untrack(iconSize)}px`,
-        height: `${untrack(iconSize)}px`,
-        padding: `${Math.max(6, untrack(iconSize) * 0.2)}px`,
+        width: `${initialIconSize}px`,
+        height: `${initialIconSize}px`,
+        padding: `${Math.max(6, initialIconSize * 0.2)}px`,
       }}
       class={cn(
         `
@@ -182,11 +147,11 @@ export function DockIcon(props: DockIconProps) {
           transition-colors
           hover:bg-muted-foreground
         `,
-        local.class,
+        props.class,
       )}
       {...rest}
     >
-      <div>{local.children}</div>
+      <div>{props.children}</div>
     </div>
   )
 }

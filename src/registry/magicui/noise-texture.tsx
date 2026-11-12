@@ -1,5 +1,5 @@
-import type { JSX } from 'solid-js'
-import { createUniqueId, mergeProps, splitProps } from 'solid-js'
+import type { JSX } from '@solidjs/web'
+import { createUniqueId, omit } from 'solid-js'
 
 import { cn } from '@/lib/utils'
 
@@ -12,17 +12,10 @@ export interface NoiseTextureProps extends JSX.SvgSVGAttributes<SVGSVGElement> {
 }
 
 export function NoiseTexture(props: NoiseTextureProps) {
-  const merged = mergeProps(
-    { frequency: 0.4, octaves: 6, slope: 0.15, noiseOpacity: 0.6 },
-    props,
-  )
-  const [local, rest] = splitProps(merged, [
-    'class',
-    'frequency',
-    'octaves',
-    'slope',
-    'noiseOpacity',
-  ])
+  const rest = omit(props, 'class', 'frequency', 'octaves', 'slope', 'noiseOpacity')
+  const frequency = () => props.frequency ?? 0.4
+  const noiseOpacity = () => props.noiseOpacity ?? 0.6
+  const octaves = () => props.octaves ?? 6
   const filterId = createUniqueId()
 
   return (
@@ -33,7 +26,7 @@ export function NoiseTexture(props: NoiseTextureProps) {
           select-none
           dark:opacity-[0.75]
         `,
-        local.class,
+        props.class,
       )}
       xmlns="http://www.w3.org/2000/svg"
       {...rest}
@@ -41,18 +34,18 @@ export function NoiseTexture(props: NoiseTextureProps) {
       <filter id={filterId}>
         <feTurbulence
           type="fractalNoise"
-          baseFrequency={local.frequency}
-          numOctaves={local.octaves}
+          baseFrequency={frequency()}
+          numOctaves={octaves()}
           stitchTiles="stitch"
         />
         <feColorMatrix type="saturate" values="0" />
         <feComponentTransfer>
-          <feFuncR type="linear" slope={local.slope} />
-          <feFuncG type="linear" slope={local.slope} />
-          <feFuncB type="linear" slope={local.slope} />
+          <feFuncR type="linear" slope={(props.slope ?? 0.15)} />
+          <feFuncG type="linear" slope={(props.slope ?? 0.15)} />
+          <feFuncB type="linear" slope={(props.slope ?? 0.15)} />
         </feComponentTransfer>
       </filter>
-      <rect width="100%" height="100%" filter={`url(#${filterId})`} opacity={local.noiseOpacity} />
+      <rect width="100%" height="100%" filter={`url(#${filterId})`} opacity={noiseOpacity()} />
     </svg>
   )
 }

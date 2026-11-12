@@ -1,8 +1,8 @@
 import { resolve } from 'node:path'
 import { env } from 'node:process'
-import solid from '@astrojs/solid-js'
 import starlight from '@astrojs/starlight'
 import tailwindcss from '@tailwindcss/vite'
+import solidNext from 'astro-solid-next'
 import { defineConfig } from 'astro/config'
 import starlightThemeBlack from 'starlight-theme-black'
 import demoTypesPlugin from './plugins/vite-plugin-demo'
@@ -12,7 +12,7 @@ export default defineConfig({
   site: env.SITE_URL ?? 'http://localhost:4321',
   base: (env.BASE_PATH ?? '/').replace(/\/?$/, '/'),
   integrations: [
-    solid(),
+    solidNext(),
     starlight({
       title: 'MagicUI Solid',
       logo: {
@@ -160,7 +160,10 @@ export default defineConfig({
   ],
   vite: {
     resolve: {
-      alias: { '@': resolve('./src'), '~': resolve('./src') },
+      alias: {
+        '@': resolve('./src'),
+        '~': resolve('./src'),
+      },
     },
     plugins: [tailwindcss(), demoTypesPlugin()],
   },

@@ -1,5 +1,5 @@
-import type { JSX } from 'solid-js'
-import { createEffect, createSignal, For, mergeProps } from 'solid-js'
+import type { JSX } from '@solidjs/web'
+import { createEffect, createSignal, For } from 'solid-js'
 
 import { cn } from '@/lib/utils'
 
@@ -18,22 +18,34 @@ type MeteorStyle = JSX.CSSProperties & { '--angle': string }
 export function Meteors(props: MeteorsProps) {
   const [meteorStyles, setMeteorStyles] = createSignal<MeteorStyle[]>([])
 
-  const merged = mergeProps(
-    { number: 20, minDelay: 0.2, maxDelay: 1.2, minDuration: 2, maxDuration: 10, angle: 215 },
-    props,
+  const angle = () => props.angle ?? 215
+  const maxDelay = () => props.maxDelay ?? 1.2
+  const maxDuration = () => props.maxDuration ?? 10
+  const minDelay = () => props.minDelay ?? 0.2
+  const minDuration = () => props.minDuration ?? 2
+  const number = () => props.number ?? 20
+
+  createEffect(
+    () => ({
+      number: number(),
+      angle: angle(),
+      maxDelay: maxDelay(),
+      minDelay: minDelay(),
+      maxDuration: maxDuration(),
+      minDuration: minDuration(),
+    }),
+    ({ number, angle, maxDelay, minDelay, maxDuration, minDuration }) => {
+      const styles = Array.from({ length: number }).map<MeteorStyle>(() => ({
+        '--angle': `${-angle}deg`,
+        'top': '-5%',
+        'left': `calc(0% + ${Math.floor(Math.random() * window.innerWidth)}px)`,
+        'animation-delay': `${Math.random() * (maxDelay - minDelay) + minDelay}s`,
+        'animation-duration': `${Math.floor(Math.random() * (maxDuration - minDuration) + minDuration)}s`,
+      }))
+
+      setMeteorStyles(styles)
+    },
   )
-
-  createEffect(() => {
-    const styles = Array.from({ length: merged.number }).map<MeteorStyle>(() => ({
-      '--angle': `${-merged.angle}deg`,
-      'top': '-5%',
-      'left': `calc(0% + ${Math.floor(Math.random() * window.innerWidth)}px)`,
-      'animation-delay': `${Math.random() * (merged.maxDelay - merged.minDelay) + merged.minDelay}s`,
-      'animation-duration': `${Math.floor(Math.random() * (merged.maxDuration - merged.minDuration) + merged.minDuration)}s`,
-    }))
-
-    setMeteorStyles(styles)
-  })
 
   return (
     <>

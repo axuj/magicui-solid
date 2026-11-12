@@ -1,4 +1,4 @@
-import { ArrowRight } from 'lucide-solid'
+import { ArrowRight } from '@lucide/solid'
 
 import { createIsDark } from '@/demos/shared/theme'
 import { Floating3DParticles } from '@/registry/magicui/floating-3d-particles'

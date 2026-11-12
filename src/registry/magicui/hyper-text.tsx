@@ -1,6 +1,8 @@
-import type { JSX, ValidComponent } from 'solid-js'
-import { createEffect, createMemo, createSignal, For, mergeProps, onCleanup, splitProps } from 'solid-js'
-import { Dynamic } from 'solid-js/web'
+import type { JSX, ValidComponent } from '@solidjs/web'
+import { Dynamic } from '@solidjs/web'
+
+import { createEffect, createMemo, createSignal, For, omit, onSettled } from 'solid-js'
+
 import { cn } from '@/lib/utils'
 
 type CharacterSet = string[] | readonly string[]
@@ -47,27 +49,11 @@ const DEFAULT_CHARACTER_SET = Object.freeze(
 const getRandomInt = (max: number): number => Math.floor(Math.random() * max)
 
 export function HyperText(props: HyperTextProps) {
-  const merged = mergeProps(
-    {
-      duration: 800,
-      delay: 0,
-      as: 'div',
-      startOnView: false,
-      animateOnHover: true,
-      characterSet: DEFAULT_CHARACTER_SET,
-    } as const,
-    props,
-  )
-  const [local, rest] = splitProps(merged, [
-    'children',
-    'class',
-    'duration',
-    'delay',
-    'as',
-    'startOnView',
-    'animateOnHover',
-    'characterSet',
-  ])
+  const rest = omit(props, 'children', 'class', 'duration', 'delay', 'as', 'startOnView', 'animateOnHover', 'characterSet')
+  const animateOnHover = () => props.animateOnHover ?? true
+  const characterSet = () => props.characterSet ?? DEFAULT_CHARACTER_SET
+  const duration = () => props.duration ?? 800
+  const startOnView = () => props.startOnView ?? false
 
   // Animation progress 0→1; 1 means idle/completed. Everything else is derived.
   const [progress, setProgress] = createSignal(1)
@@ -78,14 +64,14 @@ export function HyperText(props: HyperTextProps) {
   // re-randomizes scramble chars on every progress tick (same as the previous
   // per-frame map over the signal).
   const displayText = createMemo(() => {
-    const chars = local.children.split('')
+    const chars = props.children.split('')
     const currentIter = progress() * chars.length
     return chars.map((char, index) =>
       char === ' '
         ? char
         : index <= currentIter
           ? char
-          : local.characterSet[getRandomInt(local.characterSet.length)],
+          : characterSet()[getRandomInt(characterSet().length)],
     )
   })
 
@@ -94,7 +80,7 @@ export function HyperText(props: HyperTextProps) {
       return
     const startTime = performance.now()
     const tick = (currentTime: number) => {
-      const next = Math.min((currentTime - startTime) / local.duration, 1)
+      const next = Math.min((currentTime - startTime) / duration(), 1)
       setProgress(next)
       animationFrameId = next < 1 ? requestAnimationFrame(tick) : null
     }
@@ -102,46 +88,50 @@ export function HyperText(props: HyperTextProps) {
   }
 
   const handleAnimationTrigger = () => {
-    if (local.animateOnHover && progress() === 1)
+    if (animateOnHover() && progress() === 1)
       startAnimation()
   }
 
   // Handle animation start based on view or delay
-  createEffect(() => {
-    if (!local.startOnView) {
-      const startTimeout = setTimeout(startAnimation, local.delay)
-      onCleanup(() => clearTimeout(startTimeout))
-      return
+  createEffect(
+    () => ({ startOnView: startOnView(), delay: props.delay }),
+    ({ startOnView, delay }) => {
+      if (!startOnView) {
+        const startTimeout = setTimeout(startAnimation, (delay ?? 0))
+        return () => clearTimeout(startTimeout)
+      }
+
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setTimeout(() => {
+              startAnimation()
+            }, (props.delay ?? 0))
+            observer.disconnect()
+          }
+        },
+        { threshold: 0.1, rootMargin: '-30% 0px -30% 0px' },
+      )
+
+      if (elementRef)
+        observer.observe(elementRef)
+
+      return () => observer.disconnect()
+    },
+  )
+
+  onSettled(() => {
+    return () => {
+      if (animationFrameId !== null)
+        cancelAnimationFrame(animationFrameId)
     }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setTimeout(() => {
-            startAnimation()
-          }, local.delay)
-          observer.disconnect()
-        }
-      },
-      { threshold: 0.1, rootMargin: '-30% 0px -30% 0px' },
-    )
-
-    if (elementRef)
-      observer.observe(elementRef)
-
-    onCleanup(() => observer.disconnect())
-  })
-
-  onCleanup(() => {
-    if (animationFrameId !== null)
-      cancelAnimationFrame(animationFrameId)
   })
 
   return (
     <Dynamic
-      component={local.as}
+      component={(props.as ?? 'div')}
       ref={elementRef}
-      class={cn('overflow-hidden py-2 text-4xl font-bold', local.class)}
+      class={cn('overflow-hidden py-2 text-4xl font-bold', props.class)}
       onMouseEnter={handleAnimationTrigger}
       {...rest}
     >

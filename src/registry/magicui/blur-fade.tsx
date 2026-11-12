@@ -1,6 +1,6 @@
-import type { JSX } from 'solid-js'
+import type { JSX } from '@solidjs/web'
 import { animate, inView } from 'motion'
-import { createEffect, createSignal, mergeProps, onCleanup, splitProps } from 'solid-js'
+import { createEffect, createSignal, omit } from 'solid-js'
 
 type MarginType = NonNullable<Parameters<typeof inView>[2]>['margin']
 
@@ -31,54 +31,53 @@ interface BlurFadeProps extends Omit<JSX.HTMLAttributes<HTMLDivElement>, 'style'
 const getFilter = (v: VariantState) => v.filter
 
 export function BlurFade(props: BlurFadeProps) {
-  const merged = mergeProps(
-    { duration: 0.4, delay: 0, offset: 6, direction: 'down', inView: false, inViewMargin: '-50px' as MarginType, blur: '6px' },
-    props,
-  )
-  const [local, rest] = splitProps(merged, [
-    'children',
-    'class',
-    'variant',
-    'duration',
-    'delay',
-    'offset',
-    'direction',
-    'inView',
-    'inViewMargin',
-    'blur',
-    'style',
-  ])
+  const rest = omit(props, 'children', 'class', 'variant', 'duration', 'delay', 'offset', 'direction', 'inView', 'inViewMargin', 'blur', 'style')
+  const blur = () => props.blur ?? '6px'
+  const direction = () => props.direction ?? 'down'
+  const inViewMargin = () => props.inViewMargin ?? '-50px' as MarginType
 
   let ref: HTMLDivElement | undefined
   const [hasEnteredView, setHasEnteredView] = createSignal(false)
 
-  createEffect(() => {
+  createEffect(() => [inViewMargin()], ([inViewMargin]) => {
     if (!ref)
       return
     const stopInView = inView(ref, () => {
       setHasEnteredView(true)
     }, {
-      margin: local.inViewMargin,
+      margin: inViewMargin,
       amount: 'some',
     })
-    onCleanup(stopInView)
+    return (stopInView)
   })
 
-  const defaultVariants = (): { hidden: VariantState, visible: VariantState } => {
-    const axis = local.direction === 'left' || local.direction === 'right' ? 'x' : 'y'
-    const offset = local.direction === 'right' || local.direction === 'down' ? -local.offset : local.offset
+  const defaultVariants = (
+    directionValue = direction(),
+    offsetValue = props.offset,
+    blurValue = blur(),
+  ): { hidden: VariantState, visible: VariantState } => {
+    const axis = directionValue === 'left' || directionValue === 'right' ? 'x' : 'y'
+    const offset = directionValue === 'right' || directionValue === 'down' ? -(offsetValue ?? 6) : (offsetValue ?? 6)
     return {
-      hidden: { [axis]: offset, opacity: 0, filter: `blur(${local.blur})` },
+      hidden: { [axis]: offset, opacity: 0, filter: `blur(${blurValue})` },
       visible: { [axis]: 0, opacity: 1, filter: 'blur(0px)' },
     }
   }
 
-  const combinedVariants = (): { hidden: VariantState, visible: VariantState } =>
-    local.variant ?? defaultVariants()
+  const combinedVariants = (
+    variantValue = props.variant,
+    directionValue = direction(),
+    offsetValue = props.offset,
+    blurValue = blur(),
+  ): { hidden: VariantState, visible: VariantState } =>
+    variantValue ?? defaultVariants(directionValue, offsetValue, blurValue)
 
-  const hiddenFilter = () => getFilter(combinedVariants().hidden)
-  const visibleFilter = () => getFilter(combinedVariants().visible)
-  const shouldTransitionFilter = () => hiddenFilter() != null && visibleFilter() != null && hiddenFilter() !== visibleFilter()
+  // Both filters are passed in by the caller, which reads them inside the
+  // effect's compute; defaults here would silently capture them at setup.
+  const shouldTransitionFilter = (
+    hidden: string | null | undefined,
+    visible: string | null | undefined,
+  ) => hidden != null && visible != null && hidden !== visible
 
   const initialStyle = () => {
     const hidden = combinedVariants().hidden
@@ -97,28 +96,38 @@ export function BlurFade(props: BlurFadeProps) {
     return style
   }
 
-  const shouldAnimate = () => !local.inView || hasEnteredView()
+  const shouldAnimate = (inViewValue = props.inView, hasEnteredViewValue = hasEnteredView()) => !(inViewValue ?? false) || hasEnteredViewValue
 
-  createEffect(() => {
-    if (!ref || !shouldAnimate())
+  createEffect(() => [
+    hasEnteredView(),
+    props.inView,
+    props.variant,
+    direction(),
+    props.offset,
+    blur(),
+    props.delay,
+    props.duration,
+  ], ([hasEnteredView, inView, variant, direction, offset, blur, delay, duration]) => {
+    if (!ref || !shouldAnimate(inView, hasEnteredView))
       return
-    const animation = animate(ref, combinedVariants().visible as Record<string, string | number>, {
-      delay: 0.04 + local.delay,
-      duration: local.duration,
+    const variants = combinedVariants(variant, direction, offset, blur)
+    const animation = animate(ref, variants.visible as Record<string, string | number>, {
+      delay: 0.04 + (delay ?? 0),
+      duration: duration ?? 0.4,
       ease: 'easeOut',
-      ...(shouldTransitionFilter() ? { filter: { duration: local.duration } } : {}),
+      ...(shouldTransitionFilter(getFilter(variants.hidden), getFilter(variants.visible)) ? { filter: { duration: duration ?? 0.4 } } : {}),
     })
-    onCleanup(() => animation.stop())
+    return () => animation.stop()
   })
 
   return (
     <div
       ref={ref}
-      class={local.class}
-      style={{ ...initialStyle(), ...local.style }}
+      class={props.class}
+      style={{ ...initialStyle(), ...props.style }}
       {...rest}
     >
-      {local.children}
+      {props.children}
     </div>
   )
 }

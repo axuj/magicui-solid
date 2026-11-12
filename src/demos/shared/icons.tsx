@@ -1,4 +1,4 @@
-import type { JSX } from 'solid-js'
+import type { JSX } from '@solidjs/web'
 import { createUniqueId } from 'solid-js'
 
 export type IconProps = JSX.GSVGAttributes<SVGSVGElement> & { class?: string }

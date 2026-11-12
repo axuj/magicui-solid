@@ -1,4 +1,4 @@
-import { Play, SkipBack, SkipForward } from 'lucide-solid'
+import { Play, SkipBack, SkipForward } from '@lucide/solid'
 import { Button } from '@/components/ui/button'
 import { BorderBeam } from '@/registry/magicui/border-beam'
 

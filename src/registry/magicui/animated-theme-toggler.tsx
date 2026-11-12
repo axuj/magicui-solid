@@ -1,6 +1,6 @@
-import type { JSX } from 'solid-js'
-import { Moon, Sun } from 'lucide-solid'
-import { createEffect, createMemo, createSignal, mergeProps, onCleanup, splitProps } from 'solid-js'
+import type { JSX } from '@solidjs/web'
+import { Moon, Sun } from '@lucide/solid'
+import { createEffect, createMemo, createSignal, omit, onSettled } from 'solid-js'
 
 import { cn } from '@/lib/utils'
 
@@ -149,12 +149,11 @@ function getThemeTransitionClipPaths(
 }
 
 export function AnimatedThemeToggler(props: AnimatedThemeTogglerProps) {
-  const merged = mergeProps({ duration: 400, variant: 'circle' as const, fromCenter: false }, props)
-  const [local, rest] = splitProps(merged, ['class', 'duration', 'variant', 'fromCenter', 'theme', 'onThemeChange'])
+  const rest = omit(props, 'class', 'duration', 'variant', 'fromCenter', 'theme', 'onThemeChange')
 
-  const isControlled = () => local.theme !== undefined
+  const isControlled = () => props.theme !== undefined
   const [internalIsDark, setInternalIsDark] = createSignal(false)
-  const isDark = createMemo(() => (isControlled() ? local.theme === 'dark' : internalIsDark()))
+  const isDark = createMemo(() => (isControlled() ? props.theme === 'dark' : internalIsDark()))
 
   let buttonRef: HTMLButtonElement | undefined
   let isTransitioning = false
@@ -165,37 +164,41 @@ export function AnimatedThemeToggler(props: AnimatedThemeTogglerProps) {
     activeAnim = null
   }
 
-  onCleanup(() => {
-    if (typeof document === 'undefined')
-      return
-    cancelAnim()
-    const root = document.documentElement
-    if (root.dataset.magicuiThemeVt !== 'active')
-      return
-    delete root.dataset.magicuiThemeVt
-    root.style.removeProperty('--magicui-theme-toggle-vt-duration')
-    root.style.removeProperty('--magicui-theme-vt-clip-from')
-  })
-
-  createEffect(() => {
-    if (typeof document === 'undefined' || isControlled())
-      return
-
-    const root = document.documentElement
-    const updateTheme = () => {
-      setInternalIsDark(root.dataset.theme === 'dark')
+  onSettled(() => {
+    return () => {
+      cancelAnim()
+      const root = document.documentElement
+      if (root.dataset.magicuiThemeVt !== 'active')
+        return
+      delete root.dataset.magicuiThemeVt
+      root.style.removeProperty('--magicui-theme-toggle-vt-duration')
+      root.style.removeProperty('--magicui-theme-vt-clip-from')
     }
-
-    updateTheme()
-
-    const observer = new MutationObserver(updateTheme)
-    observer.observe(root, {
-      attributes: true,
-      attributeFilter: ['data-theme'],
-    })
-
-    onCleanup(() => observer.disconnect())
   })
+
+  // Uncontrolled mode follows <html data-theme>; the caller owns the
+  // controlled mode. createEffect also runs during SSR, so guard `document`.
+  createEffect(
+    () => (typeof document === 'undefined' || isControlled() ? null : document.documentElement),
+    (root) => {
+      if (!root)
+        return
+
+      const updateTheme = () => {
+        setInternalIsDark(root.dataset.theme === 'dark')
+      }
+
+      updateTheme()
+
+      const observer = new MutationObserver(updateTheme)
+      observer.observe(root, {
+        attributes: true,
+        attributeFilter: ['data-theme'],
+      })
+
+      return () => observer.disconnect()
+    },
+  )
 
   const toggleTheme = () => {
     const button = buttonRef
@@ -209,9 +212,9 @@ export function AnimatedThemeToggler(props: AnimatedThemeTogglerProps) {
 
     const theme = isDark()
     const controlled = isControlled()
-    const transitionVariant = local.variant
-    const transitionDuration = local.duration
-    const onThemeChange = local.onThemeChange
+    const variant = props.variant ?? 'circle'
+    const duration = props.duration ?? 400
+    const onThemeChange = props.onThemeChange
 
     // innerWidth/innerHeight (not visualViewport): percentages must resolve
     // against the snapshot reference box, which includes classic scrollbars.
@@ -220,7 +223,7 @@ export function AnimatedThemeToggler(props: AnimatedThemeTogglerProps) {
 
     let x: number
     let y: number
-    if (local.fromCenter) {
+    if (props.fromCenter ?? false) {
       x = viewportWidth / 2
       y = viewportHeight / 2
     }
@@ -255,7 +258,7 @@ export function AnimatedThemeToggler(props: AnimatedThemeTogglerProps) {
     }
 
     const clipPath = getThemeTransitionClipPaths(
-      transitionVariant,
+      variant,
       x,
       y,
       maxRadius,
@@ -267,7 +270,7 @@ export function AnimatedThemeToggler(props: AnimatedThemeTogglerProps) {
     root.dataset.magicuiThemeVt = 'active'
     root.style.setProperty(
       '--magicui-theme-toggle-vt-duration',
-      `${transitionDuration}ms`,
+      `${duration}ms`,
     )
     // Pin the collapsed clip-path via CSS so Firefox does not paint the new
     // theme unclipped between snapshot and the ready.then() JS animation.
@@ -300,9 +303,9 @@ export function AnimatedThemeToggler(props: AnimatedThemeTogglerProps) {
               clipPath,
             },
             {
-              duration: transitionDuration,
+              duration,
               // Star: linear avoids easing overshoot that fights polygon interpolation at t→1; VT group duration is synced above.
-              easing: transitionVariant === 'star' ? 'linear' : 'ease-in-out',
+              easing: variant === 'star' ? 'linear' : 'ease-in-out',
               fill: 'forwards',
               pseudoElement: '::view-transition-new(root)',
             },
@@ -317,7 +320,7 @@ export function AnimatedThemeToggler(props: AnimatedThemeTogglerProps) {
       type="button"
       ref={buttonRef}
       onClick={toggleTheme}
-      class={cn(local.class)}
+      class={cn(props.class)}
       {...rest}
     >
       {isDark() ? <Sun /> : <Moon />}

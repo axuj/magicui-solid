@@ -1,5 +1,6 @@
-import type { JSX } from 'solid-js'
-import { createMemo, For, mergeProps, Show, splitProps } from 'solid-js'
+import type { JSX } from '@solidjs/web'
+import { createMemo, For, omit, Show } from 'solid-js'
+
 import { createMap } from 'svg-dotted-map'
 import { cn } from '@/lib/utils'
 
@@ -38,44 +39,21 @@ export interface DottedMapProps<M extends Marker = Marker>
 }
 
 export function DottedMap<M extends Marker = Marker>(props: DottedMapProps<M>) {
-  const merged = mergeProps(
-    {
-      width: 150,
-      height: 75,
-      mapSamples: 5000,
-      markers: [],
-      dotColor: 'currentColor',
-      markerColor: '#FF6900',
-      dotRadius: 0.2,
-      stagger: true,
-      pulse: false,
-    },
-    props,
-  )
-  const [local, rest] = splitProps(merged, [
-    'width',
-    'height',
-    'mapSamples',
-    'markers',
-    'dotColor',
-    'markerColor',
-    'dotRadius',
-    'stagger',
-    'pulse',
-    'renderMarkerOverlay',
-    'class',
-    'style',
-  ])
+  const rest = omit(props, 'width', 'height', 'mapSamples', 'markers', 'dotColor', 'markerColor', 'dotRadius', 'stagger', 'pulse', 'renderMarkerOverlay', 'class', 'style')
+  const dotColor = () => props.dotColor ?? 'currentColor'
+  const dotRadius = () => props.dotRadius ?? 0.2
+  const markerColor = () => props.markerColor ?? '#FF6900'
+  const markers = () => props.markers ?? []
 
   const mapData = createMemo(() =>
     createMap({
-      width: local.width,
-      height: local.height,
-      mapSamples: local.mapSamples,
+      width: (props.width ?? 150),
+      height: (props.height ?? 75),
+      mapSamples: (props.mapSamples ?? 5000),
     }),
   )
   const processedMarkers = createMemo<MapMarker<M>[]>(
-    () => mapData().addMarkers(local.markers),
+    () => mapData().addMarkers(markers()),
   )
 
   // Compute stagger helpers in a single, simple pass
@@ -105,47 +83,62 @@ export function DottedMap<M extends Marker = Marker>(props: DottedMapProps<M>) {
     return { xStep: step || 1, yToRowIndex: rowMap }
   })
 
+  // Derive the offsets in a memo. A <For> callback is an owner, not a
+  // tracking scope, so reading stagger() there freezes the first value.
+  const staggeredPoints = createMemo(() => {
+    const { xStep, yToRowIndex } = stagger()
+    const enabled = props.stagger ?? true
+    return mapData().points.map((point) => {
+      const rowIndex = yToRowIndex.get(point.y) ?? 0
+      const offsetX = enabled && rowIndex % 2 === 1 ? xStep / 2 : 0
+      return { point, offsetX }
+    })
+  })
+
+  const staggeredMarkers = createMemo(() => {
+    const { xStep, yToRowIndex } = stagger()
+    const enabled = props.stagger ?? true
+    return processedMarkers().map((marker, index) => {
+      const rowIndex = yToRowIndex.get(marker.y) ?? 0
+      const offsetX = enabled && rowIndex % 2 === 1 ? xStep / 2 : 0
+      return { marker, offsetX, index }
+    })
+  })
+
   return (
     <svg
-      viewBox={`0 0 ${local.width} ${local.height}`}
+      viewBox={`0 0 ${(props.width ?? 150)} ${(props.height ?? 75)}`}
       class={cn(`
         text-gray-500
         dark:text-gray-500
-      `, local.class)}
-      style={{ width: '100%', height: '100%', ...(local.style as JSX.CSSProperties) }}
+      `, props.class)}
+      style={{ width: '100%', height: '100%', ...(props.style as JSX.CSSProperties) }}
       {...rest}
     >
-      <For each={mapData().points}>
-        {(point) => {
-          const rowIndex = stagger().yToRowIndex.get(point.y) ?? 0
-          const offsetX = local.stagger && rowIndex % 2 === 1 ? stagger().xStep / 2 : 0
-          return (
-            <circle
-              cx={point.x + offsetX}
-              cy={point.y}
-              r={local.dotRadius}
-              fill={local.dotColor}
-            />
-          )
-        }}
+      <For each={staggeredPoints()}>
+        {({ point, offsetX }) => (
+          <circle
+            cx={point.x + offsetX}
+            cy={point.y}
+            r={dotRadius()}
+            fill={dotColor()}
+          />
+        )}
       </For>
 
-      <For each={processedMarkers()}>
-        {(marker, index) => {
-          const rowIndex = stagger().yToRowIndex.get(marker.y) ?? 0
-          const offsetX = local.stagger && rowIndex % 2 === 1 ? stagger().xStep / 2 : 0
-
+      <For each={staggeredMarkers()}>
+        {({ marker, offsetX, index }) => {
           const x = marker.x + offsetX
           const y = marker.y
-          const r = marker.size ?? local.dotRadius
-          const shouldPulse = local.pulse
+          const r = marker.size ?? dotRadius()
+          const shouldPulse = (props.pulse ?? false)
             ? marker.pulse !== false
             : marker.pulse === true
           const pulseTo = r * 2.8
 
           return (
             <g>
-              <circle cx={x} cy={y} r={r} fill={local.markerColor} />
+              <circle cx={x} cy={y} r={r} fill={markerColor()} />
 
               <Show when={shouldPulse}>
                 <g pointer-events="none">
@@ -154,7 +147,7 @@ export function DottedMap<M extends Marker = Marker>(props: DottedMapProps<M>) {
                     cy={y}
                     r={r}
                     fill="none"
-                    stroke={local.markerColor}
+                    stroke={markerColor()}
                     stroke-opacity={1}
                     stroke-width={0.35}
                   >
@@ -176,7 +169,7 @@ export function DottedMap<M extends Marker = Marker>(props: DottedMapProps<M>) {
                     cy={y}
                     r={r}
                     fill="none"
-                    stroke={local.markerColor}
+                    stroke={markerColor()}
                     stroke-opacity={0.9}
                     stroke-width={0.3}
                   >
@@ -198,9 +191,9 @@ export function DottedMap<M extends Marker = Marker>(props: DottedMapProps<M>) {
                 </g>
               </Show>
 
-              {local.renderMarkerOverlay?.({
+              {props.renderMarkerOverlay?.({
                 marker: { ...marker, x, y },
-                index: index(),
+                index,
                 x,
                 y,
                 r,

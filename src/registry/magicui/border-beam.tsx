@@ -1,7 +1,9 @@
+import type { JSX } from '@solidjs/web'
 import type { Transition } from 'motion'
-import type { JSX } from 'solid-js'
+
 import { animate } from 'motion'
-import { createEffect, mergeProps, onCleanup, splitProps } from 'solid-js'
+import { createEffect } from 'solid-js'
+
 import { cn } from '@/lib/utils'
 
 export interface BorderBeamProps {
@@ -52,54 +54,40 @@ export interface BorderBeamProps {
 }
 
 export function BorderBeam(props: BorderBeamProps) {
-  const merged = mergeProps(
-    {
-      size: 50,
-      delay: 0,
-      duration: 6,
-      colorFrom: '#ffaa40',
-      colorTo: '#9c40ff',
-      reverse: false,
-      initialOffset: 0,
-      borderWidth: 1,
-    },
-    props,
-  )
-  const [local] = splitProps(merged, [
-    'size',
-    'duration',
-    'delay',
-    'colorFrom',
-    'colorTo',
-    'transition',
-    'class',
-    'style',
-    'reverse',
-    'initialOffset',
-    'borderWidth',
-  ])
+  const borderWidth = () => props.borderWidth ?? 1
+  const colorFrom = () => props.colorFrom ?? '#ffaa40'
+  const colorTo = () => props.colorTo ?? '#9c40ff'
+  const initialOffset = () => props.initialOffset ?? 0
+  const reverse = () => props.reverse ?? false
+  const size = () => props.size ?? 50
 
   let beamRef: HTMLDivElement | undefined
 
-  createEffect(() => {
+  createEffect(() => [
+    reverse(),
+    initialOffset(),
+    props.duration,
+    props.delay,
+    props.transition,
+  ], ([reverse, initialOffset, duration, delay, transition]) => {
     if (!beamRef)
       return
     const animation = animate(
       beamRef,
       {
-        offsetDistance: local.reverse
-          ? [`${100 - local.initialOffset}%`, `${-local.initialOffset}%`]
-          : [`${local.initialOffset}%`, `${100 + local.initialOffset}%`],
+        offsetDistance: reverse
+          ? [`${100 - initialOffset}%`, `${-initialOffset}%`]
+          : [`${initialOffset}%`, `${100 + initialOffset}%`],
       },
       {
         repeat: Infinity,
         ease: 'linear',
-        duration: local.duration,
-        delay: -local.delay,
-        ...local.transition,
+        duration: duration ?? 6,
+        delay: -(delay ?? 0),
+        ...transition,
       },
     )
-    onCleanup(() => animation.stop())
+    return () => animation.stop()
   })
 
   return (
@@ -110,7 +98,7 @@ export function BorderBeam(props: BorderBeamProps) {
         mask-[linear-gradient(transparent,transparent),linear-gradient(#000,#000)]
         mask-intersect [mask-clip:padding-box,border-box]
       "
-      style={{ '--border-beam-width': `${local.borderWidth}px` }}
+      style={{ '--border-beam-width': `${borderWidth()}px` }}
     >
       <div
         ref={beamRef}
@@ -119,15 +107,15 @@ export function BorderBeam(props: BorderBeamProps) {
             absolute aspect-square bg-linear-to-l from-(--color-from)
             via-(--color-to) to-transparent
           `,
-          local.class,
+          props.class,
         )}
         style={{
-          'width': `${local.size}px`,
-          'offset-path': `rect(0 auto auto 0 round ${local.size}px)`,
-          'offset-distance': `${local.initialOffset}%`,
-          '--color-from': local.colorFrom,
-          '--color-to': local.colorTo,
-          ...(local.style as JSX.CSSProperties | undefined),
+          'width': `${size()}px`,
+          'offset-path': `rect(0 auto auto 0 round ${size()}px)`,
+          'offset-distance': `${initialOffset()}%`,
+          '--color-from': colorFrom(),
+          '--color-to': colorTo(),
+          ...(props.style as JSX.CSSProperties | undefined),
         }}
       />
     </div>

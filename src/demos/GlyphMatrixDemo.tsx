@@ -1,4 +1,4 @@
-import { createSignal, onCleanup, onMount } from 'solid-js'
+import { createSignal, onSettled } from 'solid-js'
 
 import { GlyphMatrix } from '@/registry/magicui/glyph-matrix'
 
@@ -7,7 +7,7 @@ export function GlyphMatrixDemo() {
   // the resolved theme color once it's known.
   const [color, setColor] = createSignal('#6B7280')
 
-  onMount(() => {
+  onSettled(() => {
     const root = document.documentElement
     const update = () => {
       const theme = root.dataset.theme
@@ -23,7 +23,7 @@ export function GlyphMatrixDemo() {
       attributeFilter: ['data-theme'],
     })
 
-    onCleanup(() => observer.disconnect())
+    return () => observer.disconnect()
   })
 
   return (

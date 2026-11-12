@@ -1,4 +1,4 @@
-import { For, splitProps } from 'solid-js'
+import { For } from 'solid-js'
 
 import { Marquee } from '@/registry/magicui/marquee'
 
@@ -64,13 +64,12 @@ function ComponentCard(props: ComponentCardProps) {
 }
 
 function ComponentsMarquee(props: ComponentsMarqueeProps) {
-  const [local] = splitProps(props, ['class'])
   const half = () => Math.ceil(props.items.length / 2)
   const topRow = () => props.items.slice(0, half())
   const bottomRow = () => props.items.slice(half())
 
   return (
-    <section class={local.class}>
+    <section class={props.class}>
       <Marquee repeat={4} pauseOnHover class="mb-4 [--duration:60s]">
         <For each={topRow()}>
           {(item, i) => (

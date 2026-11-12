@@ -1,14 +1,7 @@
-import type { JSX } from 'solid-js'
+import type { JSX } from '@solidjs/web'
 import { animate } from 'motion'
-import {
-  createEffect,
-  createMemo,
-  createSignal,
-  mergeProps,
-  onCleanup,
-  splitProps,
-  untrack,
-} from 'solid-js'
+import { createEffect, createMemo, createSignal, omit, onSettled } from 'solid-js'
+
 import { createInView } from '@/lib/create-in-view'
 import { cn } from '@/lib/utils'
 
@@ -122,35 +115,15 @@ export interface DiaTextRevealProps extends Omit<JSX.HTMLAttributes<HTMLSpanElem
 }
 
 export function DiaTextReveal(props: DiaTextRevealProps) {
-  const merged = mergeProps(
-    {
-      colors: DEFAULT_COLORS,
-      textColor: 'var(--foreground)',
-      duration: 1.5,
-      delay: 0,
-      repeat: false,
-      repeatDelay: 0.5,
-      startOnView: true,
-      once: true,
-      fixedWidth: false,
-    } as const,
-    props,
-  )
-  const [local, rest] = splitProps(merged, [
-    'text',
-    'colors',
-    'textColor',
-    'duration',
-    'delay',
-    'repeat',
-    'repeatDelay',
-    'startOnView',
-    'once',
-    'class',
-    'fixedWidth',
-  ])
+  const rest = omit(props, 'text', 'colors', 'textColor', 'duration', 'delay', 'repeat', 'repeatDelay', 'startOnView', 'once', 'class', 'fixedWidth')
+  const colors = () => props.colors ?? DEFAULT_COLORS
+  const fixedWidth = () => props.fixedWidth ?? false
+  const repeat = () => props.repeat ?? false
+  const repeatDelay = () => props.repeatDelay ?? 0.5
+  const startOnView = () => props.startOnView ?? true
+  const textColor = () => props.textColor ?? 'var(--foreground)'
 
-  const texts = createMemo(() => (Array.isArray(local.text) ? local.text : [local.text]))
+  const texts = createMemo(() => (Array.isArray(props.text) ? props.text : [props.text]))
   const isMulti = createMemo(() => texts().length > 1)
 
   const [activeIndex, setActiveIndex] = createSignal(0)
@@ -158,85 +131,96 @@ export function DiaTextReveal(props: DiaTextRevealProps) {
   const [sweepPos, setSweepPos] = createSignal(SWEEP_START)
   const [prefersReducedMotion, setPrefersReducedMotion] = createSignal(false)
 
-  let spanEl: HTMLSpanElement | undefined
+  const [spanEl, setSpanEl] = createSignal<HTMLSpanElement>()
   let indexRef = 0
   let hasPlayed = false
   let timerRef: ReturnType<typeof setTimeout> | undefined
   let stopCurrent: (() => void) | null = null
 
-  const isInView = createInView(() => spanEl, { amount: 0.1, once: untrack(() => local.once) })
+  const isInView = createInView(spanEl, { amount: 0.1, once: () => props.once ?? true })
 
   const backgroundImage = createMemo(() =>
-    buildGradient(sweepPos(), local.colors, local.textColor),
+    buildGradient(sweepPos(), colors(), textColor()),
   )
 
-  createEffect(() => {
+  onSettled(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
     const update = () => setPrefersReducedMotion(mq.matches)
     update()
     mq.addEventListener('change', update)
-    onCleanup(() => mq.removeEventListener('change', update))
+    return () => mq.removeEventListener('change', update)
   })
 
-  createEffect(() => {
+  createEffect(() => [spanEl(), isMulti(), texts()], ([spanEl, isMulti, texts]) => {
     const el = spanEl
-    if (!el || !isMulti())
+    if (!el || !isMulti)
       return
-    setMeasuredWidths(measureWidths(el, texts()))
+    setMeasuredWidths(measureWidths(el, texts))
   })
 
-  const play = () => {
+  const play = (duration: number, delay: number) => {
     setSweepPos(SWEEP_START)
     const controls = animate(SWEEP_START, SWEEP_END, {
-      duration: local.duration,
-      delay: local.delay,
+      duration,
+      delay,
       ease: sweepEase,
       onUpdate: v => setSweepPos(v),
       onComplete() {
-        if (!local.repeat)
+        if (!repeat())
           return
         timerRef = setTimeout(() => {
           const next = (indexRef + 1) % texts().length
           indexRef = next
           setActiveIndex(next)
-          play()
-        }, local.repeatDelay * 1000)
+          play(props.duration ?? 1.5, props.delay ?? 0)
+        }, repeatDelay() * 1000)
       },
     })
     stopCurrent = () => controls.stop()
   }
 
-  createEffect(() => {
-    if (prefersReducedMotion()) {
+  createEffect(() => [
+    prefersReducedMotion(),
+    startOnView(),
+    isInView(),
+    props.once,
+    props.duration,
+    props.delay,
+    repeat(),
+    texts(),
+    repeatDelay(),
+  ], ([prefersReducedMotion, startOnView, isInView, once, duration, delay]) => {
+    if (prefersReducedMotion) {
       setSweepPos(SWEEP_END)
       return
     }
-    if (local.startOnView && !isInView())
+    if (startOnView && !isInView)
       return
-    if (local.once && hasPlayed)
+    if ((once ?? true) && hasPlayed)
       return
     hasPlayed = true
-    play()
-    onCleanup(() => {
+    play(duration ?? 1.5, delay ?? 0)
+    return () => {
       stopCurrent?.()
       clearTimeout(timerRef)
-    })
+    }
   })
 
   const fixedW = createMemo(() => {
     const widths = measuredWidths()
-    return isMulti() && local.fixedWidth && widths.length > 0 ? Math.max(...widths) : undefined
+    return isMulti() && fixedWidth() && widths.length > 0 ? Math.max(...widths) : undefined
   })
 
-  createEffect(() => {
-    const widths = measuredWidths()
-    const width = isMulti() && !local.fixedWidth && widths[activeIndex()] != null
-      ? widths[activeIndex()]
+  createEffect(() => [measuredWidths(), isMulti(), fixedWidth(), activeIndex(), spanEl()], ([measuredWidths, isMulti, fixedWidth, activeIndex, spanEl]) => {
+    const widths = measuredWidths
+    const width = isMulti && !fixedWidth && widths[activeIndex] != null
+      ? widths[activeIndex]
       : undefined
-    if (width == null || !spanEl)
+    const el = spanEl
+    if (width == null || !el)
       return
-    const controls = animate(spanEl, { width }, { duration: 0.4, ease: [0.4, 0, 0.2, 1] })
-    onCleanup(() => controls.stop())
+    const controls = animate(el, { width }, { duration: 0.4, ease: [0.4, 0, 0.2, 1] })
+    return () => controls.stop()
   })
 
   const multiStyle = createMemo(() => {
@@ -253,8 +237,8 @@ export function DiaTextReveal(props: DiaTextRevealProps) {
 
   return (
     <span
-      ref={spanEl}
-      class={cn('align-bottom leading-[100%] text-inherit', local.class)}
+      ref={setSpanEl}
+      class={cn('align-bottom leading-[100%] text-inherit', props.class)}
       style={{
         'transform': 'translateY(-2px)',
         'color': 'transparent',

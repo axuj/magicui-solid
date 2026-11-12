@@ -1,9 +1,11 @@
 import type { PolymorphicProps } from '@kobalte/core/polymorphic'
+
+import type { ValidComponent } from '@solidjs/web'
 import type { VariantProps } from 'class-variance-authority'
-import type { ValidComponent } from 'solid-js'
 import * as ButtonPrimitive from '@kobalte/core/button'
+
 import { cva } from 'class-variance-authority'
-import { splitProps } from 'solid-js'
+import { omit } from 'solid-js'
 
 import { cn } from '@/lib/utils'
 
@@ -67,13 +69,13 @@ type RainbowButtonProps<T extends ValidComponent = 'button'> = ButtonPrimitive.B
 function RainbowButton<T extends ValidComponent = 'button'>(
   props: PolymorphicProps<T, RainbowButtonProps<T>>,
 ) {
-  const [local, others] = splitProps(props as RainbowButtonProps, ['variant', 'size', 'class'])
+  const others = omit(props, 'variant', 'size', 'class') as Record<string, unknown>
   return (
     <ButtonPrimitive.Root
       data-slot="button"
       class={cn(
-        rainbowButtonVariants({ variant: local.variant, size: local.size }),
-        local.class,
+        rainbowButtonVariants({ variant: props.variant, size: props.size }),
+        props.class,
       )}
       {...others}
     />

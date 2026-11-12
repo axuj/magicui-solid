@@ -1,4 +1,4 @@
-// 生产冒烟：build → preview → 对生产产物跑 dev-browser 冒烟（比 dev 模式快且更接近线上）。
+// 生产冒烟：build → preview → 对生产产物跑浏览器冒烟（比 dev 模式快且更接近线上）。
 // dev 模式冒烟受 vite 按需编译影响（模块逐个编译、易资源耗尽），preview 是纯静态文件服务。
 //
 // 用法：

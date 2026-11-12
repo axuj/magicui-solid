@@ -1,8 +1,10 @@
 import type { TargetAndTransition } from 'motion'
-import { Play, XIcon } from 'lucide-solid'
+import { Play, X } from '@lucide/solid'
+import { Portal } from '@solidjs/web'
 import { animate } from 'motion'
-import { createEffect, createSignal, mergeProps, onCleanup, Show, splitProps } from 'solid-js'
-import { Portal } from 'solid-js/web'
+
+import { createEffect, createSignal, Show } from 'solid-js'
+
 import { cn } from '@/lib/utils'
 
 type AnimationStyle
@@ -89,8 +91,8 @@ function applyInitialStyle(el: HTMLElement, initial: TargetAndTransition) {
 }
 
 export function HeroVideoDialog(props: HeroVideoProps) {
-  const merged = mergeProps({ animationStyle: 'from-center', thumbnailAlt: 'Video thumbnail' }, props)
-  const [local] = splitProps(merged, ['animationStyle', 'videoSrc', 'thumbnailSrc', 'thumbnailAlt', 'class'])
+  const animationStyle = () => props.animationStyle ?? 'from-center'
+  const thumbnailAlt = () => props.thumbnailAlt ?? 'Video thumbnail'
 
   const [isVideoOpen, setIsVideoOpen] = createSignal(false)
   const [mounted, setMounted] = createSignal(false)
@@ -107,38 +109,50 @@ export function HeroVideoDialog(props: HeroVideoProps) {
     setIsVideoOpen(false)
   }
 
-  createEffect(() => {
-    const overlay = overlayEl()
-    const dialog = dialogEl()
-    if (!mounted() || !overlay || !dialog)
-      return
+  // Only the latest exit animation may unmount the DOM; otherwise a reopen
+  // during the exit would be undone by the older animation's `finished`.
+  let exitGeneration = 0
 
-    const selectedAnimation = animationVariants[local.animationStyle as AnimationStyle]
+  createEffect(
+    () => ({ mounted: mounted(), overlayEl: overlayEl(), dialogEl: dialogEl(), isVideoOpen: isVideoOpen(), animationStyle: animationStyle() }),
+    ({ mounted, overlayEl, dialogEl, isVideoOpen, animationStyle }) => {
+      const generation = ++exitGeneration
+      const overlay = overlayEl
+      const dialog = dialogEl
+      if (!mounted || !overlay || !dialog)
+        return
 
-    if (isVideoOpen()) {
-      applyInitialStyle(dialog, selectedAnimation.initial)
-      const animOverlay = animate(overlay, { opacity: 1 }, { duration: 0.2 })
-      const animDialog = animate(dialog, selectedAnimation.animate, springTransition)
-      onCleanup(() => {
-        animOverlay.stop()
-        animDialog.stop()
-      })
-    }
-    else {
+      const selectedAnimation = animationVariants[animationStyle]
+
+      if (isVideoOpen) {
+        applyInitialStyle(dialog, selectedAnimation.initial)
+        const animOverlay = animate(overlay, { opacity: 1 }, { duration: 0.2 })
+        const animDialog = animate(dialog, selectedAnimation.animate, springTransition)
+        return () => {
+          animOverlay.stop()
+          animDialog.stop()
+        }
+      }
+
       const animOverlay = animate(overlay, { opacity: 0 }, { duration: 0.2 })
       const animDialog = animate(dialog, selectedAnimation.exit, springTransition)
-      onCleanup(() => {
+      // Unmount after the exit animation. Keep this before the returned
+      // cleanup: a cleanup `return` makes everything after it unreachable.
+      void Promise.all([animOverlay.finished, animDialog.finished])
+        .then(() => {
+          if (generation === exitGeneration)
+            setMounted(false)
+        })
+        .catch(() => {})
+      return () => {
         animOverlay.stop()
         animDialog.stop()
-      })
-      void Promise.all([animOverlay.finished, animDialog.finished])
-        .then(() => setMounted(false))
-        .catch(() => {})
-    }
-  })
+      }
+    },
+  )
 
   return (
-    <div class={cn('relative', local.class)}>
+    <div class={cn('relative', props.class)}>
       <button
         type="button"
         aria-label="Play video"
@@ -146,8 +160,8 @@ export function HeroVideoDialog(props: HeroVideoProps) {
         onClick={openDialog}
       >
         <img
-          src={local.thumbnailSrc}
-          alt={local.thumbnailAlt}
+          src={props.thumbnailSrc}
+          alt={thumbnailAlt()}
           width={1920}
           height={1080}
           class="
@@ -174,6 +188,10 @@ export function HeroVideoDialog(props: HeroVideoProps) {
                 transition-all duration-200 ease-out
                 group-hover:scale-[1.2]
               "
+              style={{
+                filter:
+                  'drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06))',
+              }}
             >
               <Play
                 class="
@@ -181,10 +199,6 @@ export function HeroVideoDialog(props: HeroVideoProps) {
                   duration-200 ease-out
                   group-hover:scale-105
                 "
-                style={{
-                  filter:
-                    'drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06))',
-                }}
               />
             </div>
           </div>
@@ -198,7 +212,7 @@ export function HeroVideoDialog(props: HeroVideoProps) {
               return () => setOverlayEl(undefined)
             }}
             role="button"
-            tabIndex={0}
+            tabindex={0}
             onKeyDown={(e) => {
               if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
                 closeDialog()
@@ -229,7 +243,7 @@ export function HeroVideoDialog(props: HeroVideoProps) {
                   dark:bg-neutral-100/50 dark:text-black
                 "
               >
-                <XIcon class="size-5" />
+                <X class="size-5" />
               </button>
               <div class="
                 relative isolate z-1 size-full overflow-hidden rounded-2xl
@@ -237,7 +251,7 @@ export function HeroVideoDialog(props: HeroVideoProps) {
               "
               >
                 <iframe
-                  src={local.videoSrc}
+                  src={props.videoSrc}
                   title="Hero Video player"
                   class="mt-0 size-full rounded-2xl"
                   allowfullscreen

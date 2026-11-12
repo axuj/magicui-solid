@@ -1,10 +1,13 @@
 import type { PolymorphicProps } from '@kobalte/core/polymorphic'
-import type { VariantProps } from 'class-variance-authority'
 
-import type { Component, ComponentProps, ValidComponent } from 'solid-js'
+import type { ComponentProps, ValidComponent } from '@solidjs/web'
+import type { VariantProps } from 'class-variance-authority'
+import type { Component } from 'solid-js'
+
 import * as AlertPrimitive from '@kobalte/core/alert'
+
 import { cva } from 'class-variance-authority'
-import { splitProps } from 'solid-js'
+import { omit } from 'solid-js'
 
 import { cn } from '@/lib/utils'
 
@@ -37,28 +40,28 @@ type AlertRootProps<T extends ValidComponent = 'div'> = AlertPrimitive.AlertRoot
   & VariantProps<typeof alertVariants> & { class?: string | undefined }
 
 function Alert<T extends ValidComponent = 'div'>(props: PolymorphicProps<T, AlertRootProps<T>>) {
-  const [local, others] = splitProps(props as AlertRootProps, ['class', 'variant'])
+  const others = omit(props, 'class', 'variant') as AlertRootProps<T>
   return (
     <AlertPrimitive.Root
-      class={cn(alertVariants({ variant: props.variant }), local.class)}
+      class={cn(alertVariants({ variant: props.variant }), props.class)}
       {...others}
     />
   )
 }
 
 const AlertTitle: Component<ComponentProps<'h5'>> = (props) => {
-  const [local, others] = splitProps(props, ['class'])
-  return <h5 class={cn('mb-1 leading-none font-medium tracking-tight', local.class)} {...others} />
+  const others = omit(props, 'class')
+  return <h5 class={cn('mb-1 leading-none font-medium tracking-tight', props.class)} {...others} />
 }
 
 const AlertDescription: Component<ComponentProps<'div'>> = (props) => {
-  const [local, others] = splitProps(props, ['class'])
+  const others = omit(props, 'class')
   return (
     <div
       class={cn(`
         text-sm
         [&_p]:leading-relaxed
-      `, local.class)}
+      `, props.class)}
       {...others}
     />
   )

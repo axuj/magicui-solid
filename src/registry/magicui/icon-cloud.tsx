@@ -1,6 +1,6 @@
-import type { JSX } from 'solid-js'
-import { Pause, Play } from 'lucide-solid'
-import { createEffect, createSignal, onCleanup, Show } from 'solid-js'
+import type { JSX } from '@solidjs/web'
+import { Pause, Play } from '@lucide/solid'
+import { createEffect, createSignal, onSettled, Show } from 'solid-js'
 
 import { Button } from '@/components/ui/button'
 
@@ -47,9 +47,13 @@ export function IconCloud(props: IconCloudProps) {
   let imagesLoaded: boolean[] = []
   let hasContent = false
   const showControl = () => props.showControl ?? true
+  // Icons must be created on the render path. Creating them in an effect is
+  // forbidden, and creating them earlier leaves unhydrated nodes. Render into
+  // a hidden host and read the nodes back from the DOM.
+  const [iconHost, setIconHost] = createSignal<HTMLDivElement>()
 
   // Pause animation if user prefers reduced motion
-  createEffect(() => {
+  onSettled(() => {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
     if (mediaQuery.matches)
       setIsPaused(true)
@@ -59,58 +63,53 @@ export function IconCloud(props: IconCloudProps) {
     }
 
     mediaQuery.addEventListener('change', handleChange)
-    onCleanup(() => mediaQuery.removeEventListener('change', handleChange))
+    return () => mediaQuery.removeEventListener('change', handleChange)
   })
 
   // Create icon canvases once when icons/images change
-  createEffect(() => {
-    const icons = props.icons
-    const images = props.images
-    hasContent = Boolean(icons || images)
-    if (!icons && !images)
-      return
+  createEffect(
+    () => ({ iconHost: iconHost(), images: props.images }),
+    ({ iconHost, images: imagesValue }) => {
+      const host = iconHost
+      const images = imagesValue
+      const nodes = host ? Array.from(host.children) : []
+      hasContent = Boolean(nodes.length || images)
+      if (!nodes.length && !images)
+        return
 
-    const items = icons ?? images ?? []
-    imagesLoaded = Array.from<boolean>({ length: items.length }).fill(false)
+      const items: (string | Element)[] = images ?? nodes
+      imagesLoaded = Array.from<boolean>({ length: items.length }).fill(false)
 
-    const newIconCanvases = items.map((item, index) => {
-      const offscreen = document.createElement('canvas')
-      offscreen.width = 40
-      offscreen.height = 40
-      const offCtx = offscreen.getContext('2d')
+      const newIconCanvases = items.map((item, index) => {
+        const offscreen = document.createElement('canvas')
+        offscreen.width = 40
+        offscreen.height = 40
+        const offCtx = offscreen.getContext('2d')
 
-      if (offCtx) {
-        if (images) {
-          // Handle image URLs directly
-          const img = new Image()
-          img.crossOrigin = 'anonymous'
-          img.src = items[index] as string
-          img.onload = () => {
-            offCtx.clearRect(0, 0, offscreen.width, offscreen.height)
+        if (offCtx) {
+          if (images) {
+            // Handle image URLs directly
+            const img = new Image()
+            img.crossOrigin = 'anonymous'
+            img.src = items[index] as string
+            img.onload = () => {
+              offCtx.clearRect(0, 0, offscreen.width, offscreen.height)
 
-            // Create circular clipping path
-            offCtx.beginPath()
-            offCtx.arc(20, 20, 20, 0, Math.PI * 2)
-            offCtx.closePath()
-            offCtx.clip()
+              // Create circular clipping path
+              offCtx.beginPath()
+              offCtx.arc(20, 20, 20, 0, Math.PI * 2)
+              offCtx.closePath()
+              offCtx.clip()
 
-            // Draw the image
-            offCtx.drawImage(img, 0, 0, 40, 40)
+              // Draw the image
+              offCtx.drawImage(img, 0, 0, 40, 40)
 
-            imagesLoaded[index] = true
+              imagesLoaded[index] = true
+            }
           }
-        }
-        else {
-          // Handle SVG icons: resolve Solid elements to actual DOM nodes
-          const resolve = (el: unknown): Node | string => {
-            if (typeof el === 'function')
-              return resolve(el())
-            if (el instanceof Node)
-              return el
-            return String(el)
-          }
-          const svgNode = resolve(item)
-          if (svgNode instanceof Node) {
+          else {
+            // Handle SVG icons: the nodes come straight out of the hidden host
+            const svgNode = items[index] as Node
             const svgString = new XMLSerializer().serializeToString(svgNode)
             const img = new Image()
             img.src = `data:image/svg+xml;base64,${btoa(svgString)}`
@@ -122,44 +121,46 @@ export function IconCloud(props: IconCloudProps) {
             }
           }
         }
-      }
-      return offscreen
-    })
+        return offscreen
+      })
 
-    iconCanvases = newIconCanvases
-  })
+      iconCanvases = newIconCanvases
+    },
+  )
 
   // Generate initial icon positions on a sphere
-  createEffect(() => {
-    const icons = props.icons
-    const images = props.images
-    const items = icons ?? images ?? []
-    const newIcons: Icon[] = []
-    const numIcons = items.length || 20
+  createEffect(
+    () => ({ iconHost: iconHost(), images: props.images }),
+    ({ iconHost, images }) => {
+      const host = iconHost
+      const items = images ?? (host ? Array.from(host.children) : [])
+      const newIcons: Icon[] = []
+      const numIcons = items.length || 20
 
-    // Fibonacci sphere parameters
-    const offset = 2 / numIcons
-    const increment = Math.PI * (3 - Math.sqrt(5))
+      // Fibonacci sphere parameters
+      const offset = 2 / numIcons
+      const increment = Math.PI * (3 - Math.sqrt(5))
 
-    for (let i = 0; i < numIcons; i++) {
-      const y = i * offset - 1 + offset / 2
-      const r = Math.sqrt(1 - y * y)
-      const phi = i * increment
+      for (let i = 0; i < numIcons; i++) {
+        const y = i * offset - 1 + offset / 2
+        const r = Math.sqrt(1 - y * y)
+        const phi = i * increment
 
-      const x = Math.cos(phi) * r
-      const z = Math.sin(phi) * r
+        const x = Math.cos(phi) * r
+        const z = Math.sin(phi) * r
 
-      newIcons.push({
-        x: x * 100,
-        y: y * 100,
-        z: z * 100,
-        scale: 1,
-        opacity: 1,
-        id: i,
-      })
-    }
-    setIconPositions(newIcons)
-  })
+        newIcons.push({
+          x: x * 100,
+          y: y * 100,
+          z: z * 100,
+          scale: 1,
+          opacity: 1,
+          id: i,
+        })
+      }
+      setIconPositions(newIcons)
+    },
+  )
 
   // Handle mouse events
   const handleMouseDown = (e: MouseEvent) => {
@@ -249,102 +250,111 @@ export function IconCloud(props: IconCloudProps) {
   }
 
   // Animation and rendering
-  createEffect(() => {
-    const canvasEl = canvas
-    const ctx = canvasEl?.getContext('2d')
-    if (!canvasEl || !ctx)
-      return
+  createEffect(
+    () => ({ isPaused: isPaused() }),
+    ({ isPaused }) => {
+      const canvasEl = canvas
+      const ctx = canvasEl?.getContext('2d')
+      if (!canvasEl || !ctx)
+        return
 
-    const paused = isPaused()
+      const paused = isPaused
 
-    const animate = () => {
-      ctx.clearRect(0, 0, canvasEl.width, canvasEl.height)
+      const animate = () => {
+        ctx.clearRect(0, 0, canvasEl.width, canvasEl.height)
 
-      const centerX = canvasEl.width / 2
-      const centerY = canvasEl.height / 2
-      const maxDistance = Math.sqrt(centerX * centerX + centerY * centerY)
-      const dx = mousePos().x - centerX
-      const dy = mousePos().y - centerY
-      const distance = Math.sqrt(dx * dx + dy * dy)
-      const speed = 0.003 + (distance / maxDistance) * 0.01
+        const centerX = canvasEl.width / 2
+        const centerY = canvasEl.height / 2
+        const maxDistance = Math.sqrt(centerX * centerX + centerY * centerY)
+        const dx = mousePos().x - centerX
+        const dy = mousePos().y - centerY
+        const distance = Math.sqrt(dx * dx + dy * dy)
+        const speed = 0.003 + (distance / maxDistance) * 0.01
 
-      const target = targetRotation()
-      if (target) {
-        const elapsed = performance.now() - target.startTime
-        const progress = Math.min(1, elapsed / target.duration)
-        const easedProgress = easeOutCubic(progress)
+        const target = targetRotation()
+        if (target) {
+          const elapsed = performance.now() - target.startTime
+          const progress = Math.min(1, elapsed / target.duration)
+          const easedProgress = easeOutCubic(progress)
 
-        rotation = {
-          x: target.startX + (target.x - target.startX) * easedProgress,
-          y: target.startY + (target.y - target.startY) * easedProgress,
-        }
+          rotation = {
+            x: target.startX + (target.x - target.startX) * easedProgress,
+            y: target.startY + (target.y - target.startY) * easedProgress,
+          }
 
-        if (progress >= 1) {
-          setTargetRotation(null)
-        }
-      }
-      else if (!isDragging() && !paused) {
-        rotation = {
-          x: rotation.x + (dy / canvasEl.height) * speed,
-          y: rotation.y + (dx / canvasEl.width) * speed,
-        }
-      }
-
-      iconPositions().forEach((icon, index) => {
-        const cosX = Math.cos(rotation.x)
-        const sinX = Math.sin(rotation.x)
-        const cosY = Math.cos(rotation.y)
-        const sinY = Math.sin(rotation.y)
-
-        const rotatedX = icon.x * cosY - icon.z * sinY
-        const rotatedZ = icon.x * sinY + icon.z * cosY
-        const rotatedY = icon.y * cosX + rotatedZ * sinX
-
-        const scale = (rotatedZ + 200) / 300
-        const opacity = Math.max(0.2, Math.min(1, (rotatedZ + 150) / 200))
-
-        ctx.save()
-        ctx.translate(
-          canvasEl.width / 2 + rotatedX,
-          canvasEl.height / 2 + rotatedY,
-        )
-        ctx.scale(scale, scale)
-        ctx.globalAlpha = opacity
-
-        if (hasContent) {
-          // Only try to render icons/images if they exist
-          if (iconCanvases[index] && imagesLoaded[index]) {
-            ctx.drawImage(iconCanvases[index], -20, -20, 40, 40)
+          if (progress >= 1) {
+            setTargetRotation(null)
           }
         }
-        else {
-          // Show numbered circles if no icons/images are provided
-          ctx.beginPath()
-          ctx.arc(0, 0, 20, 0, Math.PI * 2)
-          ctx.fillStyle = '#4444ff'
-          ctx.fill()
-          ctx.fillStyle = 'white'
-          ctx.textAlign = 'center'
-          ctx.textBaseline = 'middle'
-          ctx.font = '16px Arial'
-          ctx.fillText(`${icon.id + 1}`, 0, 0)
+        else if (!isDragging() && !paused) {
+          rotation = {
+            x: rotation.x + (dy / canvasEl.height) * speed,
+            y: rotation.y + (dx / canvasEl.width) * speed,
+          }
         }
 
-        ctx.restore()
-      })
+        iconPositions().forEach((icon, index) => {
+          const cosX = Math.cos(rotation.x)
+          const sinX = Math.sin(rotation.x)
+          const cosY = Math.cos(rotation.y)
+          const sinY = Math.sin(rotation.y)
 
-      const hasPendingAssets = hasContent && !imagesLoaded.every(loaded => loaded)
-      const shouldContinue = !paused || isDragging() || targetRotation() !== null || hasPendingAssets
-      if (shouldContinue)
-        animationFrame = requestAnimationFrame(animate)
-    }
+          const rotatedX = icon.x * cosY - icon.z * sinY
+          const rotatedZ = icon.x * sinY + icon.z * cosY
+          const rotatedY = icon.y * cosX + rotatedZ * sinX
 
-    animationFrame = requestAnimationFrame(animate)
-    onCleanup(() => cancelAnimationFrame(animationFrame))
-  })
+          const scale = (rotatedZ + 200) / 300
+          const opacity = Math.max(0.2, Math.min(1, (rotatedZ + 150) / 200))
+
+          ctx.save()
+          ctx.translate(
+            canvasEl.width / 2 + rotatedX,
+            canvasEl.height / 2 + rotatedY,
+          )
+          ctx.scale(scale, scale)
+          ctx.globalAlpha = opacity
+
+          if (hasContent) {
+            // Only try to render icons/images if they exist
+            if (iconCanvases[index] && imagesLoaded[index]) {
+              ctx.drawImage(iconCanvases[index], -20, -20, 40, 40)
+            }
+          }
+          else {
+            // Show numbered circles if no icons/images are provided
+            ctx.beginPath()
+            ctx.arc(0, 0, 20, 0, Math.PI * 2)
+            ctx.fillStyle = '#4444ff'
+            ctx.fill()
+            ctx.fillStyle = 'white'
+            ctx.textAlign = 'center'
+            ctx.textBaseline = 'middle'
+            ctx.font = '16px Arial'
+            ctx.fillText(`${icon.id + 1}`, 0, 0)
+          }
+
+          ctx.restore()
+        })
+
+        const hasPendingAssets = hasContent && !imagesLoaded.every(loaded => loaded)
+        const shouldContinue = !paused || isDragging() || targetRotation() !== null || hasPendingAssets
+        if (shouldContinue)
+          animationFrame = requestAnimationFrame(animate)
+      }
+
+      animationFrame = requestAnimationFrame(animate)
+      return () => cancelAnimationFrame(animationFrame)
+    },
+  )
 
   return (
     <div class="relative inline-block">
+      {/* Icons are painted into an offscreen canvas, but they still have to
+          render: emitting them here keeps hydration keys aligned and puts their
+          owner on the render path rather than inside a computation. */}
+      <div ref={setIconHost} style={{ display: 'none' }} aria-hidden="true">
+        {props.icons}
+      </div>
       <canvas
         ref={canvas}
         width={400}

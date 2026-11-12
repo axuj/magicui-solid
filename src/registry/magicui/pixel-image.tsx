@@ -1,4 +1,4 @@
-import { createEffect, createMemo, createSignal, For, mergeProps, onCleanup, onMount } from 'solid-js'
+import { createEffect, createMemo, createSignal, For, onSettled } from 'solid-js'
 
 import { cn } from '@/lib/utils'
 
@@ -28,16 +28,10 @@ interface PixelImageProps {
 }
 
 export function PixelImage(props: PixelImageProps) {
-  const merged = mergeProps(
-    {
-      grid: '6x4' as PredefinedGridKey,
-      grayscaleAnimation: true,
-      pixelFadeInDuration: 1000,
-      maxAnimationDelay: 1200,
-      colorRevealDelay: 1300,
-    },
-    props,
-  )
+  const colorRevealDelay = () => props.colorRevealDelay ?? 1300
+  const grayscaleAnimation = () => props.grayscaleAnimation ?? true
+  const maxAnimationDelay = () => props.maxAnimationDelay ?? 1200
+  const pixelFadeInDuration = () => props.pixelFadeInDuration ?? 1000
   const [isVisible, setIsVisible] = createSignal(false)
   const [showColor, setShowColor] = createSignal(false)
 
@@ -59,13 +53,13 @@ export function PixelImage(props: PixelImageProps) {
       )
     }
 
-    return isValidGrid(merged.customGrid) ? merged.customGrid! : DEFAULT_GRIDS[merged.grid]
+    return isValidGrid(props.customGrid) ? props.customGrid! : DEFAULT_GRIDS[(props.grid ?? '6x4' as PredefinedGridKey)]
   }
 
   const pieces = createMemo(() => {
     const { rows, cols } = grid()
     const total = rows * cols
-    const maxDelay = merged.maxAnimationDelay
+    const maxDelay = maxAnimationDelay()
     return Array.from({ length: total }, (_, index) => {
       const row = Math.floor(index / cols)
       const col = index % cols
@@ -85,18 +79,21 @@ export function PixelImage(props: PixelImageProps) {
     })
   })
 
-  onMount(() => {
+  onSettled(() => {
     requestAnimationFrame(() => {
       requestAnimationFrame(() => setIsVisible(true))
     })
   })
 
-  createEffect(() => {
-    const colorTimeout = setTimeout(() => {
-      setShowColor(true)
-    }, merged.colorRevealDelay)
-    onCleanup(() => clearTimeout(colorTimeout))
-  })
+  createEffect(
+    () => ({ colorRevealDelay: colorRevealDelay() }),
+    ({ colorRevealDelay }) => {
+      const colorTimeout = setTimeout(() => {
+        setShowColor(true)
+      }, colorRevealDelay)
+      return () => clearTimeout(colorTimeout)
+    },
+  )
 
   return (
     <div class="
@@ -114,24 +111,24 @@ export function PixelImage(props: PixelImageProps) {
             style={{
               'clip-path': piece.clipPath,
               'transition-delay': `${piece.delay}ms`,
-              'transition-duration': `${merged.pixelFadeInDuration}ms`,
+              'transition-duration': `${pixelFadeInDuration()}ms`,
             }}
           >
             <img
-              src={merged.src}
+              src={props.src}
               alt={`Pixel image piece ${index() + 1}`}
               class={cn(
                 'z-1 rounded-[2.5rem] object-cover',
-                merged.grayscaleAnimation
+                grayscaleAnimation()
                   ? (showColor() ? 'grayscale-0' : 'grayscale')
                   : undefined,
               )}
               style={{
-                transition: merged.grayscaleAnimation
-                  ? `filter ${merged.pixelFadeInDuration}ms cubic-bezier(0.4, 0, 0.2, 1)`
+                transition: grayscaleAnimation()
+                  ? `filter ${pixelFadeInDuration()}ms cubic-bezier(0.4, 0, 0.2, 1)`
                   : 'none',
               }}
-              draggable={false}
+              draggable="false"
             />
           </div>
         )}

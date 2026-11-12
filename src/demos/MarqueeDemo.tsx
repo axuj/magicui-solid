@@ -1,4 +1,5 @@
 import { For } from 'solid-js'
+
 import { Marquee } from '@/registry/magicui/marquee'
 
 const reviews = [

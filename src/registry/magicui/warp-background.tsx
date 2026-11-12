@@ -1,5 +1,5 @@
-import type { JSX } from 'solid-js'
-import { createMemo, For, mergeProps, splitProps } from 'solid-js'
+import type { JSX } from '@solidjs/web'
+import { createMemo, For, omit } from 'solid-js'
 
 import { cn } from '@/lib/utils'
 
@@ -75,38 +75,20 @@ function BeamGroup(props: BeamGroupProps) {
 }
 
 export function WarpBackground(props: WarpBackgroundProps) {
-  const merged = mergeProps(
-    {
-      perspective: 100,
-      beamsPerSide: 3,
-      beamSize: 5,
-      beamDelayMax: 3,
-      beamDelayMin: 0,
-      beamDuration: 3,
-      gridColor: 'var(--border)',
-    },
-    props,
-  )
-  const [local, rest] = splitProps(merged, [
-    'children',
-    'class',
-    'perspective',
-    'beamsPerSide',
-    'beamSize',
-    'beamDelayMax',
-    'beamDelayMin',
-    'beamDuration',
-    'gridColor',
-  ])
+  const rest = omit(props, 'children', 'class', 'perspective', 'beamsPerSide', 'beamSize', 'beamDelayMax', 'beamDelayMin', 'beamDuration', 'gridColor')
+  const beamDelayMax = () => props.beamDelayMax ?? 3
+  const beamDelayMin = () => props.beamDelayMin ?? 0
+  const beamsPerSide = () => props.beamsPerSide ?? 3
+  const gridColor = () => props.gridColor ?? 'var(--border)'
 
   const generateBeams = () => {
-    const cellsPerSide = Math.floor(100 / local.beamSize)
-    const step = cellsPerSide / local.beamsPerSide
+    const cellsPerSide = Math.floor(100 / (props.beamSize ?? 5))
+    const step = cellsPerSide / beamsPerSide()
     const beams: { x: number, delay: number }[] = []
 
-    for (let i = 0; i < local.beamsPerSide; i++) {
+    for (let i = 0; i < beamsPerSide(); i++) {
       const x = Math.floor(i * step)
-      const delay = Math.random() * (local.beamDelayMax - local.beamDelayMin) + local.beamDelayMin
+      const delay = Math.random() * (beamDelayMax() - beamDelayMin()) + beamDelayMin()
       beams.push({ x, delay })
     }
     return beams
@@ -125,12 +107,12 @@ export function WarpBackground(props: WarpBackgroundProps) {
   ]
 
   return (
-    <div class={cn('relative rounded-sm border p-20', local.class)} {...rest}>
+    <div class={cn('relative rounded-sm border p-20', props.class)} {...rest}>
       <div
         style={{
-          '--perspective': `${local.perspective}px`,
-          '--grid-color': local.gridColor,
-          '--beam-size': `${local.beamSize}%`,
+          '--perspective': `${(props.perspective ?? 100)}px`,
+          '--grid-color': gridColor(),
+          '--beam-size': `${(props.beamSize ?? 5)}%`,
         }}
         class="
           @container-size pointer-events-none absolute top-0 left-0 size-full
@@ -143,13 +125,13 @@ export function WarpBackground(props: WarpBackgroundProps) {
             <BeamGroup
               positionClass={group.positionClass}
               beams={group.beams}
-              beamSize={local.beamSize}
-              beamDuration={local.beamDuration}
+              beamSize={(props.beamSize ?? 5)}
+              beamDuration={(props.beamDuration ?? 3)}
             />
           )}
         </For>
       </div>
-      <div class="relative">{local.children}</div>
+      <div class="relative">{props.children}</div>
     </div>
   )
 }

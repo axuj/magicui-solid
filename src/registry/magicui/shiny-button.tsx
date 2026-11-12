@@ -1,6 +1,6 @@
-import type { JSX } from 'solid-js'
+import type { JSX } from '@solidjs/web'
 import { animate } from 'motion'
-import { onCleanup, onMount, splitProps } from 'solid-js'
+import { omit, onSettled } from 'solid-js'
 
 import { cn } from '@/lib/utils'
 
@@ -10,7 +10,7 @@ interface ShinyButtonProps extends JSX.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export function ShinyButton(props: ShinyButtonProps) {
-  const [local, rest] = splitProps(props, ['class', 'children'])
+  const rest = omit(props, 'class', 'children')
 
   let buttonRef: HTMLButtonElement | undefined
 
@@ -21,7 +21,7 @@ export function ShinyButton(props: ShinyButtonProps) {
     mass: 0.5,
   } as const
 
-  onMount(() => {
+  onSettled(() => {
     if (!buttonRef)
       return
 
@@ -43,7 +43,7 @@ export function ShinyButton(props: ShinyButtonProps) {
       },
     )
 
-    onCleanup(() => animation.stop())
+    return () => animation.stop()
   })
 
   const animateScale = (scale: number) => {
@@ -63,7 +63,7 @@ export function ShinyButton(props: ShinyButtonProps) {
           dark:bg-[radial-gradient(circle_at_50%_0%,var(--primary)/10%_0%,transparent_60%)]
           dark:hover:shadow-[0_0_20px_var(--primary)/10%]
         `,
-        local.class,
+        props.class,
       )}
       onPointerDown={() => animateScale(0.95)}
       onPointerUp={() => animateScale(1)}
@@ -81,7 +81,7 @@ export function ShinyButton(props: ShinyButtonProps) {
           'mask-image': 'linear-gradient(-75deg,var(--primary) calc(var(--x) + 20%),transparent calc(var(--x) + 30%),var(--primary) calc(var(--x) + 100%))',
         }}
       >
-        {local.children}
+        {props.children}
       </span>
       <span
         style={{

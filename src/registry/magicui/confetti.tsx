@@ -1,11 +1,12 @@
+import type { JSX } from '@solidjs/web'
 import type {
   GlobalOptions as ConfettiGlobalOptions,
   CreateTypes as ConfettiInstance,
   Options as ConfettiOptions,
 } from 'canvas-confetti'
-import type { JSX } from 'solid-js'
+
 import confetti from 'canvas-confetti'
-import { onCleanup, onMount, splitProps } from 'solid-js'
+import { omit, onSettled } from 'solid-js'
 
 import { Button } from '@/components/ui/button'
 
@@ -23,7 +24,7 @@ interface ConfettiProps extends Omit<JSX.CanvasHTMLAttributes<HTMLCanvasElement>
 }
 
 export function Confetti(props: ConfettiProps) {
-  const [local, rest] = splitProps(props, ['options', 'globalOptions', 'manualstart', 'children', 'class', 'ref'])
+  const rest = omit(props, 'options', 'globalOptions', 'manualstart', 'children', 'class', 'ref') as Record<string, unknown>
 
   let canvasNode: HTMLCanvasElement | undefined
   let instance: ConfettiInstance | null = null
@@ -31,7 +32,7 @@ export function Confetti(props: ConfettiProps) {
   const fire = async (opts: ConfettiOptions = {}) => {
     try {
       await instance?.({
-        ...local.options,
+        ...props.options,
         ...opts,
       })
     }
@@ -42,27 +43,26 @@ export function Confetti(props: ConfettiProps) {
 
   const api: ConfettiRef = { fire }
 
-  onMount(() => {
+  onSettled(() => {
     props.ref?.(api)
     if (canvasNode && !instance) {
       instance = confetti.create(canvasNode, {
         resize: true,
         useWorker: true,
-        ...local.globalOptions,
+        ...props.globalOptions,
       })
     }
-    if (!local.manualstart)
+    if (!props.manualstart)
       void fire()
-  })
-
-  onCleanup(() => {
-    instance?.reset()
-    instance = null
+    return () => {
+      instance?.reset()
+      instance = null
+    }
   })
 
   return (
     <>
-      <canvas ref={canvasNode} class={local.class} {...rest} />
+      <canvas ref={canvasNode} class={props.class} {...rest} />
       {props.children}
     </>
   )
@@ -76,11 +76,11 @@ export interface ConfettiButtonProps extends Omit<JSX.ButtonHTMLAttributes<HTMLB
 }
 
 export function ConfettiButton(props: ConfettiButtonProps) {
-  const [local, rest] = splitProps(props, ['children', 'options', 'onClick'])
+  const rest = omit(props, 'children', 'options', 'onClick') as Record<string, unknown>
 
   const handleClick = async (event: MouseEvent) => {
     try {
-      local.onClick?.(event)
+      props.onClick?.(event)
       if (event.defaultPrevented)
         return
 
@@ -94,7 +94,7 @@ export function ConfettiButton(props: ConfettiButtonProps) {
 
         await confetti({
           zIndex: 9999,
-          ...local.options,
+          ...props.options,
           origin,
         })
       }

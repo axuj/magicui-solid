@@ -1,5 +1,6 @@
 import type { Component } from 'solid-js'
-import { Bell, Calendar, FileText, Globe, Search } from 'lucide-solid'
+
+import { Bell, Calendar, FileText, Globe, Search } from '@lucide/solid'
 import { For } from 'solid-js'
 
 import { BentoCard, BentoGrid } from '@/registry/magicui/bento-grid'

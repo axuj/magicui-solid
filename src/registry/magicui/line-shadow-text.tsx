@@ -1,6 +1,8 @@
-import type { JSX, ValidComponent } from 'solid-js'
-import { mergeProps, splitProps } from 'solid-js'
-import { Dynamic } from 'solid-js/web'
+import type { JSX, ValidComponent } from '@solidjs/web'
+
+import { Dynamic } from '@solidjs/web'
+import { omit } from 'solid-js'
+
 import { cn } from '@/lib/utils'
 
 interface LineShadowTextProps extends Omit<JSX.HTMLAttributes<HTMLElement>, 'children'> {
@@ -10,13 +12,14 @@ interface LineShadowTextProps extends Omit<JSX.HTMLAttributes<HTMLElement>, 'chi
 }
 
 export function LineShadowText(props: LineShadowTextProps) {
-  const merged = mergeProps({ shadowColor: 'black', as: 'span' }, props)
-  const [local, rest] = splitProps(merged, ['children', 'shadowColor', 'as', 'class'])
+  const rest = omit(props, 'children', 'shadowColor', 'as', 'class')
+  const as = () => props.as ?? 'span'
+  const shadowColor = () => props.shadowColor ?? 'black'
 
   return (
     <Dynamic
-      component={local.as}
-      style={{ '--shadow-color': local.shadowColor }}
+      component={as()}
+      style={{ '--shadow-color': shadowColor() }}
       class={cn(
         `
           relative z-0 inline-flex
@@ -26,12 +29,12 @@ export function LineShadowText(props: LineShadowTextProps) {
           after:bg-size-[0.06em_0.06em] after:bg-clip-text
           after:text-transparent after:content-[attr(data-text)]
         `,
-        local.class,
+        props.class,
       )}
-      data-text={local.children}
+      data-text={props.children}
       {...rest}
     >
-      {local.children}
+      {props.children}
     </Dynamic>
   )
 }

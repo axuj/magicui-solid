@@ -1,7 +1,9 @@
+import type { JSX } from '@solidjs/web'
 import type { MotionValue } from 'motion'
-import type { JSX } from 'solid-js'
+
 import { attachSpring, motionValue, scroll } from 'motion'
-import { createContext, createEffect, createSignal, For, mergeProps, onCleanup, onMount, Show, splitProps, untrack, useContext } from 'solid-js'
+import { createContext, createSignal, For, omit, onSettled, Show, untrack, useContext } from 'solid-js'
+
 import { cn } from '@/lib/utils'
 
 interface ScrollVelocityRowProps extends JSX.HTMLAttributes<HTMLDivElement> {
@@ -43,31 +45,31 @@ function createVelocityFactor(): MotionValue<number> {
 
   let unsubscribeScroll: () => void = () => {}
 
-  onMount(() => {
+  onSettled(() => {
     unsubscribeScroll = scroll((_progress, info) => {
       rawVelocity.set(info.y.velocity)
     }, { axis: 'y' })
-  })
 
-  onCleanup(() => {
-    unsubscribeScroll()
-    detachSpring()
-    unsubscribeSmooth()
+    return () => {
+      unsubscribeScroll()
+      detachSpring()
+      unsubscribeSmooth()
+    }
   })
 
   return velocityFactor
 }
 
 export function ScrollVelocityContainer(props: JSX.HTMLAttributes<HTMLDivElement>) {
-  const [local, rest] = splitProps(props, ['class', 'children'])
+  const rest = omit(props, 'class', 'children')
   const velocityFactor = createVelocityFactor()
 
   return (
-    <ScrollVelocityContext.Provider value={velocityFactor}>
-      <div class={cn('relative w-full', local.class)} {...rest}>
-        {local.children}
+    <ScrollVelocityContext value={velocityFactor}>
+      <div class={cn('relative w-full', props.class)} {...rest}>
+        {props.children}
       </div>
-    </ScrollVelocityContext.Provider>
+    </ScrollVelocityContext>
   )
 }
 
@@ -88,15 +90,10 @@ interface ScrollVelocityRowImplProps extends ScrollVelocityRowProps {
 }
 
 function ScrollVelocityRowImpl(props: ScrollVelocityRowImplProps) {
-  const merged = mergeProps({ baseVelocity: 5, direction: 1, scrollReactivity: true }, props)
-  const [local, rest] = splitProps(merged, [
-    'children',
-    'baseVelocity',
-    'direction',
-    'class',
-    'scrollReactivity',
-    'velocityFactor',
-  ])
+  const rest = omit(props, 'children', 'baseVelocity', 'direction', 'class', 'scrollReactivity', 'velocityFactor')
+  const baseVelocity = () => props.baseVelocity ?? 5
+  const direction = () => props.direction ?? 1
+  const scrollReactivity = () => props.scrollReactivity ?? true
 
   let containerRef: HTMLDivElement | undefined
   let blockRef: HTMLDivElement | undefined
@@ -106,13 +103,14 @@ function ScrollVelocityRowImpl(props: ScrollVelocityRowImplProps) {
   const baseX = motionValue(0)
   const unitWidth = motionValue(0)
 
-  const baseDirection = { current: untrack(() => local.direction) >= 0 ? 1 : -1 }
-  const currentDirection = { current: untrack(() => local.direction) >= 0 ? 1 : -1 }
+  // The initial sign has to reflect `direction` because it drives the idle
+  // drift; the loop below re-reads it per frame so a later change takes effect.
+  const currentDirection = { current: untrack(() => direction() >= 0 ? 1 : -1) }
   const isInViewState = { current: true }
   const isPageVisible = { current: true }
   const prefersReducedMotion = { current: false }
 
-  onMount(() => {
+  onSettled(() => {
     const container = containerRef
     const block = blockRef
     if (!container || !block)
@@ -150,16 +148,16 @@ function ScrollVelocityRowImpl(props: ScrollVelocityRowImplProps) {
     mediaQuery.addEventListener('change', handleReducedMotion)
     handleReducedMotion()
 
-    onCleanup(() => {
+    return () => {
       resizeObserver.disconnect()
       intersectionObserver.disconnect()
       document.removeEventListener('visibilitychange', handleVisibility)
       mediaQuery.removeEventListener('change', handleReducedMotion)
-    })
+    }
   })
 
   // Derived translate pixels from baseX wrapped into the unit width
-  createEffect(() => {
+  onSettled(() => {
     const updateX = () => {
       const width = Number(unitWidth.get()) || 1
       const offset = Number(baseX.get()) || 0
@@ -167,14 +165,14 @@ function ScrollVelocityRowImpl(props: ScrollVelocityRowImplProps) {
     }
     const unsubscribeBase = baseX.on('change', updateX)
     const unsubscribeWidth = unitWidth.on('change', updateX)
-    onCleanup(() => {
+    return () => {
       unsubscribeBase()
       unsubscribeWidth()
-    })
+    }
   })
 
   // Animation frame loop: move by base velocity combined with scroll velocity
-  createEffect(() => {
+  onSettled(() => {
     let rafId = 0
     let previousTime = performance.now()
 
@@ -184,18 +182,19 @@ function ScrollVelocityRowImpl(props: ScrollVelocityRowImplProps) {
 
       if (isInViewState.current && isPageVisible.current) {
         const dt = delta / 1000
-        const vf = local.scrollReactivity ? local.velocityFactor.get() : 0
+        const vf = scrollReactivity() ? props.velocityFactor.get() : 0
         const absVf = Math.min(5, Math.abs(vf))
         const speedMultiplier = prefersReducedMotion.current ? 1 : 1 + absVf
 
         if (absVf > 0.1) {
           const scrollDirection = vf >= 0 ? 1 : -1
-          currentDirection.current = baseDirection.current * scrollDirection
+          const baseDirection = direction() >= 0 ? 1 : -1
+          currentDirection.current = baseDirection * scrollDirection
         }
 
         const blockWidth = unitWidth.get() || 0
         if (blockWidth > 0) {
-          const pixelsPerSecond = (blockWidth * local.baseVelocity) / 100
+          const pixelsPerSecond = (blockWidth * baseVelocity()) / 100
           const moveBy = currentDirection.current * pixelsPerSecond * speedMultiplier * dt
           baseX.set(baseX.get() + moveBy)
         }
@@ -205,13 +204,13 @@ function ScrollVelocityRowImpl(props: ScrollVelocityRowImplProps) {
     }
     rafId = requestAnimationFrame(loop)
 
-    onCleanup(() => cancelAnimationFrame(rafId))
+    return () => cancelAnimationFrame(rafId)
   })
 
   return (
     <div
       ref={containerRef}
-      class={cn('w-full overflow-hidden whitespace-nowrap', local.class)}
+      class={cn('w-full overflow-hidden whitespace-nowrap', props.class)}
       {...rest}
     >
       <div
@@ -225,13 +224,15 @@ function ScrollVelocityRowImpl(props: ScrollVelocityRowImplProps) {
           {(_, i) => (
             <div
               ref={(el) => {
-                if (i() === 0)
+                // A <For> callback is not a tracking scope; the index is a
+                // one-time snapshot, so mark the read explicitly.
+                if (untrack(i) === 0)
                   blockRef = el
               }}
-              aria-hidden={i() !== 0}
+              aria-hidden={i() !== 0 ? 'true' : undefined}
               class="inline-flex shrink-0 items-center"
             >
-              {local.children}
+              {props.children}
             </div>
           )}
         </For>

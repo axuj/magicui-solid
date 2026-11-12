@@ -1,7 +1,9 @@
+import type { JSX } from '@solidjs/web'
 import type { TargetAndTransition, Transition, Variant, Variants } from 'motion'
-import type { JSX } from 'solid-js'
+
 import { animate } from 'motion'
-import { createMemo, For, mergeProps, onCleanup, onMount } from 'solid-js'
+import { createMemo, For, onSettled, untrack } from 'solid-js'
+
 import { cn } from '@/lib/utils'
 
 interface SpinningTextProps {
@@ -45,14 +47,12 @@ function resolveTarget(variant: Variant | undefined): TargetAndTransition | unde
 }
 
 export function SpinningText(props: SpinningTextProps) {
-  const merged = mergeProps(
-    { duration: 10, reverse: false, radius: 5 } as const,
-    props,
-  )
+  const radius = () => props.radius ?? 5
+  const reverse = () => props.reverse ?? false
 
   // Derived from children so a change re-renders letters and the sr-only text
   const targetText = createMemo(() => {
-    const childrenValue = merged.children
+    const childrenValue = props.children
     if (typeof childrenValue !== 'string' && !Array.isArray(childrenValue)) {
       throw new TypeError('children must be a string or an array of strings')
     }
@@ -73,24 +73,24 @@ export function SpinningText(props: SpinningTextProps) {
 
   const finalTransition = (): Transition => ({
     ...BASE_TRANSITION,
-    ...merged.transition,
-    duration: (merged.transition as { duration?: number } | undefined)?.duration ?? merged.duration,
+    ...props.transition,
+    duration: (props.transition as { duration?: number } | undefined)?.duration ?? (props.duration ?? 10),
   })
 
   const containerVariants = (): Variants => ({
-    visible: { rotate: merged.reverse ? -360 : 360 },
-    ...merged.variants?.container,
+    visible: { rotate: reverse() ? -360 : 360 },
+    ...props.variants?.container,
   })
 
   const itemVariants = (): Variants => ({
     ...BASE_ITEM_VARIANTS,
-    ...merged.variants?.item,
+    ...props.variants?.item,
   })
 
   let containerRef: HTMLDivElement | undefined
   const letterRefs: (HTMLSpanElement | undefined)[] = []
 
-  onMount(() => {
+  onSettled(() => {
     if (!containerRef)
       return
 
@@ -98,13 +98,14 @@ export function SpinningText(props: SpinningTextProps) {
     const rotate = typeof containerVisible === 'object' && containerVisible !== null
       ? (containerVisible as { rotate?: number }).rotate
       : undefined
-    const target = rotate ?? (merged.reverse ? -360 : 360)
+    const target = rotate ?? (reverse() ? -360 : 360)
 
-    const animation = animate(containerRef, { rotate: target }, finalTransition())
-    onCleanup(() => animation.stop())
+    const transition = finalTransition()
+    const animation = animate(containerRef, { rotate: target }, transition)
+    return () => animation.stop()
   })
 
-  onMount(() => {
+  onSettled(() => {
     const hidden = resolveTarget(itemVariants().hidden)
     const visible = resolveTarget(itemVariants().visible)
     if (!hidden && !visible)
@@ -121,15 +122,15 @@ export function SpinningText(props: SpinningTextProps) {
         list.push(animate(span, visible, transition))
       return list
     })
-    onCleanup(() => animations.forEach(a => a.stop()))
+    return () => animations.forEach(a => a.stop())
   })
 
   return (
     <div
       ref={containerRef}
-      class={cn('relative', merged.class)}
+      class={cn('relative', props.class)}
       style={{
-        ...merged.style,
+        ...props.style,
       }}
     >
       <For each={letters()}>
@@ -137,14 +138,14 @@ export function SpinningText(props: SpinningTextProps) {
           <span
             aria-hidden="true"
             ref={(el) => {
-              letterRefs[index()] = el
+              letterRefs[untrack(index)] = el
             }}
             class="absolute top-1/2 left-1/2 inline-block"
             style={
               {
                 '--index': index(),
                 '--total': letters().length,
-                '--radius': merged.radius,
+                '--radius': radius(),
                 'transform': `
                   translate(-50%, -50%)
                   rotate(calc(360deg / var(--total) * var(--index)))

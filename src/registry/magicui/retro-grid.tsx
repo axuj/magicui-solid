@@ -1,5 +1,6 @@
-import type { JSX } from 'solid-js'
-import { createEffect, createSignal, mergeProps, onCleanup, splitProps, untrack } from 'solid-js'
+import type { JSX } from '@solidjs/web'
+import { createEffect, createSignal, omit, onSettled } from 'solid-js'
+
 import { cn } from '@/lib/utils'
 
 const ANIMATION_DURATION_SECONDS = 15
@@ -10,6 +11,9 @@ const GRID_LINE_WIDTH_PX = 0.92
 const GRID_START_OFFSET_RATIO = -0.5
 const GRID_WIDTH_RATIO = 6
 const GRID_X_OFFSET_RATIO = -2
+const DEFAULT_ANGLE = 65
+const DEFAULT_CELL_SIZE = 60
+const DEFAULT_LINE_COLOR = 'gray'
 const MAX_ANGLE = 89
 const MAX_DEVICE_PIXEL_RATIO = 2
 const MIN_ANGLE = 1
@@ -465,43 +469,37 @@ function createFallbackGridStyle(
 }
 
 export function RetroGrid(props: RetroGridProps) {
-  const merged = mergeProps(
-    {
-      angle: 65,
-      cellSize: 60,
-      opacity: 0.5,
-      lightLineColor: 'gray',
-      darkLineColor: 'gray',
-    },
-    props,
-  )
-  const [local, rest] = splitProps(merged, [
-    'angle',
-    'cellSize',
-    'opacity',
-    'lightLineColor',
-    'darkLineColor',
-    'class',
-    'style',
-  ])
+  const rest = omit(props, 'angle', 'cellSize', 'opacity', 'lightLineColor', 'darkLineColor', 'class', 'style')
+  const darkLineColor = () => props.darkLineColor ?? DEFAULT_LINE_COLOR
+  const lightLineColor = () => props.lightLineColor ?? DEFAULT_LINE_COLOR
   let canvasRef: HTMLCanvasElement | undefined
   let containerRef: HTMLDivElement | undefined
   const [isWebGlReady, setIsWebGlReady] = createSignal(false)
-  const angleRef = { current: untrack(() => local.angle) }
-  const cellSizeRef = { current: untrack(() => local.cellSize) }
-  const darkLineColorRef = { current: untrack(() => local.darkLineColor) }
-  const lightLineColorRef = { current: untrack(() => local.lightLineColor) }
+  // Seeds for the first frame only: the effect below assigns the real values
+  // before the GL scene is built, so these reads would be redundant.
+  const angleRef = { current: DEFAULT_ANGLE }
+  const cellSizeRef = { current: DEFAULT_CELL_SIZE }
+  const darkLineColorRef: { current: string } = { current: DEFAULT_LINE_COLOR }
+  const lightLineColorRef: { current: string } = { current: DEFAULT_LINE_COLOR }
   const syncSceneRef = { current: (() => {}) as (() => void) | null }
 
-  createEffect(() => {
-    angleRef.current = local.angle
-    cellSizeRef.current = local.cellSize
-    darkLineColorRef.current = local.darkLineColor
-    lightLineColorRef.current = local.lightLineColor
-    syncSceneRef.current?.()
-  })
+  createEffect(
+    () => ({
+      angle: props.angle,
+      cellSize: props.cellSize,
+      darkLine: darkLineColor(),
+      lightLine: lightLineColor(),
+    }),
+    ({ angle, cellSize, darkLine, lightLine }) => {
+      angleRef.current = angle ?? DEFAULT_ANGLE
+      cellSizeRef.current = cellSize ?? DEFAULT_CELL_SIZE
+      darkLineColorRef.current = darkLine
+      lightLineColorRef.current = lightLine
+      syncSceneRef.current?.()
+    },
+  )
 
-  createEffect(() => {
+  onSettled(() => {
     const canvas = canvasRef
     const container = containerRef
 
@@ -797,7 +795,7 @@ export function RetroGrid(props: RetroGridProps) {
 
     syncScene()
 
-    onCleanup(() => {
+    return () => {
       stopAnimation()
       resizeObserver.disconnect()
       intersectionObserver.disconnect()
@@ -809,7 +807,7 @@ export function RetroGrid(props: RetroGridProps) {
       canvas.removeEventListener('webglcontextrestored', handleContextRestored)
       syncSceneRef.current = null
       releasePipeline(!isContextLost)
-    })
+    }
   })
 
   const fallbackProjectionStyles: JSX.CSSProperties = {
@@ -821,11 +819,11 @@ export function RetroGrid(props: RetroGridProps) {
       ref={containerRef}
       class={cn(
         'pointer-events-none absolute size-full overflow-hidden',
-        local.class,
+        props.class,
       )}
       style={{
-        ...(local.style as JSX.CSSProperties),
-        opacity: local.opacity,
+        ...(props.style as JSX.CSSProperties),
+        opacity: (props.opacity ?? 0.5),
       }}
       {...rest}
     >
@@ -835,7 +833,7 @@ export function RetroGrid(props: RetroGridProps) {
             <div class="absolute inset-0" style={fallbackProjectionStyles}>
               <div
                 class="absolute inset-0"
-                style={{ transform: `rotateX(${clamp(local.angle, MIN_ANGLE, MAX_ANGLE)}deg)` }}
+                style={{ transform: `rotateX(${clamp((props.angle ?? 65), MIN_ANGLE, MAX_ANGLE)}deg)` }}
               >
                 <div
                   data-retro-grid-scroll="true"
@@ -844,7 +842,7 @@ export function RetroGrid(props: RetroGridProps) {
                     origin-[100%_0_0]
                     dark:hidden
                   "
-                  style={createFallbackGridStyle(Math.max(local.cellSize, 1), local.lightLineColor)}
+                  style={createFallbackGridStyle(Math.max((props.cellSize ?? 60), 1), lightLineColor())}
                 />
                 <div
                   data-retro-grid-scroll="true"
@@ -853,7 +851,7 @@ export function RetroGrid(props: RetroGridProps) {
                     w-[600vw] origin-[100%_0_0]
                     dark:block
                   "
-                  style={createFallbackGridStyle(Math.max(local.cellSize, 1), local.darkLineColor)}
+                  style={createFallbackGridStyle(Math.max((props.cellSize ?? 60), 1), darkLineColor())}
                 />
               </div>
             </div>

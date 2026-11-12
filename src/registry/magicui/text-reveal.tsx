@@ -1,6 +1,7 @@
-import type { JSX } from 'solid-js'
+import type { JSX } from '@solidjs/web'
 import { scroll, transform } from 'motion'
-import { createEffect, createMemo, createSignal, For, onCleanup } from 'solid-js'
+import { createMemo, createSignal, For, onSettled } from 'solid-js'
+
 import { cn } from '@/lib/utils'
 
 export interface TextRevealProps extends Omit<JSX.HTMLAttributes<HTMLDivElement>, 'children'> {
@@ -18,11 +19,11 @@ export function TextReveal(props: TextRevealProps) {
   let sectionRef: HTMLDivElement | undefined
   const [scrollYProgress, setScrollYProgress] = createSignal(0)
 
-  createEffect(() => {
+  onSettled(() => {
     if (!sectionRef)
       return
     const stop = scroll((progress: number) => setScrollYProgress(progress), { target: sectionRef })
-    onCleanup(stop)
+    return (stop)
   })
 
   return (

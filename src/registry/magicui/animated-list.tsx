@@ -1,6 +1,9 @@
-import type { Accessor, JSX } from 'solid-js'
+import type { JSX } from '@solidjs/web'
+import type { Accessor } from 'solid-js'
+
 import { animate } from 'motion'
-import { createContext, createEffect, createSignal, mergeProps, on, onCleanup, onMount, Show, splitProps, useContext } from 'solid-js'
+import { createContext, createEffect, createSignal, omit, onSettled, Show, useContext } from 'solid-js'
+
 import { createFlip } from '@/lib/flip'
 import { cn } from '@/lib/utils'
 
@@ -14,7 +17,7 @@ const AnimatedListContext = createContext<AnimatedListContextValue>()
 function AnimatedItem(props: { children: JSX.Element }) {
   let el: HTMLDivElement | undefined
 
-  onMount(() => {
+  onSettled(() => {
     if (!el)
       return
     const animation = animate(
@@ -22,7 +25,7 @@ function AnimatedItem(props: { children: JSX.Element }) {
       { scale: [0, 1], opacity: [0, 1] },
       { type: 'spring', stiffness: 350, damping: 40 },
     )
-    onCleanup(() => animation.stop())
+    return () => animation.stop()
   })
 
   return (
@@ -54,33 +57,38 @@ export interface AnimatedListProps extends JSX.HTMLAttributes<HTMLDivElement> {
 }
 
 export function AnimatedList(props: AnimatedListProps) {
-  const merged = mergeProps({ delay: 1000 }, props)
-  const [local, rest] = splitProps(merged, ['children', 'class', 'delay'])
+  const rest = omit(props, 'children', 'class', 'delay')
+  const delay = () => props.delay ?? 1000
 
   const [index, setIndex] = createSignal(0)
   const [childrenCount, setChildrenCount] = createSignal(0)
+  // Count only: registration runs in a child's component body, where a
+  // signal write is forbidden.
   let count = 0
-  const registerItem = () => {
-    setChildrenCount(++count)
-    return count - 1
-  }
+  const registerItem = () => count++
+  // Publish the total once all children have registered.
+  onSettled(() => {
+    setChildrenCount(count)
+  })
 
   const flip = createFlip()
 
-  createEffect(on(index, () => flip.flip()))
+  createEffect(index, () => flip.flip())
 
-  createEffect(() => {
-    if (index() < childrenCount() - 1) {
-      const timeout = setTimeout(() => setIndex(prev => (prev + 1) % childrenCount()), local.delay)
-      onCleanup(() => clearTimeout(timeout))
+  // `delay` is part of the compute so a change restarts the timer with the new
+  // value; reading the destructured value keeps the apply free of subscriptions.
+  createEffect(() => [index(), childrenCount(), delay()], ([indexValue, childrenCountValue, delayValue]) => {
+    if (indexValue < childrenCountValue - 1) {
+      const timeout = setTimeout(() => setIndex(prev => (prev + 1) % childrenCount()), delayValue)
+      return () => clearTimeout(timeout)
     }
   })
 
   return (
-    <AnimatedListContext.Provider value={{ registerItem, currentIndex: index }}>
-      <div ref={flip.ref} class={cn('flex flex-col-reverse items-center gap-4', local.class)} {...rest}>
-        {local.children}
+    <AnimatedListContext value={{ registerItem, currentIndex: index }}>
+      <div ref={flip.ref} class={cn('flex flex-col-reverse items-center gap-4', props.class)} {...rest}>
+        {props.children}
       </div>
-    </AnimatedListContext.Provider>
+    </AnimatedListContext>
   )
 }

@@ -1,6 +1,7 @@
-import type { JSX } from 'solid-js'
+import type { JSX } from '@solidjs/web'
 import { animate } from 'motion'
-import { createEffect, createSignal, For, mergeProps, onCleanup, onMount, splitProps } from 'solid-js'
+import { createEffect, createSignal, For, omit, onSettled } from 'solid-js'
+
 import { cn } from '@/lib/utils'
 
 interface SparkleData {
@@ -16,7 +17,7 @@ interface SparkleData {
 function Sparkle(props: SparkleData) {
   let ref: SVGSVGElement | undefined
 
-  onMount(() => {
+  onSettled(() => {
     if (!ref)
       return
     const animation = animate(
@@ -32,7 +33,7 @@ function Sparkle(props: SparkleData) {
         delay: props.delay,
       },
     )
-    onCleanup(() => animation.stop())
+    return () => animation.stop()
   })
 
   return (
@@ -90,60 +91,65 @@ interface SparklesTextProps {
 }
 
 export function SparklesText(props: SparklesTextProps) {
-  const merged = mergeProps(
-    { colors: { first: '#9E7AFF', second: '#FE8BBB' } as const, sparklesCount: 10 },
-    props,
-  )
-  const [local, rest] = splitProps(merged, ['children', 'colors', 'sparklesCount', 'className'])
+  const rest = omit(props, 'children', 'colors', 'sparklesCount', 'className')
+  const colors = () => props.colors ?? { first: '#9E7AFF', second: '#FE8BBB' } as const
+  const sparklesCount = () => props.sparklesCount ?? 10
   const [sparkles, setSparkles] = createSignal<SparkleData[]>([])
 
-  createEffect(() => {
-    const generateStar = (): SparkleData => {
-      const starX = `${Math.random() * 100}%`
-      const starY = `${Math.random() * 100}%`
-      const color = Math.random() > 0.5 ? local.colors.first : local.colors.second
-      const delay = Math.random() * 2
-      const scale = Math.random() * 1 + 0.3
-      const lifespan = Math.random() * 10 + 5
-      const id = `${starX}-${starY}-${Date.now()}`
-      return { id, x: starX, y: starY, color, delay, scale, lifespan }
-    }
+  createEffect(
+    () => ({
+      colors: colors(),
+      sparklesCount: sparklesCount(),
+    }),
+    ({ colors: colorsValue, sparklesCount }) => {
+      const generateStar = (starColors: { first: string, second: string }): SparkleData => {
+        const starX = `${Math.random() * 100}%`
+        const starY = `${Math.random() * 100}%`
+        const color = Math.random() > 0.5 ? starColors.first : starColors.second
+        const delay = Math.random() * 2
+        const scale = Math.random() * 1 + 0.3
+        const lifespan = Math.random() * 10 + 5
+        const id = `${starX}-${starY}-${Date.now()}`
+        return { id, x: starX, y: starY, color, delay, scale, lifespan }
+      }
 
-    const initializeStars = () => {
-      const newSparkles = Array.from({ length: local.sparklesCount }, generateStar)
-      setSparkles(newSparkles)
-    }
+      const initializeStars = () => {
+        const newSparkles = Array.from({ length: sparklesCount }, () => generateStar(colorsValue))
+        setSparkles(newSparkles)
+      }
 
-    const updateStars = () => {
-      setSparkles((currentSparkles) => {
-        const next = currentSparkles.slice()
-        for (let i = 0; i < next.length; i++) {
-          const star = next[i]
-          if (star.lifespan <= 0) {
-            next[i] = generateStar()
+      const updateStars = () => {
+        const starColors = colors()
+        setSparkles((currentSparkles) => {
+          const next = currentSparkles.slice()
+          for (let i = 0; i < next.length; i++) {
+            const star = next[i]
+            if (star.lifespan <= 0) {
+              next[i] = generateStar(starColors)
+            }
+            else {
+              star.lifespan -= 0.1
+            }
           }
-          else {
-            star.lifespan -= 0.1
-          }
-        }
-        return next
-      })
-    }
+          return next
+        })
+      }
 
-    initializeStars()
-    const interval = setInterval(updateStars, 100)
+      initializeStars()
+      const interval = setInterval(updateStars, 100)
 
-    onCleanup(() => clearInterval(interval))
-  })
+      return () => clearInterval(interval)
+    },
+  )
 
   return (
     <div
-      class={cn('text-6xl font-bold', local.className)}
+      class={cn('text-6xl font-bold', props.className)}
       {...rest}
       style={
         {
-          '--sparkles-first-color': `${local.colors.first}`,
-          '--sparkles-second-color': `${local.colors.second}`,
+          '--sparkles-first-color': `${colors().first}`,
+          '--sparkles-second-color': `${colors().second}`,
         } as JSX.CSSProperties
       }
     >
@@ -151,7 +157,7 @@ export function SparklesText(props: SparklesTextProps) {
         <For each={sparkles()}>
           {sparkle => <Sparkle {...sparkle} />}
         </For>
-        <strong>{local.children}</strong>
+        <strong>{props.children}</strong>
       </span>
     </div>
   )

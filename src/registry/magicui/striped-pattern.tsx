@@ -1,5 +1,6 @@
-import type { JSX } from 'solid-js'
-import { createUniqueId, For, mergeProps, splitProps } from 'solid-js'
+import type { JSX } from '@solidjs/web'
+import { createUniqueId, For, omit } from 'solid-js'
+
 import { cn } from '@/lib/utils'
 
 export interface StripedPatternProps
@@ -15,8 +16,8 @@ export interface StripedPatternProps
  * A Solid component that creates a striped pattern background using SVG.
  */
 export function StripedPattern(props: StripedPatternProps) {
-  const merged = mergeProps({ direction: 'left' as const, width: 10, height: 10 }, props)
-  const [local, rest] = splitProps(merged, ['direction', 'width', 'height', 'class'])
+  const rest = omit(props, 'direction', 'width', 'height', 'class')
+  const direction = () => props.direction ?? 'left' as const
   const id = createUniqueId()
 
   return (
@@ -24,7 +25,7 @@ export function StripedPattern(props: StripedPatternProps) {
       aria-hidden="true"
       class={cn(
         'pointer-events-none absolute inset-0 z-10 size-full stroke-[0.5]',
-        local.class,
+        props.class,
       )}
       xmlns="http://www.w3.org/2000/svg"
       {...rest}
@@ -32,17 +33,17 @@ export function StripedPattern(props: StripedPatternProps) {
       <defs>
         <pattern
           id={id}
-          width={local.width}
-          height={local.height}
+          width={(props.width ?? 10)}
+          height={(props.height ?? 10)}
           patternUnits="userSpaceOnUse"
         >
           <For each={[-1, 0, 1]}>
             {i => (
               <line
-                x1={i * local.width}
-                y1={local.direction === 'left' ? local.height : 0}
-                x2={(i + 1) * local.width}
-                y2={local.direction === 'left' ? 0 : local.height}
+                x1={i * (props.width ?? 10)}
+                y1={direction() === 'left' ? (props.height ?? 10) : 0}
+                x2={(i + 1) * (props.width ?? 10)}
+                y2={direction() === 'left' ? 0 : (props.height ?? 10)}
                 stroke="currentColor"
               />
             )}

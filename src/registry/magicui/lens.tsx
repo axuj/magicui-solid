@@ -1,14 +1,6 @@
-import type { JSX } from 'solid-js'
+import type { JSX } from '@solidjs/web'
 import { animate } from 'motion'
-import {
-  createEffect,
-  createMemo,
-  createSignal,
-  mergeProps,
-  onCleanup,
-  Show,
-  untrack,
-} from 'solid-js'
+import { createEffect, createMemo, createSignal, Show } from 'solid-js'
 
 interface Position {
   /** The x coordinate of the lens */
@@ -39,57 +31,56 @@ interface LensProps {
 }
 
 export function Lens(props: LensProps) {
-  const merged = mergeProps(
-    {
-      zoomFactor: 1.3,
-      lensSize: 170,
-      isStatic: false,
-      position: { x: 0, y: 0 },
-      duration: 0.1,
-      lensColor: 'black',
-      ariaLabel: 'Zoom Area',
+  const ariaLabel = () => props.ariaLabel ?? 'Zoom Area'
+  const isStatic = () => props.isStatic ?? false
+  const lensColor = () => props.lensColor ?? 'black'
+  const lensSize = () => props.lensSize ?? 170
+  const position = () => props.position ?? { x: 0, y: 0 }
+
+  createEffect(
+    () => ({ zoomFactor: props.zoomFactor, lensSize: lensSize() }),
+    ({ zoomFactor, lensSize }) => {
+      if ((zoomFactor ?? 1.3) < 1) {
+        throw new Error('zoomFactor must be greater than 1')
+      }
+      if (lensSize < 0) {
+        throw new Error('lensSize must be greater than 0')
+      }
     },
-    props,
   )
 
-  createEffect(() => {
-    if (merged.zoomFactor < 1) {
-      throw new Error('zoomFactor must be greater than 1')
-    }
-    if (merged.lensSize < 0) {
-      throw new Error('lensSize must be greater than 0')
-    }
-  })
-
   const [isHovering, setIsHovering] = createSignal(false)
-  const [mousePosition, setMousePosition] = createSignal<Position>(untrack(() => merged.position))
+  const [mousePosition, setMousePosition] = createSignal<Position>(position())
   const [isMounted, setIsMounted] = createSignal(false)
   const [isExiting, setIsExiting] = createSignal(false)
 
   const currentPosition = createMemo(() => {
-    if (merged.isStatic)
-      return merged.position
-    if (merged.defaultPosition && !isHovering())
-      return merged.defaultPosition
+    if (isStatic())
+      return position()
+    if (props.defaultPosition && !isHovering())
+      return props.defaultPosition
     return mousePosition()
   })
 
   const maskImage = () =>
-    `radial-gradient(circle ${merged.lensSize / 2}px at ${currentPosition().x}px ${currentPosition().y}px, ${merged.lensColor} 100%, transparent 100%)`
+    `radial-gradient(circle ${lensSize() / 2}px at ${currentPosition().x}px ${currentPosition().y}px, ${lensColor()} 100%, transparent 100%)`
 
-  createEffect(() => {
-    if (merged.isStatic || merged.defaultPosition) {
-      setIsMounted(true)
-      return
-    }
-    if (isHovering()) {
-      setIsExiting(false)
-      setIsMounted(true)
-    }
-    else {
-      setIsExiting(true)
-    }
-  })
+  createEffect(
+    () => ({ isStatic: isStatic(), defaultPosition: props.defaultPosition, isHovering: isHovering() }),
+    ({ isStatic, defaultPosition, isHovering }) => {
+      if (isStatic || defaultPosition) {
+        setIsMounted(true)
+        return
+      }
+      if (isHovering) {
+        setIsExiting(false)
+        setIsMounted(true)
+      }
+      else {
+        setIsExiting(true)
+      }
+    },
+  )
 
   function handleMouseMove(e: MouseEvent) {
     const rect = (e.currentTarget as HTMLDivElement).getBoundingClientRect()
@@ -107,21 +98,21 @@ export function Lens(props: LensProps) {
           setIsHovering(false)
       }}
       role="region"
-      aria-label={merged.ariaLabel}
-      tabIndex={0}
+      aria-label={ariaLabel()}
+      tabindex={0}
     >
-      {merged.children}
+      {props.children}
       <Show when={isMounted()}>
         <LensContent
           maskImage={maskImage()}
           x={currentPosition().x}
           y={currentPosition().y}
-          zoomFactor={merged.zoomFactor}
-          duration={merged.duration}
+          zoomFactor={(props.zoomFactor ?? 1.3)}
+          duration={(props.duration ?? 0.1)}
           isExiting={isExiting()}
           onExitComplete={() => setIsMounted(false)}
         >
-          {merged.children}
+          {props.children}
         </LensContent>
       </Show>
     </div>
@@ -140,15 +131,18 @@ function LensContent(props: {
 }) {
   let el: HTMLDivElement | undefined
 
-  createEffect(() => {
-    if (!el)
-      return
-    const exiting = props.isExiting
-    const anim = exiting
-      ? animate(el, { opacity: 0, scale: 0.8 }, { duration: props.duration, onComplete: () => props.onExitComplete() })
-      : animate(el, { opacity: [0, 1], scale: [0.58, 1] }, { duration: props.duration })
-    onCleanup(() => anim.stop())
-  })
+  createEffect(
+    () => ({ isExiting: props.isExiting, duration: props.duration }),
+    ({ isExiting, duration }) => {
+      if (!el)
+        return
+      const exiting = isExiting
+      const anim = exiting
+        ? animate(el, { opacity: 0, scale: 0.8 }, { duration, onComplete: () => props.onExitComplete() })
+        : animate(el, { opacity: [0, 1], scale: [0.58, 1] }, { duration })
+      return () => anim.stop()
+    },
+  )
 
   return (
     <div

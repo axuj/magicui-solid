@@ -1,5 +1,5 @@
-import type { ComponentProps, JSX } from 'solid-js'
-import { createEffect, createMemo, createSignal, mergeProps, on, onCleanup, splitProps, untrack } from 'solid-js'
+import type { ComponentProps, JSX } from '@solidjs/web'
+import { createEffect, createMemo, createSignal, omit, onSettled, untrack } from 'solid-js'
 
 import { cn } from '@/lib/utils'
 
@@ -477,27 +477,12 @@ function ease(from: number, to: number, rate: number, dt: number) {
  * coloured from a three-stop ramp. Children render above the dots.
  */
 export function DitherField(props: DitherFieldProps) {
-  const merged = mergeProps({
-    pattern: 'horizon' as DitherPattern,
-    color: 'currentColor' as DitherColor,
-    dotSize: 1,
-    intensity: 0.75,
-    speed: 1,
-    fps: 30,
-    interactive: true,
-  }, props)
-  const [local, rest] = splitProps(merged, [
-    'class',
-    'children',
-    'pattern',
-    'src',
-    'color',
-    'dotSize',
-    'intensity',
-    'speed',
-    'fps',
-    'interactive',
-  ])
+  const rest = omit(props, 'class', 'children', 'pattern', 'src', 'color', 'dotSize', 'intensity', 'speed', 'fps', 'interactive')
+  const color = () => props.color ?? 'currentColor' as DitherColor
+  const dotSize = () => props.dotSize ?? 1
+  const intensity = () => props.intensity ?? 0.75
+  const interactive = () => props.interactive ?? true
+  const pattern = () => props.pattern ?? 'horizon' as DitherPattern
 
   let rootEl: HTMLDivElement | undefined
   let layerEl: HTMLDivElement | undefined
@@ -510,10 +495,10 @@ export function DitherField(props: DitherFieldProps) {
   // Kept across rebuilds, so a field that scrolls back into view resumes.
   let time = 10
   let shown = false
-  let repaint: () => void = () => {}
-  const colorKey = createMemo(() => toRamp(local.color).join('|'))
+  let repaint: (color: DitherColor, intensity: number) => void = () => {}
+  const colorKey = createMemo(() => toRamp(color()).join('|'))
 
-  createEffect(() => {
+  onSettled(() => {
     const root = rootEl
     if (!root)
       return
@@ -522,18 +507,12 @@ export function DitherField(props: DitherFieldProps) {
       { rootMargin: '100px' },
     )
     observer.observe(root)
-    onCleanup(() => observer.disconnect())
+    return () => observer.disconnect()
   })
 
-  createEffect(() => {
+  createEffect(() => [near(), pattern(), props.src, dotSize(), contextKey()], ([nearValue, patternValue, srcValue, dotSizeValue]) => {
     // Only these options rebuild the GL state, matching the React source's
     // dependency list. Colour and the animation options are read per frame.
-    const nearValue = near()
-    const patternValue = local.pattern
-    const srcValue = local.src
-    const dotSizeValue = local.dotSize
-    contextKey()
-
     const root = rootEl
     const layer = layerEl
     if (!nearValue || !root || !layer)
@@ -591,12 +570,14 @@ export function DitherField(props: DitherFieldProps) {
       shown = true
     }
 
-    const paint = () => {
-      renderer.setRamp(resolveRamp(root, untrack(() => local.color)))
-      renderer.setIntensity(untrack(() => local.intensity))
+    const applyRamp = (colorValue: DitherColor, intensityValue: number) => {
+      renderer.setRamp(resolveRamp(root, colorValue))
+      renderer.setIntensity(intensityValue)
       draw()
     }
-    repaint = paint
+    repaint = applyRamp
+    // Only reached from rAF and observer callbacks, which are not tracking scopes.
+    const paint = () => applyRamp(color(), intensity())
     // Theme changes can arrive in bursts; resolve the colours once a frame.
     let paintFrame = 0
     const schedulePaint = () => {
@@ -645,10 +626,11 @@ export function DitherField(props: DitherFieldProps) {
 
     tickFn = (now: number) => {
       frame = requestAnimationFrame(tickFn)
-      // Read per frame outside a tracked scope: changing these must not rebuild the GL state.
-      const speedValue = untrack(() => local.speed)
-      const fpsValue = untrack(() => local.fps)
-      const interactiveValue = untrack(() => local.interactive)
+      // Read per frame on purpose: a speed/fps change must not rebuild the GL
+      // state. `untrack` states that these are live values, not dependencies.
+      const speedValue = untrack(() => props.speed ?? 1)
+      const fpsValue = untrack(() => props.fps ?? 30)
+      const interactiveValue = untrack(interactive)
       if (previous && now - previous < 1000 / Math.max(fpsValue, 1) - 2)
         return
       // Real time since the last drawn frame, so a low fps keeps the same
@@ -752,7 +734,9 @@ export function DitherField(props: DitherFieldProps) {
     const darkQuery = window.matchMedia('(prefers-color-scheme: dark)')
 
     resize()
-    paint()
+    // One-shot setup: reading the accessors here takes the values as they are
+    // when the GL state becomes usable; later changes repaint through `repaint`.
+    applyRamp(color(), intensity())
     syncFn()
     watchRatio()
     resizeObserver.observe(root)
@@ -777,7 +761,7 @@ export function DitherField(props: DitherFieldProps) {
     canvas.addEventListener('webglcontextlost', onLost)
     canvas.addEventListener('webglcontextrestored', onRestored)
 
-    onCleanup(() => {
+    return () => {
       disposed = true
       cancelAnimationFrame(frame)
       cancelAnimationFrame(paintFrame)
@@ -806,28 +790,29 @@ export function DitherField(props: DitherFieldProps) {
       renderer.dispose()
       gl.getExtension('WEBGL_lose_context')?.loseContext()
       canvas.remove()
-    })
+    }
   })
 
-  createEffect(on([colorKey, () => local.intensity], () => {
-    repaint()
-  }))
+  createEffect(
+    () => ({ key: colorKey(), color: color(), intensity: intensity() }),
+    ({ color, intensity }) => repaint(color, intensity),
+  )
 
   const fallbackStyle = createMemo<JSX.CSSProperties>(() => {
-    const [, mid] = toRamp(local.color)
+    const [, mid] = toRamp(color())
     return {
       backgroundImage: `radial-gradient(${mid} 0.6px, transparent 0.9px)`,
-      backgroundSize: `${3 * local.dotSize}px ${3 * local.dotSize}px`,
+      backgroundSize: `${3 * dotSize()}px ${3 * dotSize()}px`,
       maskImage: 'radial-gradient(ellipse at 50% 70%, black, transparent 75%)',
       WebkitMaskImage: 'radial-gradient(ellipse at 50% 70%, black, transparent 75%)',
-      opacity: Math.min(1, local.intensity),
+      opacity: Math.min(1, intensity()),
     }
   })
 
   return (
     <div
       ref={rootEl}
-      class={cn('relative isolate overflow-hidden', local.class)}
+      class={cn('relative isolate overflow-hidden', props.class)}
       {...rest}
     >
       <div
@@ -836,7 +821,7 @@ export function DitherField(props: DitherFieldProps) {
         class="pointer-events-none absolute inset-0 -z-10"
         style={fallback() ? fallbackStyle() : undefined}
       />
-      {local.children}
+      {props.children}
     </div>
   )
 }

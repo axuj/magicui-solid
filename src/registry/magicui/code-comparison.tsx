@@ -1,7 +1,8 @@
 import type { ThemeRegistration } from '@shikijs/types'
-import type { JSX } from 'solid-js'
-import { FileIcon } from 'lucide-solid'
-import { createEffect, createMemo, createSignal, mergeProps, on, onCleanup, splitProps } from 'solid-js'
+import type { JSX } from '@solidjs/web'
+
+import { File } from '@lucide/solid'
+import { createEffect, createMemo, createSignal, onSettled } from 'solid-js'
 
 import { cn } from '@/lib/utils'
 
@@ -16,23 +17,14 @@ interface CodeComparisonProps {
 }
 
 export function CodeComparison(props: CodeComparisonProps) {
-  const merged = mergeProps({ highlightColor: '#ff3333' }, props)
-  const [local] = splitProps(merged, [
-    'beforeCode',
-    'afterCode',
-    'language',
-    'filename',
-    'lightTheme',
-    'darkTheme',
-    'highlightColor',
-  ])
+  const highlightColor = () => props.highlightColor ?? '#ff3333'
   const [theme, setTheme] = createSignal<'light' | 'dark'>('light')
   const [highlightedBefore, setHighlightedBefore] = createSignal('')
   const [highlightedAfter, setHighlightedAfter] = createSignal('')
   const [hasLeftFocus, setHasLeftFocus] = createSignal(false)
   const [hasRightFocus, setHasRightFocus] = createSignal(false)
 
-  createEffect(() => {
+  onSettled(() => {
     if (typeof document === 'undefined')
       return
 
@@ -49,76 +41,73 @@ export function CodeComparison(props: CodeComparisonProps) {
       attributeFilter: ['data-theme'],
     })
 
-    onCleanup(() => observer.disconnect())
+    return () => observer.disconnect()
   })
 
   const selectedTheme = createMemo(() =>
-    theme() === 'dark' ? local.darkTheme : local.lightTheme,
+    theme() === 'dark' ? props.darkTheme : props.lightTheme,
   )
 
-  createEffect(() => {
-    if (highlightedBefore() || highlightedAfter()) {
-      setHasLeftFocus(highlightedBefore().includes('class="line focused"'))
-      setHasRightFocus(highlightedAfter().includes('class="line focused"'))
+  createEffect(() => [highlightedBefore(), highlightedAfter()], ([highlightedBefore, highlightedAfter]) => {
+    if (highlightedBefore || highlightedAfter) {
+      setHasLeftFocus(highlightedBefore.includes('class="line focused"'))
+      setHasRightFocus(highlightedAfter.includes('class="line focused"'))
     }
   })
 
-  createEffect(
-    on(
-      [selectedTheme, () => local.beforeCode, () => local.afterCode, () => local.language],
-      ([theme, beforeCode, afterCode, language]) => {
-        let cancelled = false
+  createEffect(() => [selectedTheme(), props.beforeCode, props.afterCode, props.language], ([theme, beforeCode, afterCode, language]) => {
+    let cancelled = false
 
-        async function highlightCode() {
-          try {
-            const { codeToHtml } = await import('shiki')
-            const { transformerNotationHighlight, transformerNotationDiff, transformerNotationFocus } = await import('@shikijs/transformers')
+    async function highlightCode() {
+      try {
+        const { codeToHtml } = await import('shiki')
+        const { transformerNotationHighlight, transformerNotationDiff, transformerNotationFocus } = await import('@shikijs/transformers')
 
-            const before = await codeToHtml(beforeCode, {
-              lang: language,
-              theme,
-              transformers: [
-                transformerNotationHighlight({ matchAlgorithm: 'v3' }),
-                transformerNotationDiff({ matchAlgorithm: 'v3' }),
-                transformerNotationFocus({ matchAlgorithm: 'v3' }),
-              ],
-            })
-            const after = await codeToHtml(afterCode, {
-              lang: language,
-              theme,
-              transformers: [
-                transformerNotationHighlight({ matchAlgorithm: 'v3' }),
-                transformerNotationDiff({ matchAlgorithm: 'v3' }),
-                transformerNotationFocus({ matchAlgorithm: 'v3' }),
-              ],
-            })
-            if (cancelled)
-              return
-            setHighlightedBefore(before)
-            setHighlightedAfter(after)
-          }
-          catch (error) {
-            console.error('Error highlighting code:', error)
-            if (cancelled)
-              return
-            setHighlightedBefore(`<pre>${beforeCode}</pre>`)
-            setHighlightedAfter(`<pre>${afterCode}</pre>`)
-          }
-        }
-        highlightCode()
-
-        onCleanup(() => {
-          cancelled = true
+        const before = await codeToHtml(beforeCode, {
+          lang: language,
+          theme,
+          transformers: [
+            transformerNotationHighlight({ matchAlgorithm: 'v3' }),
+            transformerNotationDiff({ matchAlgorithm: 'v3' }),
+            transformerNotationFocus({ matchAlgorithm: 'v3' }),
+          ],
         })
-      },
-    ),
-  )
+        const after = await codeToHtml(afterCode, {
+          lang: language,
+          theme,
+          transformers: [
+            transformerNotationHighlight({ matchAlgorithm: 'v3' }),
+            transformerNotationDiff({ matchAlgorithm: 'v3' }),
+            transformerNotationFocus({ matchAlgorithm: 'v3' }),
+          ],
+        })
+        if (cancelled)
+          return
+        setHighlightedBefore(before)
+        setHighlightedAfter(after)
+      }
+      catch (error) {
+        console.error('Error highlighting code:', error)
+        if (cancelled)
+          return
+        setHighlightedBefore(`<pre>${beforeCode}</pre>`)
+        setHighlightedAfter(`<pre>${afterCode}</pre>`)
+      }
+    }
+    highlightCode()
+
+    // The effect callback has no owner: return the cleanup instead of
+    // calling onCleanup, which would never run.
+    return () => {
+      cancelled = true
+    }
+  })
 
   const renderCode = (code: string, highlighted: string): JSX.Element => {
     if (highlighted) {
       return (
         <div
-          style={{ '--highlight-color': local.highlightColor }}
+          style={{ '--highlight-color': highlightColor() }}
           class={cn(
             'size-full overflow-auto bg-background font-mono text-xs',
             '[&>pre]:h-full [&>pre]:w-screen! [&>pre]:py-2',
@@ -204,8 +193,8 @@ export function CodeComparison(props: CodeComparisonProps) {
               text-foreground
             "
             >
-              <FileIcon class="mr-2 size-4" />
-              {local.filename}
+              <File class="mr-2 size-4" />
+              {props.filename}
               <span class="
                 ml-auto hidden
                 md:block
@@ -214,7 +203,7 @@ export function CodeComparison(props: CodeComparisonProps) {
                 before
               </span>
             </div>
-            {renderCode(local.beforeCode, highlightedBefore())}
+            {renderCode(props.beforeCode, highlightedBefore())}
           </div>
           <div
             class={cn(
@@ -238,8 +227,8 @@ export function CodeComparison(props: CodeComparisonProps) {
               text-foreground
             "
             >
-              <FileIcon class="mr-2 size-4" />
-              {local.filename}
+              <File class="mr-2 size-4" />
+              {props.filename}
               <span class="
                 ml-auto hidden
                 md:block
@@ -248,7 +237,7 @@ export function CodeComparison(props: CodeComparisonProps) {
                 after
               </span>
             </div>
-            {renderCode(local.afterCode, highlightedAfter())}
+            {renderCode(props.afterCode, highlightedAfter())}
           </div>
         </div>
         <div class="

@@ -360,7 +360,7 @@ const data = {
       type: 'registry:lib',
       title: 'Flip',
       description: 'FLIP layout animation helper (First-Last-Invert-Play) with motion, matching framer-motion layout defaults.',
-      dependencies: ['motion', 'solid-js'],
+      dependencies: ['motion'],
       files: [{ path: 'src/lib/flip.ts', type: 'registry:lib' }],
     },
     {
@@ -368,8 +368,17 @@ const data = {
       type: 'registry:lib',
       title: 'Create In View',
       description: 'Reactive wrapper around motion\'s inView. Returns a signal that is true while the target is inside the viewport, with built-in once support.',
-      dependencies: ['motion', 'solid-js'],
+      dependencies: ['motion'],
       files: [{ path: 'src/lib/create-in-view.ts', type: 'registry:lib' }],
+    },
+    {
+      name: 'button',
+      type: 'registry:ui',
+      title: 'Button',
+      description: 'Kobalte-based button adapted for Solid 2. Installed automatically by components that need it.',
+      dependencies: ['@kobalte/core@2.0.0-alpha.4', 'class-variance-authority'],
+      registryDependencies: [dep('utils'), dep('theme')],
+      files: [{ path: 'src/components/ui/button.tsx', type: 'registry:ui', target: '@components/ui/button.tsx' }],
     },
     theme,
     uiItem({
@@ -383,7 +392,7 @@ const data = {
       name: 'hero-video-dialog',
       title: 'Hero Video Dialog',
       description: 'A hero video dialog component that opens a video player with configurable animations.',
-      dependencies: ['motion', 'lucide-solid'],
+      dependencies: ['motion', '@lucide/solid'],
     }),
     uiItem({
       name: 'marquee',
@@ -401,8 +410,8 @@ const data = {
       name: 'bento-grid',
       title: 'Bento Grid',
       description: 'A bento grid layout component that showcases content in a grid of cards with hover effects.',
-      dependencies: ['lucide-solid'],
-      registryDependencies: ['https://www.solid-ui.com/r/button.json'],
+      dependencies: ['@lucide/solid'],
+      registryDependencies: [dep('button')],
     }),
     uiItem({
       name: 'animated-list',
@@ -449,8 +458,8 @@ const data = {
       name: 'icon-cloud',
       title: 'Icon Cloud',
       description: 'An interactive 3D tag cloud component.',
-      dependencies: ['lucide-solid'],
-      registryDependencies: ['https://www.solid-ui.com/r/button.json'],
+      dependencies: ['@lucide/solid'],
+      registryDependencies: [dep('button')],
     }),
     uiItem({
       name: 'pointer',
@@ -510,7 +519,7 @@ const data = {
       title: 'Confetti',
       description: 'Confetti animations are best used to delight your users when something special happens',
       dependencies: ['canvas-confetti', '@types/canvas-confetti'],
-      registryDependencies: ['https://www.solid-ui.com/r/button.json'],
+      registryDependencies: [dep('button')],
     }),
     uiItem({
       name: 'particles',
@@ -521,7 +530,7 @@ const data = {
       name: 'animated-theme-toggler',
       title: 'Theme Toggler',
       description: 'Theme toggle with View Transitions and animated clip-path masks (circle, polygons, star), optional viewport-centered origin.',
-      dependencies: ['lucide-solid'],
+      dependencies: ['@lucide/solid'],
       css: themeToggleViewTransitionCss,
     }),
     uiItem({
@@ -662,7 +671,7 @@ const data = {
       name: 'rainbow-button',
       title: 'Rainbow Button',
       description: 'An animated button with a rainbow effect.',
-      dependencies: ['class-variance-authority', '@kobalte/core'],
+      dependencies: ['class-variance-authority', '@kobalte/core@2.0.0-alpha.4'],
       cssVars: {
         light: {
           'color-1': 'oklch(66.2% 0.225 25.9)',
@@ -762,15 +771,15 @@ const data = {
       name: 'file-tree',
       title: 'File Tree',
       description: 'A component used to showcase the folder and file structure of a directory.',
-      dependencies: ['@kobalte/core', 'lucide-solid'],
-      registryDependencies: ['https://www.solid-ui.com/r/button.json'],
+      dependencies: ['@kobalte/core@2.0.0-alpha.4', '@lucide/solid'],
+      registryDependencies: [dep('button')],
       tailwind: { config: { theme: { extend: accordionAnimation } } },
     }),
     uiItem({
       name: 'code-comparison',
       title: 'Code Comparison',
       description: 'A component which compares two code snippets.',
-      dependencies: ['shiki', '@shikijs/transformers', '@shikijs/themes', '@shikijs/types', 'lucide-solid'],
+      dependencies: ['shiki', '@shikijs/transformers', '@shikijs/themes', '@shikijs/types', '@lucide/solid'],
     }),
     uiItem({
       name: 'scroll-progress',
@@ -821,7 +830,7 @@ const data = {
       name: 'interactive-hover-button',
       title: 'Interactive Hover Button',
       description: 'A visually engaging button component that responds to hover with dynamic transitions, adapting smoothly between light and dark modes for enhanced user interactivity.',
-      dependencies: ['lucide-solid'],
+      dependencies: ['@lucide/solid'],
     }),
     uiItem({
       name: 'animated-circular-progress-bar',

@@ -1,7 +1,9 @@
+import type { JSX } from '@solidjs/web'
 import type { RoughAnnotation } from 'rough-notation/lib/model'
-import type { JSX } from 'solid-js'
+
 import { annotate } from 'rough-notation'
-import { createEffect, mergeProps, onCleanup } from 'solid-js'
+import { createEffect, createSignal } from 'solid-js'
+
 import { createInView } from '@/lib/create-in-view'
 
 export type AnnotationAction
@@ -26,63 +28,55 @@ interface HighlighterProps {
 }
 
 export function Highlighter(props: HighlighterProps) {
-  const merged = mergeProps(
-    {
-      action: 'highlight',
-      color: '#ffd1dc',
-      strokeWidth: 1.5,
-      animationDuration: 600,
-      iterations: 2,
-      padding: 2,
-      multiline: true,
-      isView: false,
-    } as const,
-    props,
-  )
+  const action = () => props.action ?? 'highlight'
 
-  let elementRef: HTMLSpanElement | undefined
-  const isInView = createInView(() => elementRef, { once: true, margin: '-10%' })
+  const [elementRef, setElementRef] = createSignal<HTMLSpanElement>()
+  const isInView = createInView(elementRef, { once: true, margin: '-10%' })
 
   // If isView is false, always show. If isView is true, wait for inView
-  const shouldShow = () => !merged.isView || isInView()
+  const shouldShow = () => !(props.isView ?? false) || isInView()
 
-  createEffect(() => {
-    let annotation: RoughAnnotation | null = null
-    let resizeObserver: ResizeObserver | null = null
+  createEffect(
+    () => ({ elementRef: elementRef(), shouldShow: shouldShow(), action: action(), color: props.color, strokeWidth: props.strokeWidth, animationDuration: props.animationDuration, iterations: props.iterations, padding: props.padding, multiline: props.multiline }),
+    ({ elementRef, shouldShow, action, color, strokeWidth, animationDuration, iterations, padding, multiline }) => {
+      let annotation: RoughAnnotation | null = null
+      let resizeObserver: ResizeObserver | null = null
 
-    if (shouldShow() && elementRef) {
-      const annotationConfig = {
-        type: merged.action,
-        color: merged.color,
-        strokeWidth: merged.strokeWidth,
-        animationDuration: merged.animationDuration,
-        iterations: merged.iterations,
-        padding: merged.padding,
-        multiline: merged.multiline,
+      const el = elementRef
+      if (shouldShow && el) {
+        const annotationConfig = {
+          type: action,
+          color: (color ?? '#ffd1dc'),
+          strokeWidth: (strokeWidth ?? 1.5),
+          animationDuration: (animationDuration ?? 600),
+          iterations: (iterations ?? 2),
+          padding: (padding ?? 2),
+          multiline: (multiline ?? true),
+        }
+
+        const currentAnnotation = annotate(el, annotationConfig)
+        annotation = currentAnnotation
+        currentAnnotation.show()
+
+        resizeObserver = new ResizeObserver(() => {
+          currentAnnotation.hide()
+          currentAnnotation.show()
+        })
+
+        resizeObserver.observe(el)
+        resizeObserver.observe(document.body)
       }
 
-      const currentAnnotation = annotate(elementRef, annotationConfig)
-      annotation = currentAnnotation
-      currentAnnotation.show()
-
-      resizeObserver = new ResizeObserver(() => {
-        currentAnnotation.hide()
-        currentAnnotation.show()
-      })
-
-      resizeObserver.observe(elementRef)
-      resizeObserver.observe(document.body)
-    }
-
-    onCleanup(() => {
-      annotation?.remove()
-      resizeObserver?.disconnect()
-    })
-  })
+      return () => {
+        annotation?.remove()
+        resizeObserver?.disconnect()
+      }
+    },
+  )
 
   return (
-    <span ref={elementRef} class="relative inline-block bg-transparent">
-      {merged.children}
+    <span ref={setElementRef} class="relative inline-block bg-transparent">
+      {props.children}
     </span>
   )
 }

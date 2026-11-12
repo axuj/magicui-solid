@@ -1,6 +1,10 @@
-import type { Accessor, JSX, ValidComponent } from 'solid-js'
-import { createContext, createEffect, createSignal, mergeProps, onCleanup, splitProps, untrack, useContext } from 'solid-js'
-import { Dynamic } from 'solid-js/web'
+import type { JSX, ValidComponent } from '@solidjs/web'
+import type { Accessor } from 'solid-js'
+
+import { Dynamic } from '@solidjs/web'
+
+import { createContext, createEffect, createSignal, omit, untrack, useContext } from 'solid-js'
+
 import { createInView } from '@/lib/create-in-view'
 import { cn } from '@/lib/utils'
 
@@ -29,40 +33,50 @@ interface AnimatedSpanProps {
 }
 
 export function AnimatedSpan(props: AnimatedSpanProps) {
-  const merged = mergeProps({ delay: 0, startOnView: false }, props)
-  const [local, rest] = splitProps(merged, ['children', 'delay', 'class', 'startOnView'])
+  const rest = omit(props, 'children', 'delay', 'class', 'startOnView')
 
-  let elementRef: HTMLDivElement | undefined
-  const isInView = useElementVisibility(() => elementRef)
+  const [elementRef, setElementRef] = createSignal<HTMLDivElement>()
+  const isInView = useElementVisibility(elementRef)
 
   const sequence = useSequence()
   const itemIndex = sequence ? sequence.registerItem() : null
   const [hasStarted, setHasStarted] = createSignal(false)
 
-  createEffect(() => {
-    if (untrack(hasStarted))
-      return
+  createEffect(
+    () => ({
+      sequenceStarted: sequence?.sequenceStarted(),
+      activeIndex: sequence?.activeIndex(),
+      startOnView: props.startOnView,
+      isInView: isInView(),
+      delay: props.delay,
+    }),
+    ({ sequenceStarted, activeIndex, startOnView, isInView, delay }) => {
+      // Deliberately not a dependency: subscribing to the gate would make
+      // `setHasStarted(true)` re-run this effect.
+      if (untrack(() => hasStarted()))
+        return
 
-    if (sequence && itemIndex !== null) {
-      if (sequence.sequenceStarted() && sequence.activeIndex() === itemIndex) {
-        setHasStarted(true)
+      if (sequence && itemIndex !== null) {
+        if (sequenceStarted && activeIndex === itemIndex) {
+          setHasStarted(true)
+        }
       }
-    }
-    else {
-      if (!local.startOnView || isInView()) {
-        const timer = setTimeout(setHasStarted, local.delay, true)
-        onCleanup(() => clearTimeout(timer))
+      else {
+        if (!(startOnView ?? false) || isInView) {
+          const timer = setTimeout(setHasStarted, (delay ?? 0), true)
+          return () => clearTimeout(timer)
+        }
       }
-    }
-  })
+    },
+  )
 
   return (
     <div
-      ref={elementRef}
+      ref={setElementRef}
       class={cn(
         'grid text-sm font-normal tracking-tight transition-all duration-300',
         hasStarted() ? 'translate-y-0 opacity-100' : '-translate-y-1 opacity-0',
-        local.class,
+        props.class,
       )}
       style={{ 'transition-delay': '0ms' }}
       onTransitionEnd={() => {
@@ -72,7 +86,7 @@ export function AnimatedSpan(props: AnimatedSpanProps) {
       }}
       {...rest}
     >
-      {local.children}
+      {props.children}
     </div>
   )
 }
@@ -87,11 +101,10 @@ interface TypingAnimationProps {
 }
 
 export function TypingAnimation(props: TypingAnimationProps) {
-  const merged = mergeProps({ duration: 60, delay: 0, as: 'span', startOnView: true }, props)
-  const [local, rest] = splitProps(merged, ['children', 'class', 'duration', 'delay', 'as', 'startOnView'])
+  const rest = omit(props, 'children', 'class', 'duration', 'delay', 'as', 'startOnView')
 
-  let elementRef: HTMLElement | undefined
-  const isInView = useElementVisibility(() => elementRef)
+  const [elementRef, setElementRef] = createSignal<HTMLElement>()
+  const isInView = useElementVisibility(elementRef)
 
   const [displayedText, setDisplayedText] = createSignal('')
   const [started, setStarted] = createSignal(false)
@@ -99,54 +112,71 @@ export function TypingAnimation(props: TypingAnimationProps) {
   const sequence = useSequence()
   const itemIndex = sequence ? sequence.registerItem() : null
 
-  createEffect(() => {
-    if (untrack(started))
-      return
+  createEffect(
+    () => ({
+      sequenceStarted: sequence?.sequenceStarted(),
+      activeIndex: sequence?.activeIndex(),
+      startOnView: props.startOnView,
+      isInView: isInView(),
+      delay: props.delay,
+    }),
+    ({ sequenceStarted, activeIndex, startOnView, isInView, delay }) => {
+      // Same as above: the gate is read as a snapshot, never tracked.
+      if (untrack(() => started()))
+        return
 
-    if (sequence && itemIndex !== null) {
-      if (sequence.sequenceStarted() && sequence.activeIndex() === itemIndex) {
-        setStarted(true)
-      }
-    }
-    else {
-      if (!local.startOnView || isInView()) {
-        const timer = setTimeout(setStarted, local.delay, true)
-        onCleanup(() => clearTimeout(timer))
-      }
-    }
-  })
-
-  createEffect(() => {
-    if (!started())
-      return
-
-    const textToType = local.children
-    let i = 0
-    const interval = setInterval(() => {
-      if (i < textToType.length) {
-        setDisplayedText(textToType.substring(0, i + 1))
-        i++
-      }
-      else {
-        clearInterval(interval)
-        if (sequence && itemIndex !== null) {
-          sequence.completeItem(itemIndex)
+      if (sequence && itemIndex !== null) {
+        if (sequenceStarted && activeIndex === itemIndex) {
+          setStarted(true)
         }
       }
-    }, local.duration)
+      else {
+        if (!(startOnView ?? true) || isInView) {
+          const timer = setTimeout(setStarted, (delay ?? 0), true)
+          return () => clearTimeout(timer)
+        }
+      }
+    },
+  )
 
-    onCleanup(() => clearInterval(interval))
-  })
+  createEffect(
+    () => ({
+      started: started(),
+      children: props.children,
+      duration: props.duration,
+    }),
+    ({ started, children, duration }) => {
+      if (!started)
+        return
+
+      const textToType = children
+      let i = 0
+      const interval = setInterval(() => {
+        if (i < textToType.length) {
+          setDisplayedText(textToType.substring(0, i + 1))
+          i++
+        }
+        else {
+          clearInterval(interval)
+          if (sequence && itemIndex !== null) {
+            sequence.completeItem(itemIndex)
+          }
+        }
+      }, duration ?? 60)
+
+      return () => clearInterval(interval)
+    },
+  )
 
   return (
     <Dynamic
-      component={local.as}
-      ref={elementRef}
-      class={cn('inline-grid text-sm font-normal tracking-tight', local.class)}
+      component={props.as ?? 'span'}
+      ref={setElementRef}
+      class={cn('inline-grid text-sm font-normal tracking-tight', props.class)}
       {...rest}
     >
       <span class="invisible [grid-area:1/1]" aria-hidden="true">
-        {local.children}
+        {props.children}
       </span>
       <span class="[grid-area:1/1]">
         {displayedText()}
@@ -163,14 +193,17 @@ interface TerminalProps {
 }
 
 export function Terminal(props: TerminalProps) {
-  const merged = mergeProps({ sequence: true, startOnView: true }, props)
-  const [local, rest] = splitProps(merged, ['children', 'class', 'sequence', 'startOnView'])
+  const rest = omit(props, 'children', 'class', 'sequence', 'startOnView')
 
-  let containerRef: HTMLDivElement | undefined
-  const isInView = useElementVisibility(() => containerRef)
+  const [containerRef, setContainerRef] = createSignal<HTMLDivElement>()
+  const isInView = useElementVisibility(containerRef)
 
   const [activeIndex, setActiveIndex] = createSignal(0)
-  const sequenceStarted = () => local.sequence ? (!local.startOnView || isInView()) : false
+  // Read inside the derived accessor rather than capturing it here, so the
+  // effects that consume it keep tracking `sequence`.
+  const sequenceStarted = () => (props.sequence ?? true) ? (!(props.startOnView ?? true) || isInView()) : false
+  // The context value is built once, so this one is a snapshot by design.
+  const sequenceEnabled = untrack(() => props.sequence ?? true)
 
   let registeredCount = 0
 
@@ -184,12 +217,12 @@ export function Terminal(props: TerminalProps) {
   }
 
   return (
-    <SequenceContext.Provider value={untrack(() => local.sequence) ? contextValue : null}>
+    <SequenceContext value={sequenceEnabled ? contextValue : null}>
       <div
-        ref={containerRef}
+        ref={setContainerRef}
         class={cn(
           'z-0 size-full max-w-lg rounded-xl border bg-background',
-          local.class,
+          props.class,
         )}
         {...rest}
       >
@@ -201,9 +234,9 @@ export function Terminal(props: TerminalProps) {
           </div>
         </div>
         <pre class="p-4">
-          <code class="grid gap-y-1 overflow-auto">{local.children}</code>
+          <code class="grid gap-y-1 overflow-auto">{props.children}</code>
         </pre>
       </div>
-    </SequenceContext.Provider>
+    </SequenceContext>
   )
 }

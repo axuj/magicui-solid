@@ -1,4 +1,5 @@
 import { For } from 'solid-js'
+
 import { cn } from '@/lib/utils'
 import { AnimatedList, AnimatedListItem } from '@/registry/magicui/animated-list'
 

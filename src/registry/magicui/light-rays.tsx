@@ -1,6 +1,6 @@
-import type { JSX } from 'solid-js'
+import type { JSX } from '@solidjs/web'
 import { animate } from 'motion'
-import { createEffect, createMemo, For, mergeProps, onCleanup, splitProps } from 'solid-js'
+import { createEffect, createMemo, For, omit } from 'solid-js'
 
 import { cn } from '@/lib/utils'
 
@@ -52,31 +52,34 @@ function createRays(count: number, cycle: number): LightRay[] {
 function Ray(props: LightRay) {
   let rayRef: HTMLDivElement | undefined
 
-  createEffect(() => {
-    if (!rayRef)
-      return
+  createEffect(
+    () => ({ intensity: props.intensity, rotate: props.rotate, swing: props.swing, duration: props.duration, delay: props.delay }),
+    ({ intensity, rotate, swing, duration, delay }) => {
+      if (!rayRef)
+        return
 
-    const controls = animate(
-      rayRef,
-      {
-        opacity: [0, props.intensity, 0],
-        rotate: [
-          props.rotate - props.swing,
-          props.rotate + props.swing,
-          props.rotate - props.swing,
-        ],
-      },
-      {
-        duration: props.duration,
-        repeat: Infinity,
-        ease: 'easeInOut',
-        delay: props.delay,
-        repeatDelay: props.duration * 0.1,
-      },
-    )
+      const controls = animate(
+        rayRef,
+        {
+          opacity: [0, intensity, 0],
+          rotate: [
+            rotate - swing,
+            rotate + swing,
+            rotate - swing,
+          ],
+        },
+        {
+          duration,
+          repeat: Infinity,
+          ease: 'easeInOut',
+          delay,
+          repeatDelay: duration * 0.1,
+        },
+      )
 
-    onCleanup(() => controls.stop())
-  })
+      return () => controls.stop()
+    },
+  )
 
   return (
     <div
@@ -97,21 +100,14 @@ function Ray(props: LightRay) {
 }
 
 export function LightRays(props: LightRaysProps) {
-  const merged = mergeProps(
-    { count: 7, color: 'rgba(160, 210, 255, 0.2)', blur: 36, speed: 14, length: '70vh' },
-    props,
-  )
-  const [local, rest] = splitProps(merged, [
-    'class',
-    'style',
-    'count',
-    'color',
-    'blur',
-    'speed',
-    'length',
-  ])
-  const cycleDuration = () => Math.max(local.speed, 0.1)
-  const rays = createMemo(() => createRays(local.count, cycleDuration()))
+  const rest = omit(props, 'class', 'style', 'count', 'color', 'blur', 'speed', 'length')
+  const blur = () => props.blur ?? 36
+  const color = () => props.color ?? 'rgba(160, 210, 255, 0.2)'
+  const count = () => props.count ?? 7
+  const length = () => props.length ?? '70vh'
+  const speed = () => props.speed ?? 14
+  const cycleDuration = () => Math.max(speed(), 0.1)
+  const rays = createMemo(() => createRays(count(), cycleDuration()))
 
   return (
     <div
@@ -120,19 +116,19 @@ export function LightRays(props: LightRaysProps) {
           pointer-events-none absolute inset-0 isolate overflow-hidden
           rounded-[inherit]
         `,
-        local.class,
+        props.class,
       )}
       style={{
-        '--light-rays-color': local.color,
-        '--light-rays-blur': `${local.blur}px`,
-        '--light-rays-length': local.length,
-        ...(local.style ?? {}) as JSX.CSSProperties,
+        '--light-rays-color': color(),
+        '--light-rays-blur': `${blur()}px`,
+        '--light-rays-length': length(),
+        ...(props.style ?? {}) as JSX.CSSProperties,
       }}
       {...rest}
     >
       <div class="absolute inset-0 overflow-hidden">
         <div
-          aria-hidden
+          aria-hidden="true"
           class="absolute inset-0 opacity-60"
           style={{
             background:
@@ -140,7 +136,7 @@ export function LightRays(props: LightRaysProps) {
           }}
         />
         <div
-          aria-hidden
+          aria-hidden="true"
           class="absolute inset-0 opacity-60"
           style={{
             background:
