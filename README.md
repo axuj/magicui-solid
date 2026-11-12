@@ -21,6 +21,12 @@
 - **Copy-paste friendly** — install any component in seconds with the shadcn CLI
 - **Tailwind CSS v4** — components ship with their own animations and keyframes
 
+## Solid 2
+
+This branch is the Solid 2 build, targeting `solid-js` 2.0.0-rc.21 with the official v2 reactivity model and lint preset. Its registry is self-hosted: no component depends on an external registry URL. See the [migration notes](https://github.com/axuj/magicui-solid/blob/v2/docs/solid-2-migration.md) for the full set of changes.
+
+It is a release candidate. npm users need `legacy-peer-deps=true` in `.npmrc`: Kobalte 2 alpha still declares peers at `2.0.0-rc.16`.
+
 ## Installation
 
 First add the `@magicui-solid` registry to your `components.json` (see the [Installation guide](https://axuj.github.io/magicui-solid/v2/docs/installation) for prerequisites, registry setup and theme injection). Then install any component:
