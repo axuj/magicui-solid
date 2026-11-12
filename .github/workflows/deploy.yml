@@ -2,10 +2,60 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [master]
+    branches: [master, v2, ci]
+  workflow_dispatch:
 
 jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@v7
+        with:
+          ref: master
+          path: main
+
+      - name: Checkout v2
+        uses: actions/checkout@v7
+        with:
+          ref: v2
+          path: v2
+
+      - uses: nubjs/setup-nub@v0
+
+      - name: Build master
+        working-directory: main
+        run: |
+          nub ci
+          nub run build
+        env:
+          SITE_URL: https://axuj.github.io
+          BASE_PATH: /magicui-solid
+
+      - name: Build v2
+        working-directory: v2
+        run: |
+          nub ci
+          nub run build
+        env:
+          SITE_URL: https://axuj.github.io
+          BASE_PATH: /magicui-solid/v2
+
+      - name: Merge both builds into one artifact
+        run: |
+          mkdir -p main/dist/v2
+          cp -R v2/dist/. main/dist/v2/
+
+      - name: Upload combined build
+        uses: actions/upload-artifact@v4
+        with:
+          name: pages-site
+          path: main/dist
+          include-hidden-files: true
+
   deploy:
+    needs: build
+    if: github.ref != 'refs/heads/ci'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -14,20 +64,16 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+    concurrency:
+      group: pages
+      cancel-in-progress: false
 
     steps:
-      - uses: actions/checkout@v7
-
-      - uses: nubjs/setup-nub@v0
-
-      - name: Install dependencies
-        run: nub ci
-
-      - name: Build
-        run: nub run build
-        env:
-          SITE_URL: https://axuj.github.io
-          BASE_PATH: /magicui-solid
+      - name: Download combined build
+        uses: actions/download-artifact@v4
+        with:
+          name: pages-site
+          path: dist
 
       - uses: actions/configure-pages@v6
 
